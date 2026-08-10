@@ -7,7 +7,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join, resolve } from "node:path";
+import { join, relative, resolve } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { resolveLocalToolingDatabaseUrl } from "./local-tooling.js";
 
@@ -56,6 +56,22 @@ describe("resolveLocalToolingDatabaseUrl", () => {
     ).toThrow(/^\[DATABASE\] RESET DITOLAK/);
   });
 
+  it("returns an explicit guarded local URL without normalization", () => {
+    const rootDirectory = createWorkspaceRoot({
+      ".env.example":
+        "DATABASE_URL=postgresql://safrs:safrs@127.0.0.1:54329/safrs_local\n",
+    });
+    const databaseUrl =
+      "postgresql://safrs:local-password@127.0.0.1:54329/safrs_local";
+
+    expect(
+      resolveLocalToolingDatabaseUrl(
+        { DATABASE_URL: databaseUrl },
+        rootDirectory,
+      ),
+    ).toBe(databaseUrl);
+  });
+
   it("rejects a present .env that does not declare DATABASE_URL", () => {
     const rootDirectory = createWorkspaceRoot({
       ".env": "NODE_ENV=development\n",
@@ -76,11 +92,38 @@ describe("resolveLocalToolingDatabaseUrl", () => {
 
     expect(existsSync(rootBiomeConfig)).toBe(true);
     expect(readFileSync(rootBiomeConfig, "utf8")).toContain(
-      "!!packages/database/src/generated",
+      "!!packages/database/src/generated/prisma",
     );
     expect(readFileSync(rootBiomeConfig, "utf8")).not.toContain(
-      "!!packages/database/src/generated/**",
+      '!!packages/database/src/generated"',
     );
+  });
+
+  it("keeps authored generated siblings visible to Biome", () => {
+    const rootDirectory = resolve(import.meta.dirname, "../../..");
+    const authoredSibling = join(
+      rootDirectory,
+      "packages/database/src/generated/authored-sibling.ts",
+    );
+    const biomeCli = join(
+      rootDirectory,
+      "node_modules/@biomejs/biome/bin/biome",
+    );
+
+    writeFileSync(authoredSibling, "const unused = 1;\n");
+
+    try {
+      const result = spawnSync(
+        process.execPath,
+        [biomeCli, "check", relative(rootDirectory, authoredSibling)],
+        { cwd: rootDirectory, encoding: "utf8" },
+      );
+
+      expect(result.status, result.stderr).toBe(0);
+      expect(`${result.stdout}${result.stderr}`).toContain("noUnusedVariables");
+    } finally {
+      rmSync(authoredSibling, { force: true });
+    }
   });
 
   it("runs Prisma generate from the declared local fallback without DATABASE_URL", () => {

@@ -23,9 +23,7 @@ export function assertDisposableDatabase(connectionUrl: string): URL {
     target.pathname.split("/").filter(Boolean).length !== 1 ||
     (!target.pathname.endsWith("_local") &&
       !target.pathname.endsWith("_test")) ||
-    target.searchParams
-      .getAll("sslmode")
-      .some((value) => value.toLowerCase() === "require")
+    target.search !== ""
   ) {
     return rejectReset();
   }

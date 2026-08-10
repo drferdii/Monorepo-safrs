@@ -5,7 +5,7 @@
       "**",
       "!!**/.safrs",
       "!!**/.turbo",
-      "!!packages/database/src/generated"
+      "!!packages/database/src/generated/prisma"
     ],
     "ignoreUnknown": true
   },

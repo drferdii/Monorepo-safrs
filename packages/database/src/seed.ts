@@ -26,6 +26,17 @@ const transaction = {
   occurredAt: new Date("2026-01-02T00:00:00.000Z"),
 };
 
+const transactionSequenceSyncQuery = `
+  SELECT setval(
+    pg_get_serial_sequence('transaction_samples', 'id'),
+    GREATEST(
+      (SELECT COALESCE(MAX("id"), 1) FROM "transaction_samples"),
+      (SELECT last_value FROM "transaction_samples_id_seq")
+    ),
+    true
+  )
+`;
+
 async function main() {
   await database.demo.upsert({
     where: { id: demo.id },
@@ -38,6 +49,7 @@ async function main() {
     create: transaction,
     update: transaction,
   });
+  await database.$executeRawUnsafe(transactionSequenceSyncQuery);
 }
 
 try {
