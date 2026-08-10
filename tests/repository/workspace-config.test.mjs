@@ -31,7 +31,7 @@ test("root exposes the solo-developer command contract", () => {
   assert.match(pkg.packageManager, /^pnpm@11\./);
 });
 
-test("root follows canonical SAFRS topology and excludes governance from Biome", () => {
+test("root follows canonical SAFRS topology and excludes protected paths from Biome", () => {
   const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
   const workspace = fs.readFileSync("pnpm-workspace.yaml", "utf8");
   const biome = JSON.parse(fs.readFileSync("biome.jsonc", "utf8"));
@@ -51,4 +51,5 @@ test("root follows canonical SAFRS topology and excludes governance from Biome",
     "node tools/capabilities/src/cli.mjs",
   );
   assert.ok(biome.files.includes.includes("!!**/.safrs"));
+  assert.ok(biome.files.includes.includes("!!**/.turbo"));
 });
