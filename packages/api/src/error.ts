@@ -2,7 +2,7 @@ import { apiErrorSchema } from "@safrs/schemas";
 import { z } from "zod";
 import type { $ZodError } from "zod/v4/core";
 
-type ApiError = z.infer<typeof apiErrorSchema>;
+export type ApiError = z.infer<typeof apiErrorSchema>;
 
 export function internalError(correlationId: string): ApiError {
   return apiErrorSchema.parse({

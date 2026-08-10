@@ -3,3 +3,4 @@ export {
   type ApiClient,
   createApiClient,
 } from "./client.js";
+export type { ApiError } from "./error.js";

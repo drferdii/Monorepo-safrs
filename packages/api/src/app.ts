@@ -1,7 +1,8 @@
 import { zValidator } from "@hono/zod-validator";
 import { createDemoInputSchema, demoSchema } from "@safrs/schemas";
 import { type Context, Hono } from "hono";
-import { internalError, validationError } from "./error.js";
+import type { ApplyGlobalResponse } from "hono/client";
+import { type ApiError, internalError, validationError } from "./error.js";
 
 type DemoRecord = {
   createdAt: Date;
@@ -26,6 +27,12 @@ type CreateAppOptions = {
   getStore?: () => Promise<DemoStore>;
 };
 
+type GlobalErrorResponses = {
+  500: {
+    json: ApiError;
+  };
+};
+
 async function defaultStore(): Promise<DemoStore> {
   const { database } = await import("@safrs/database");
 
@@ -40,7 +47,7 @@ function serializeDemo(demo: DemoRecord) {
   });
 }
 
-export function createApp({ getStore = defaultStore }: CreateAppOptions = {}) {
+function createRoutes({ getStore = defaultStore }: CreateAppOptions = {}) {
   return new Hono<ApiEnvironment>()
     .basePath("/api")
     .use("*", async (context, next) => {
@@ -85,5 +92,12 @@ export function createApp({ getStore = defaultStore }: CreateAppOptions = {}) {
     );
 }
 
+type ApiRoutes = ReturnType<typeof createRoutes>;
+
+export type AppType = ApplyGlobalResponse<ApiRoutes, GlobalErrorResponses>;
+
+export function createApp(options: CreateAppOptions = {}): AppType {
+  return createRoutes(options) as AppType;
+}
+
 export const app = createApp();
-export type AppType = typeof app;

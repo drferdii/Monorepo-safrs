@@ -2,6 +2,7 @@ import type { InferRequestType, InferResponseType } from "hono/client";
 import { describe, expect, expectTypeOf, it } from "vitest";
 import { app, createApp } from "./app.js";
 import { createApiClient } from "./client.js";
+import type { ApiError } from "./error.js";
 
 describe("Hono API", () => {
   it("returns typed health state", async () => {
@@ -99,6 +100,20 @@ describe("Hono API", () => {
     expect(JSON.stringify(body)).not.toContain("DATABASE_URL");
   });
 
+  it("returns the thrown-error correlation ID in its response header", async () => {
+    const api = createApp({
+      getStore: async () => {
+        throw new Error("unexpected persistence failure");
+      },
+    });
+
+    const response = await api.request("/api/demos");
+    const body = await response.json();
+
+    expect(response.status).toBe(500);
+    expect(response.headers.get("x-correlation-id")).toBe(body.correlationId);
+  });
+
   it("includes a correlation ID in error responses and headers", async () => {
     const response = await app.request("/api/demos", {
       body: JSON.stringify({ name: "" }),
@@ -129,9 +144,30 @@ describe("Hono API", () => {
       name: string;
     }>();
     expectTypeOf<
+      InferResponseType<typeof client.api.demos.$get, 500>
+    >().toEqualTypeOf<ApiError>();
+    expectTypeOf<
+      InferResponseType<typeof client.api.demos.$get, 200>
+    >().toEqualTypeOf<
+      Array<{
+        createdAt: string;
+        id: string;
+        name: string;
+      }>
+    >();
+    expectTypeOf<
+      InferResponseType<typeof client.api.demos.$post, 400>
+    >().toEqualTypeOf<ApiError>();
+    expectTypeOf<
+      InferResponseType<typeof client.api.demos.$post, 500>
+    >().toEqualTypeOf<ApiError>();
+    expectTypeOf<
       InferResponseType<typeof client.api.health.$get, 200>
     >().toEqualTypeOf<{
       status: "ok";
     }>();
+    expectTypeOf<
+      InferResponseType<typeof client.api.health.$get, 500>
+    >().toEqualTypeOf<ApiError>();
   });
 });
