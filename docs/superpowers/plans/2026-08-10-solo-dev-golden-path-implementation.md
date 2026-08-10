@@ -115,7 +115,7 @@ Expected: FAIL because `package.json` does not exist.
 
 Use private workspace metadata, `packageManager: pnpm@11.21.0`, `engines.node: >=24.18.0 <25`, workspaces under `projects/*/apps/*`, `packages/*`, and `tools/*`, and a pnpm catalog containing the compatibility-tested stable versions.
 
-Biome must explicitly exclude `.safrs/**` so `lint`, `format`, and `fix` cannot inspect or rewrite canonical machine-readable governance. The focused workspace test must assert this exclusion and `pnpm lint` must pass without changing any `.safrs` file.
+Biome must explicitly exclude `.safrs/**` and generated `.turbo/**` caches so `lint`, `format`, and `fix` cannot inspect or rewrite canonical machine-readable governance or generated task artifacts. The focused workspace test must assert both exclusions. The sequence `pnpm typecheck` followed by `pnpm lint` must pass without cache cleanup and without changing any `.safrs` file.
 
 Root command wiring:
 
