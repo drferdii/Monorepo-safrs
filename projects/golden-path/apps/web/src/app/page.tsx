@@ -16,7 +16,11 @@ export function ReadinessDesk({ readiness }: { readiness: Readiness }) {
     <main className="readiness-desk">
       <header className="desk-header">
         <p className="eyebrow">Meja kesiapan</p>
-        <h1>Monorepo siap untuk alur SAFRS</h1>
+        <h1>
+          {aggregateState === "ready"
+            ? "Monorepo siap untuk alur SAFRS"
+            : "Periksa kesiapan alur SAFRS"}
+        </h1>
         <p>
           Ikuti aliran operasional ini untuk memastikan data, API, dan web
           terhubung sebelum menyimpan satu contoh.

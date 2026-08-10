@@ -18,7 +18,7 @@ export function getBrowserApiBaseUrl(locationOrigin: string): string {
   const sameOrigin =
     configuredOrigin === locationOrigin ? configuredOrigin : locationOrigin;
 
-  return new URL("/api", sameOrigin).toString();
+  return sameOrigin;
 }
 
 export function createBrowserApiClient(locationOrigin: string) {

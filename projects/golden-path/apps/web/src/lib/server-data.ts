@@ -1,5 +1,5 @@
 import { app } from "@safrs/api";
-import { cacheLife } from "next/cache";
+import { cacheLife, cacheTag } from "next/cache";
 
 export type ReadinessItem = {
   detail: string;
@@ -15,6 +15,7 @@ export async function readApiStatus(): Promise<ReadinessItem> {
   "use cache";
 
   cacheLife("minutes");
+  cacheTag("safrs:readiness:api");
 
   try {
     const response = await app.request("/api/health");
