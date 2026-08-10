@@ -5,6 +5,13 @@ import { DemoForm } from "../components/demo-form";
 import { getReadiness, type Readiness } from "../lib/server-data";
 
 export function ReadinessDesk({ readiness }: { readiness: Readiness }) {
+  const aggregateState =
+    readiness.api.state === "ready" && readiness.database.state === "ready"
+      ? "ready"
+      : "attention";
+  const aggregateLabel =
+    aggregateState === "ready" ? "Siap" : "Perlu perhatian";
+
   return (
     <main className="readiness-desk">
       <header className="desk-header">
@@ -28,7 +35,10 @@ export function ReadinessDesk({ readiness }: { readiness: Readiness }) {
             <strong>API bertipe</strong>
             <small>Hono memvalidasi kontrak data.</small>
           </li>
-          <li className="flow-step flow-step--ready">
+          <li
+            aria-label={`Status akhir: ${aggregateLabel}`}
+            className={`flow-step flow-step--${aggregateState}`}
+          >
             <span>03</span>
             <strong>Web</strong>
             <small>Halaman server menampilkan hasil.</small>

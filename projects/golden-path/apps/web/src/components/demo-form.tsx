@@ -42,6 +42,7 @@ export function DemoForm() {
           id="demo-name"
           maxLength={80}
           name="name"
+          placeholder="Misalnya Atlas"
           required
           aria-label="Nama contoh"
         />

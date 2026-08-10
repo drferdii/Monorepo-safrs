@@ -21,4 +21,23 @@ describe("ReadinessDesk", () => {
     expect(markup).toContain('aria-label="Nama contoh"');
     expect(markup).toContain("Simpan contoh");
   });
+
+  it("menandai langkah akhir perlu perhatian ketika dependensi belum siap", () => {
+    const markup = renderToStaticMarkup(
+      createElement(ReadinessDesk, {
+        readiness: {
+          api: {
+            detail: "API belum dapat diperiksa.",
+            state: "attention",
+          },
+          database: {
+            detail: "PostgreSQL dapat dijangkau.",
+            state: "ready",
+          },
+        },
+      }),
+    );
+
+    expect(markup).toContain('aria-label="Status akhir: Perlu perhatian"');
+  });
 });

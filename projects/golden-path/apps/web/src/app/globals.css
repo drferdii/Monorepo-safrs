@@ -210,11 +210,29 @@ p {
 }
 
 .demo-form input {
-  border: 1px solid transparent;
+  background: #fff;
+  border: 1px solid #a8c5ff;
   border-radius: 0;
+  caret-color: var(--signal);
+  color: var(--ink);
   flex: 1;
   min-width: 0;
   padding: 0.7rem 0.8rem;
+}
+
+.demo-form input::placeholder {
+  color: var(--slate);
+  opacity: 1;
+}
+
+.demo-form input:focus-visible {
+  border-color: var(--signal);
+}
+
+.demo-form input:disabled {
+  background: #e7eef8;
+  color: var(--slate);
+  cursor: not-allowed;
 }
 
 button {
