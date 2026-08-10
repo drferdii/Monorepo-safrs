@@ -1,15 +1,8 @@
 import { fileURLToPath } from "node:url";
 import { defineConfig } from "@playwright/test";
-import { loadCanonicalEnvironment } from "../../../../tools/doctor/src/checks.mjs";
+import { resolvePlaywrightEnvironment } from "./e2e/environment.js";
 
-const rootDirectory = fileURLToPath(new URL("../../../../", import.meta.url));
-const canonicalEnvironment = process.env.DATABASE_URL
-  ? {
-      APP_URL: process.env.APP_URL ?? "http://127.0.0.1:3001",
-      DATABASE_URL: process.env.DATABASE_URL,
-      NODE_ENV: "test",
-    }
-  : { ...loadCanonicalEnvironment({ rootDirectory }), NODE_ENV: "test" };
+const canonicalEnvironment = resolvePlaywrightEnvironment(process.env);
 
 export default defineConfig({
   testDir: "./e2e",

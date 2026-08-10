@@ -1,15 +1,9 @@
 import { randomUUID } from "node:crypto";
-import { fileURLToPath } from "node:url";
 import { expect, test } from "@playwright/test";
 import { Client } from "pg";
-import { loadCanonicalEnvironment } from "../../../../../tools/doctor/src/checks.mjs";
+import { resolvePlaywrightEnvironment } from "./environment.js";
 
-const rootDirectory = fileURLToPath(
-  new URL("../../../../../", import.meta.url),
-);
-const databaseUrl =
-  process.env.DATABASE_URL ??
-  loadCanonicalEnvironment({ rootDirectory }).DATABASE_URL;
+const { DATABASE_URL: databaseUrl } = resolvePlaywrightEnvironment(process.env);
 const createdDemoNames: string[] = [];
 
 test.afterEach(async () => {
