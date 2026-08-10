@@ -1,6 +1,6 @@
-export { type AppType, app, createApp, type DemoStore } from "./app.js";
+export { type AppType, app, createApp, type DemoStore } from "./app.ts";
 export {
   type ApiClient,
   createApiClient,
-} from "./client.js";
-export type { ApiError } from "./error.js";
+} from "./client.ts";
+export type { ApiError } from "./error.ts";

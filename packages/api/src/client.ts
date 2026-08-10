@@ -1,5 +1,5 @@
 import { hc } from "hono/client";
-import type { AppType } from "./app.js";
+import type { AppType } from "./app.ts";
 
 export type ApiClient = ReturnType<typeof hc<AppType>>;
 

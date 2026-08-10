@@ -1,6 +1,7 @@
 {
   "extends": "@safrs/config/tsconfig/base.json",
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
     "rootDir": "src"
   },
   "include": ["src/**/*.ts"]

@@ -2,7 +2,7 @@ import { zValidator } from "@hono/zod-validator";
 import { createDemoInputSchema, demoSchema } from "@safrs/schemas";
 import { type Context, Hono } from "hono";
 import type { ApplyGlobalResponse } from "hono/client";
-import { type ApiError, internalError, validationError } from "./error.js";
+import { type ApiError, internalError, validationError } from "./error.ts";
 
 type DemoRecord = {
   createdAt: Date;

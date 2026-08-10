@@ -2,4 +2,4 @@ export {
   apiErrorSchema,
   createDemoInputSchema,
   demoSchema,
-} from "./demo.js";
+} from "./demo.ts";
