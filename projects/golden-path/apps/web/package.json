@@ -9,6 +9,7 @@
     "lint": "biome check src",
     "start": "next start",
     "test": "vitest run",
+    "test:e2e": "playwright test --config playwright.config.ts",
     "typecheck": "tsc --project tsconfig.json"
   },
   "dependencies": {
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@safrs/config": "workspace:*",
+    "@playwright/test": "catalog:",
     "@tailwindcss/postcss": "catalog:",
     "@types/node": "catalog:",
     "@types/react": "catalog:",
