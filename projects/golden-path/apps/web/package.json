@@ -20,6 +20,7 @@
     "@safrs/database": "workspace:*",
     "@safrs/env": "workspace:*",
     "@safrs/ui": "workspace:*",
+    "@sentra/design-tokens": "workspace:*",
     "hono": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
