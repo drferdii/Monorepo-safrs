@@ -27,7 +27,7 @@
 ## Red/green evidence
 
 - Red: `pnpm --filter @safrs/api test` failed before `app.ts` and `client.ts` existed with `Cannot find module './app.js'`.
-- Green: focused API suite passes 7 tests covering health, list ISO serialization, create, validation envelope, error redaction, correlation ID, and compile-time Hono client request/response inference.
+- Initial green: focused API suite passed 7 tests covering health, list ISO serialization, create, validation envelope, error redaction, correlation ID, and compile-time Hono client request/response inference.
 - Follow-up red: API typecheck rejected the missing `ApiError` export and inferred `never` for global `500` RPC responses.
 - Follow-up green: focused suite passes 8 tests. Type assertions cover GET `200|500`, POST `201|400|500`, and health `200|500`; an injected thrown store error verifies its response header and body carry the same correlation ID.
 
@@ -50,7 +50,7 @@
 - `pnpm --filter @safrs/api test` — passed, 8/8 tests after the global-error type fix.
 - `pnpm lint` — passed.
 - `pnpm typecheck` — passed (4 Turbo tasks).
-- `pnpm test` — passed (API 7/7; database integration suite remained intentionally skipped without its dedicated database).
+- `pnpm test` — passed (API 8/8; schemas 2/2; env 3/3; database 20 passed with 2 integration tests intentionally skipped without its dedicated database).
 - `bash scripts/safrs-verify.sh` — passed; it classifies the combined dirty workspace as R2 and requires independent integrity review because the pre-existing untracked SAFRS bootstrap includes governance controls.
 
 ## Concerns
