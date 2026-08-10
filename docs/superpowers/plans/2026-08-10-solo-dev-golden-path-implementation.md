@@ -37,7 +37,7 @@
 
 ### Runtime units
 
-- `apps/web`: Next.js deployment, API adapter, pages, error boundaries, Playwright.
+- `projects/golden-path/apps/web`: Next.js deployment, API adapter, pages, error boundaries, Playwright.
 - `packages/api`: Hono application, typed RPC client, error envelope.
 - `packages/schemas`: canonical Zod boundary schemas.
 - `packages/env`: T3 Env server/client validation.
@@ -47,9 +47,9 @@
 
 ### Operator tooling
 
-- `tooling/doctor`: read-only prerequisite and health checks.
-- `tooling/project-wizard`: SAFRS capsule generator.
-- `tooling/capabilities`: optional capability manifests and selector.
+- `tools/doctor`: read-only prerequisite and health checks.
+- `tools/project-wizard`: SAFRS capsule generator.
+- `tools/capabilities`: optional capability manifests and selector.
 - `scripts/setup.mjs`: first-run orchestration.
 - `scripts/dev.mjs`: safe single-command startup.
 - `scripts/safrs-verify.mjs`: cross-platform SAFRS verification launcher.
@@ -113,7 +113,9 @@ Expected: FAIL because `package.json` does not exist.
 
 - [ ] **Step 3: Add root workspace configuration**
 
-Use private workspace metadata, `packageManager: pnpm@11.21.0`, `engines.node: >=24.18.0 <25`, workspaces under `apps/*`, `packages/*`, and `tooling/*`, and a pnpm catalog containing the compatibility-tested stable versions.
+Use private workspace metadata, `packageManager: pnpm@11.21.0`, `engines.node: >=24.18.0 <25`, workspaces under `projects/*/apps/*`, `packages/*`, and `tools/*`, and a pnpm catalog containing the compatibility-tested stable versions.
+
+Biome must explicitly exclude `.safrs/**` so `lint`, `format`, and `fix` cannot inspect or rewrite canonical machine-readable governance. The focused workspace test must assert this exclusion and `pnpm lint` must pass without changing any `.safrs` file.
 
 Root command wiring:
 
@@ -121,7 +123,7 @@ Root command wiring:
 {
   "scripts": {
     "setup": "node scripts/setup.mjs",
-    "doctor": "node tooling/doctor/src/cli.mjs",
+    "doctor": "node tools/doctor/src/cli.mjs",
     "dev": "node scripts/dev.mjs",
     "build": "turbo run build",
     "lint": "biome check .",
@@ -139,8 +141,8 @@ Root command wiring:
     "db:migrate": "pnpm --filter @safrs/database migrate",
     "db:seed": "pnpm --filter @safrs/database seed",
     "db:reset": "pnpm --filter @safrs/database reset",
-    "project:new": "node tooling/project-wizard/src/cli.mjs",
-    "capability:add": "node tooling/capabilities/src/cli.mjs",
+    "project:new": "node tools/project-wizard/src/cli.mjs",
+    "capability:add": "node tools/capabilities/src/cli.mjs",
     "prepare": "husky"
   }
 }
@@ -409,22 +411,28 @@ git commit -m "feat: add typed Hono RPC API"
 ### Task 5: Create the Next.js application
 
 **Files:**
-- Create: `apps/web/package.json`
-- Create: `apps/web/tsconfig.json`
-- Create: `apps/web/next.config.ts`
-- Create: `apps/web/postcss.config.mjs`
-- Create: `apps/web/src/app/globals.css`
-- Create: `apps/web/src/app/layout.tsx`
-- Create: `apps/web/src/app/page.tsx`
-- Create: `apps/web/src/app/loading.tsx`
-- Create: `apps/web/src/app/error.tsx`
-- Create: `apps/web/src/app/global-error.tsx`
-- Create: `apps/web/src/app/not-found.tsx`
-- Create: `apps/web/src/app/api/[[...route]]/route.ts`
-- Create: `apps/web/src/components/demo-form.tsx`
-- Create: `apps/web/src/lib/api-client.ts`
-- Create: `apps/web/src/lib/server-data.ts`
-- Create: `apps/web/src/app/page.test.tsx`
+- Create: `projects/golden-path/AGENTS.md`
+- Create: `projects/golden-path/README.md`
+- Create: `projects/golden-path/docs/architecture.md`
+- Create: `projects/golden-path/docs/data.md`
+- Create: `projects/golden-path/docs/testing.md`
+- Create: `projects/golden-path/tests/README.md`
+- Create: `projects/golden-path/apps/web/package.json`
+- Create: `projects/golden-path/apps/web/tsconfig.json`
+- Create: `projects/golden-path/apps/web/next.config.ts`
+- Create: `projects/golden-path/apps/web/postcss.config.mjs`
+- Create: `projects/golden-path/apps/web/src/app/globals.css`
+- Create: `projects/golden-path/apps/web/src/app/layout.tsx`
+- Create: `projects/golden-path/apps/web/src/app/page.tsx`
+- Create: `projects/golden-path/apps/web/src/app/loading.tsx`
+- Create: `projects/golden-path/apps/web/src/app/error.tsx`
+- Create: `projects/golden-path/apps/web/src/app/global-error.tsx`
+- Create: `projects/golden-path/apps/web/src/app/not-found.tsx`
+- Create: `projects/golden-path/apps/web/src/app/api/[[...route]]/route.ts`
+- Create: `projects/golden-path/apps/web/src/components/demo-form.tsx`
+- Create: `projects/golden-path/apps/web/src/lib/api-client.ts`
+- Create: `projects/golden-path/apps/web/src/lib/server-data.ts`
+- Create: `projects/golden-path/apps/web/src/app/page.test.tsx`
 - Create: `packages/ui/package.json`
 - Create: `packages/ui/tsconfig.json`
 - Create: `packages/ui/src/index.ts`
@@ -460,7 +468,7 @@ export { handler as DELETE, handler as GET, handler as PATCH, handler as POST, h
 
 - [ ] **Step 5: Implement server-first rendering**
 
-The page is a Server Component. It performs independent reads in parallel, uses Suspense for dynamic status, marks reusable public status reads with explicit cache policy, and passes only serializable values into `DemoForm`. The form is the smallest possible Client Component and uses the typed Hono client.
+The project begins as a complete SAFRS capsule with objective, owner, boundaries, non-goals, exact commands, runtime/data dependencies, sensitive surfaces, and links to canonical root policy. The page is a Server Component. It performs independent reads in parallel, uses Suspense for dynamic status, marks reusable public status reads with explicit cache policy, and passes only serializable values into `DemoForm`. The form is the smallest possible Client Component and uses the typed Hono client.
 
 - [ ] **Step 6: Add recovery UI and framework optimizations**
 
@@ -474,7 +482,7 @@ Expected: PASS with no environment secret printed.
 - [ ] **Step 8: Commit the application**
 
 ~~~bash
-git add apps/web packages/ui pnpm-lock.yaml
+git add projects/golden-path packages/ui pnpm-lock.yaml
 git commit -m "feat: add Next.js golden-path application"
 ~~~
 
@@ -483,11 +491,11 @@ git commit -m "feat: add Next.js golden-path application"
 ### Task 6: Build human-readable doctor, setup, and development startup
 
 **Files:**
-- Create: `tooling/doctor/package.json`
-- Create: `tooling/doctor/src/checks.mjs`
-- Create: `tooling/doctor/src/messages.mjs`
-- Create: `tooling/doctor/src/cli.mjs`
-- Create: `tooling/doctor/test/checks.test.mjs`
+- Create: `tools/doctor/package.json`
+- Create: `tools/doctor/src/checks.mjs`
+- Create: `tools/doctor/src/messages.mjs`
+- Create: `tools/doctor/src/cli.mjs`
+- Create: `tools/doctor/test/checks.test.mjs`
 - Create: `scripts/setup.mjs`
 - Create: `scripts/dev.mjs`
 - Create: `scripts/lib/process.mjs`
@@ -514,7 +522,7 @@ Also test missing Node, missing environment file, unsafe production-like URL, he
 
 - [ ] **Step 2: Confirm tests fail**
 
-Run: `node --test tooling/doctor/test/*.test.mjs scripts/lib/*.test.mjs`
+Run: `node --test tools/doctor/test/*.test.mjs scripts/lib/*.test.mjs`
 Expected: FAIL because diagnostics are missing.
 
 - [ ] **Step 3: Implement read-only checks and redaction**
@@ -540,7 +548,7 @@ Expected: database becomes healthy, generation/migration/seed succeed, and docto
 - [ ] **Step 7: Commit operator tooling**
 
 ~~~bash
-git add tooling/doctor scripts/setup.mjs scripts/dev.mjs scripts/lib
+git add tools/doctor scripts/setup.mjs scripts/dev.mjs scripts/lib
 git commit -m "feat: add human-readable setup and diagnostics"
 ~~~
 
@@ -549,12 +557,12 @@ git commit -m "feat: add human-readable setup and diagnostics"
 ### Task 7: Add the SAFRS project wizard
 
 **Files:**
-- Create: `tooling/project-wizard/package.json`
-- Create: `tooling/project-wizard/src/model.mjs`
-- Create: `tooling/project-wizard/src/render.mjs`
-- Create: `tooling/project-wizard/src/cli.mjs`
-- Create: `tooling/project-wizard/test/model.test.mjs`
-- Create: `tooling/project-wizard/test/render.test.mjs`
+- Create: `tools/project-wizard/package.json`
+- Create: `tools/project-wizard/src/model.mjs`
+- Create: `tools/project-wizard/src/render.mjs`
+- Create: `tools/project-wizard/src/cli.mjs`
+- Create: `tools/project-wizard/test/model.test.mjs`
+- Create: `tools/project-wizard/test/render.test.mjs`
 
 **Interfaces:**
 - Produces: `normalizeProjectAnswers(input)`, `renderProjectCapsule(model)`, preview/apply CLI.
@@ -566,7 +574,7 @@ Test slug normalization, rejection of path traversal, sensitive-domain risk elev
 
 - [ ] **Step 2: Verify tests fail**
 
-Run: `node --test tooling/project-wizard/test/*.test.mjs`
+Run: `node --test tools/project-wizard/test/*.test.mjs`
 Expected: FAIL because wizard functions do not exist.
 
 - [ ] **Step 3: Implement the product-language model**
@@ -585,7 +593,7 @@ Expected: a complete capsule passes `tools/safrs/check_topology.py` and does not
 - [ ] **Step 6: Commit the wizard**
 
 ~~~bash
-git add tooling/project-wizard
+git add tools/project-wizard
 git commit -m "feat: add SAFRS project creation wizard"
 ~~~
 
@@ -594,17 +602,17 @@ git commit -m "feat: add SAFRS project creation wizard"
 ### Task 8: Add optional capability manifests and selector
 
 **Files:**
-- Create: `tooling/capabilities/package.json`
-- Create: `tooling/capabilities/src/schema.mjs`
-- Create: `tooling/capabilities/src/catalog.mjs`
-- Create: `tooling/capabilities/src/cli.mjs`
-- Create: `tooling/capabilities/test/catalog.test.mjs`
-- Create: `tooling/capabilities/manifests/email.json`
-- Create: `tooling/capabilities/manifests/stripe.json`
-- Create: `tooling/capabilities/manifests/ai.json`
-- Create: `tooling/capabilities/manifests/electron.json`
-- Create: `tooling/capabilities/manifests/wxt.json`
-- Create: `tooling/capabilities/manifests/python.json`
+- Create: `tools/capabilities/package.json`
+- Create: `tools/capabilities/src/schema.mjs`
+- Create: `tools/capabilities/src/catalog.mjs`
+- Create: `tools/capabilities/src/cli.mjs`
+- Create: `tools/capabilities/test/catalog.test.mjs`
+- Create: `tools/capabilities/manifests/email.json`
+- Create: `tools/capabilities/manifests/stripe.json`
+- Create: `tools/capabilities/manifests/ai.json`
+- Create: `tools/capabilities/manifests/electron.json`
+- Create: `tools/capabilities/manifests/wxt.json`
+- Create: `tools/capabilities/manifests/python.json`
 
 **Interfaces:**
 - Produces: `CapabilityManifest` validation and `pnpm capability:add` preview/selection.
@@ -616,7 +624,7 @@ For every manifest, require `id`, `label`, `description`, `risk`, `dependencies`
 
 - [ ] **Step 2: Verify tests fail**
 
-Run: `node --test tooling/capabilities/test/*.test.mjs`
+Run: `node --test tools/capabilities/test/*.test.mjs`
 Expected: FAIL because the catalog is absent.
 
 - [ ] **Step 3: Implement manifests**
@@ -629,13 +637,13 @@ The selector previews dependencies, files, environment names, commands, and risk
 
 - [ ] **Step 5: Verify absence and selection**
 
-Run: `node --test tooling/capabilities/test/*.test.mjs`
+Run: `node --test tools/capabilities/test/*.test.mjs`
 Expected: PASS and prove unselected packages are not installed.
 
 - [ ] **Step 6: Commit capability framework**
 
 ~~~bash
-git add tooling/capabilities
+git add tools/capabilities
 git commit -m "feat: add optional capability catalog"
 ~~~
 
@@ -685,8 +693,8 @@ git commit -m "chore: add fast staged-file hygiene"
 - Create: `tests/contracts/hono-rpc-contract.test.ts`
 - Create: `tests/contracts/environment-boundary.test.ts`
 - Create: `tests/integration/database.test.ts`
-- Create: `apps/web/playwright.config.ts`
-- Create: `apps/web/e2e/golden-path.spec.ts`
+- Create: `projects/golden-path/apps/web/playwright.config.ts`
+- Create: `projects/golden-path/apps/web/e2e/golden-path.spec.ts`
 - Create: `vitest.workspace.ts`
 - Modify: package test configurations where needed.
 
@@ -733,7 +741,7 @@ In a temporary worktree copy, rename `name` to `title` in the POST schema and ru
 - [ ] **Step 7: Commit tests**
 
 ~~~bash
-git add tests apps/web/playwright.config.ts apps/web/e2e vitest.workspace.ts
+git add tests projects/golden-path/apps/web/playwright.config.ts projects/golden-path/apps/web/e2e vitest.workspace.ts
 git commit -m "test: prove golden-path behavior"
 ~~~
 
@@ -800,10 +808,11 @@ git commit -m "ci: add PR-only updates and full verification"
 
 **Files:**
 - Modify: `AGENTS.md`
-- Create: `apps/web/AGENTS.md`
+- Modify: `projects/golden-path/AGENTS.md`
+- Create: `projects/golden-path/apps/web/AGENTS.md`
 - Create: `packages/api/AGENTS.md`
 - Create: `packages/database/AGENTS.md`
-- Create: `tooling/AGENTS.md`
+- Create: `tools/AGENTS.md`
 - Modify: `README.md`
 - Modify: `03_ARCHITECTURE.md`
 - Modify: `08_DECISIONS.md` or create an accepted ADR under `docs/adrs/`
@@ -811,7 +820,7 @@ git commit -m "ci: add PR-only updates and full verification"
 - Modify: `.safrs/tool-inventory.json`
 - Modify: `MANIFEST.txt`
 - Regenerate: `SHA256SUMS.txt` according to its documented scope.
-- Create: `CODEX_IMPLEMENT_GOLDEN_PATH.md`
+- Modify: `CODEX_IMPLEMENT_GOLDEN_PATH.md`
 - Create: `docs/evidence/SAFRS_GOLDEN_PATH_VERIFICATION.md`
 - Move after acceptance: `docs/plans/active/SAFRS_BOOTSTRAP_IMPLEMENTATION.md` to `docs/plans/completed/SAFRS_BOOTSTRAP_IMPLEMENTATION.md`
 
@@ -830,7 +839,7 @@ Expected: FAIL on newly required runtime routing until files are added.
 
 - [ ] **Step 3: Add focused agent instructions and canonical architecture**
 
-Record the single-deployment Next.js/Hono decision, package boundaries, human-facing commands, optional capability rule, Active LTS policy, and R2/R3 boundaries. Keep root numeric documents in the root; runtime code remains in `apps`/`packages`/`tooling`.
+Record the single-deployment Next.js/Hono decision, package boundaries, human-facing commands, optional capability rule, Active LTS policy, and R2/R3 boundaries. Keep root numeric documents in the root; project applications remain inside `projects/<project>/apps/*`, reusable capabilities in `packages/*`, and repository tooling in `tools/*`.
 
 - [ ] **Step 4: Create the reusable Codex prompt**
 
@@ -867,7 +876,7 @@ Use the exact Sol Advisor reviewer lane only after its preflight passes. The rev
 - [ ] **Step 8: Commit final integration**
 
 ~~~bash
-git add AGENTS.md apps packages tooling README.md 03_ARCHITECTURE.md 08_DECISIONS.md docs .safrs MANIFEST.txt SHA256SUMS.txt CODEX_IMPLEMENT_GOLDEN_PATH.md
+git add AGENTS.md projects packages tools README.md 03_ARCHITECTURE.md 08_DECISIONS.md docs .safrs MANIFEST.txt SHA256SUMS.txt CODEX_IMPLEMENT_GOLDEN_PATH.md
 git commit -m "docs: complete SAFRS golden-path integration"
 ~~~
 

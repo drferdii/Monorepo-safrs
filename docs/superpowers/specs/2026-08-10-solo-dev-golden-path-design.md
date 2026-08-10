@@ -67,8 +67,12 @@ This choice avoids requiring Chief to operate two deployments while retaining an
 ### 4.2 Default topology
 
 ```text
-apps/
-└── web/                    Next.js application and Hono route adapter
+projects/
+└── golden-path/
+    ├── AGENTS.md           SAFRS product boundary
+    ├── docs/               Product architecture, data, and testing context
+    └── apps/
+        └── web/            Next.js application and Hono route adapter
 
 packages/
 ├── api/                    Hono routes, typed client, and API errors
@@ -78,21 +82,18 @@ packages/
 ├── ui/                     Shared presentation components
 └── config/                 Shared TypeScript and repository configuration
 
-tooling/
+tools/
 ├── doctor/                 Prerequisite and health diagnostics
 ├── project-wizard/         Project creation workflow
 └── capabilities/           Optional capability installers and manifests
-
-projects/
-└── <project>/              SAFRS project capsule and product-specific context
 ```
 
-`apps/` contains deployable software. `packages/` contains shared runtime capabilities. `tooling/` contains repository operator tools. `projects/` remains the SAFRS ownership and context boundary. A project capsule points to its deployable app and packages instead of duplicating their source.
+`projects/` remains the SAFRS ownership and context boundary and contains each project's deployable applications. `packages/` contains product-neutral shared runtime capabilities. `tools/` contains repository-wide operator tooling. This preserves the canonical SAFRS topology without changing the simple root commands used by Chief.
 
 ### 4.3 Dependency direction
 
 ```text
-apps/web
+projects/golden-path/apps/web
   -> packages/api
   -> packages/database
   -> packages/env
@@ -111,7 +112,7 @@ packages/ui
   -> packages/schemas only when a UI contract requires it
 ```
 
-Shared packages must never import from `apps/` or from another project's private directory. Turborepo boundaries and tests enforce this rule.
+Shared packages must never import from `projects/` or from another project's private directory. Turborepo boundaries and tests enforce this rule.
 
 ## 5. Next.js golden path
 
