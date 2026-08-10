@@ -30,3 +30,13 @@ export function assertDisposableDatabase(connectionUrl: string): URL {
 
   return target;
 }
+
+export function assertDisposableTestDatabase(connectionUrl: string): URL {
+  const target = assertDisposableDatabase(connectionUrl);
+
+  if (!target.pathname.endsWith("_test")) {
+    return rejectReset();
+  }
+
+  return target;
+}

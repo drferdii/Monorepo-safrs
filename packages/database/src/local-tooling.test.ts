@@ -7,7 +7,7 @@ import {
   writeFileSync,
 } from "node:fs";
 import { tmpdir } from "node:os";
-import { join, relative, resolve } from "node:path";
+import { join, resolve } from "node:path";
 import { afterEach, describe, expect, it } from "vitest";
 import { resolveLocalToolingDatabaseUrl } from "./local-tooling.js";
 
@@ -101,29 +101,25 @@ describe("resolveLocalToolingDatabaseUrl", () => {
 
   it("keeps authored generated siblings visible to Biome", () => {
     const rootDirectory = resolve(import.meta.dirname, "../../..");
-    const authoredSibling = join(
-      rootDirectory,
-      "packages/database/src/generated/authored-sibling.ts",
-    );
     const biomeCli = join(
       rootDirectory,
       "node_modules/@biomejs/biome/bin/biome",
     );
+    const result = spawnSync(
+      process.execPath,
+      [
+        biomeCli,
+        "lint",
+        "--write",
+        "--unsafe",
+        "--stdin-file-path",
+        "packages/database/src/generated/authored-sibling.ts",
+      ],
+      { cwd: rootDirectory, encoding: "utf8", input: "const unused = 1;\n" },
+    );
 
-    writeFileSync(authoredSibling, "const unused = 1;\n");
-
-    try {
-      const result = spawnSync(
-        process.execPath,
-        [biomeCli, "check", relative(rootDirectory, authoredSibling)],
-        { cwd: rootDirectory, encoding: "utf8" },
-      );
-
-      expect(result.status, result.stderr).toBe(0);
-      expect(`${result.stdout}${result.stderr}`).toContain("noUnusedVariables");
-    } finally {
-      rmSync(authoredSibling, { force: true });
-    }
+    expect(result.status, result.stderr).toBe(0);
+    expect(result.stdout).toContain("const _unused = 1;");
   });
 
   it("runs Prisma generate from the declared local fallback without DATABASE_URL", () => {

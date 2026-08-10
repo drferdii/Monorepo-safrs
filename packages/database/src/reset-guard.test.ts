@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
-import { assertDisposableDatabase } from "./reset-guard.js";
+import {
+  assertDisposableDatabase,
+  assertDisposableTestDatabase,
+} from "./reset-guard.js";
 
 describe("assertDisposableDatabase", () => {
   it("accepts the declared local database", () => {
@@ -25,5 +28,21 @@ describe("assertDisposableDatabase", () => {
     expect(() => assertDisposableDatabase(url)).toThrow(
       /^\[DATABASE\] RESET DITOLAK/,
     );
+  });
+
+  it("rejects a shared local database as an integration-test target", () => {
+    expect(() =>
+      assertDisposableTestDatabase(
+        "postgresql://safrs:safrs@127.0.0.1:54329/safrs_local",
+      ),
+    ).toThrow(/^\[DATABASE\] RESET DITOLAK/);
+  });
+
+  it("accepts a dedicated local test database", () => {
+    expect(
+      assertDisposableTestDatabase(
+        "postgresql://safrs:safrs@127.0.0.1:54329/safrs_seed_123_test",
+      ).pathname,
+    ).toBe("/safrs_seed_123_test");
   });
 });
