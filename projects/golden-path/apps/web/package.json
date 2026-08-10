@@ -6,13 +6,16 @@
   "scripts": {
     "build": "next build",
     "dev": "next dev",
+    "dev:email": "email dev --dir src/email",
     "lint": "biome check src",
     "start": "next start",
+    "stripe:listen": "stripe listen --forward-to localhost:3000/api/webhooks/stripe",
     "test": "vitest run",
     "test:e2e": "playwright test --config playwright.config.ts",
     "typecheck": "tsc --project tsconfig.json"
   },
   "dependencies": {
+    "@react-email/components": "catalog:",
     "@safrs/api": "workspace:*",
     "@safrs/database": "workspace:*",
     "@safrs/env": "workspace:*",
@@ -20,7 +23,9 @@
     "hono": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
-    "react-dom": "catalog:"
+    "react-dom": "catalog:",
+    "resend": "catalog:",
+    "stripe": "catalog:"
   },
   "devDependencies": {
     "@safrs/config": "workspace:*",
@@ -29,6 +34,7 @@
     "@types/node": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
+    "react-email": "catalog:",
     "tailwindcss": "catalog:",
     "typescript": "catalog:",
     "vitest": "catalog:"
