@@ -1,0 +1,34 @@
+{
+  "name": "@safrs/database",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./reset-guard": "./src/reset-guard.ts"
+  },
+  "scripts": {
+    "generate": "prisma generate",
+    "migrate": "prisma migrate deploy",
+    "seed": "node --experimental-strip-types src/seed.ts",
+    "reset": "node --experimental-strip-types src/reset.ts",
+    "studio": "prisma studio",
+    "lint": "biome check src/client.ts src/index.ts src/reset-guard.ts src/reset-guard.test.ts src/reset.ts src/seed.ts prisma.config.ts",
+    "test": "vitest run",
+    "typecheck": "tsc --project tsconfig.json"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "catalog:",
+    "@prisma/client": "catalog:",
+    "@safrs/env": "workspace:*",
+    "pg": "catalog:"
+  },
+  "devDependencies": {
+    "@safrs/config": "workspace:*",
+    "@types/node": "catalog:",
+    "@types/pg": "catalog:",
+    "prisma": "catalog:",
+    "typescript": "catalog:",
+    "vitest": "catalog:"
+  }
+}
