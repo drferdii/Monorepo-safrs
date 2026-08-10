@@ -1,7 +1,9 @@
 import { createEnv } from "@t3-oss/env-core";
 import { z } from "zod";
 
-type ServerEnvironment = NodeJS.ProcessEnv;
+type ServerEnvironment = Partial<
+  Record<"DATABASE_URL" | "NODE_ENV" | "APP_URL", string | undefined>
+>;
 
 const serverSchema = {
   DATABASE_URL: z.url(),
@@ -12,7 +14,11 @@ const serverSchema = {
 export function createServerEnv(environment: ServerEnvironment) {
   return createEnv({
     server: serverSchema,
-    runtimeEnv: environment,
+    runtimeEnv: {
+      DATABASE_URL: environment.DATABASE_URL,
+      NODE_ENV: environment.NODE_ENV,
+      APP_URL: environment.APP_URL,
+    },
     emptyStringAsUndefined: true,
     onValidationError: (issues) => {
       const variableNames = issues
@@ -35,4 +41,8 @@ export function createServerEnv(environment: ServerEnvironment) {
   });
 }
 
-export const serverEnv = createServerEnv(process.env);
+export const serverEnv = createServerEnv({
+  DATABASE_URL: process.env.DATABASE_URL,
+  NODE_ENV: process.env.NODE_ENV,
+  APP_URL: process.env.APP_URL,
+});
