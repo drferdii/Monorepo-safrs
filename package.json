@@ -8,7 +8,7 @@
   },
   "scripts": {
     "setup": "node scripts/setup.mjs",
-    "doctor": "node tooling/doctor/src/cli.mjs",
+    "doctor": "node tools/doctor/src/cli.mjs",
     "dev": "node scripts/dev.mjs",
     "build": "turbo run build",
     "lint": "biome check .",
@@ -26,8 +26,8 @@
     "db:migrate": "pnpm --filter @safrs/database migrate",
     "db:seed": "pnpm --filter @safrs/database seed",
     "db:reset": "pnpm --filter @safrs/database reset",
-    "project:new": "node tooling/project-wizard/src/cli.mjs",
-    "capability:add": "node tooling/capabilities/src/cli.mjs",
+    "project:new": "node tools/project-wizard/src/cli.mjs",
+    "capability:add": "node tools/capabilities/src/cli.mjs",
     "prepare": "husky"
   },
   "devDependencies": {

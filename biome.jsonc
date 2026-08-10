@@ -1,6 +1,7 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
   "files": {
+    "includes": ["**", "!!**/.safrs"],
     "ignoreUnknown": true
   },
   "formatter": {
