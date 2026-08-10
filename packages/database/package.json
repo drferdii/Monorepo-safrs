@@ -8,12 +8,12 @@
     "./reset-guard": "./src/reset-guard.ts"
   },
   "scripts": {
-    "generate": "prisma generate",
-    "migrate": "prisma migrate deploy",
-    "seed": "node --experimental-strip-types src/seed.ts",
+    "generate": "node --experimental-strip-types scripts/run-local-prisma.mjs generate",
+    "migrate": "node --experimental-strip-types scripts/run-local-prisma.mjs migrate",
+    "seed": "node --experimental-strip-types scripts/run-local-prisma.mjs seed",
     "reset": "node --experimental-strip-types src/reset.ts",
-    "studio": "prisma studio",
-    "lint": "biome check src/client.ts src/index.ts src/reset-guard.ts src/reset-guard.test.ts src/reset.ts src/seed.ts prisma.config.ts",
+    "studio": "node --experimental-strip-types scripts/run-local-prisma.mjs studio",
+    "lint": "biome check src/client.ts src/index.ts src/local-tooling.ts src/local-tooling.test.ts src/reset-guard.ts src/reset-guard.test.ts src/reset.ts src/seed.ts prisma.config.ts scripts/run-local-prisma.mjs",
     "test": "vitest run",
     "typecheck": "tsc --project tsconfig.json"
   },

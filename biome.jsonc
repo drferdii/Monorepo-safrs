@@ -1,7 +1,12 @@
 {
   "$schema": "https://biomejs.dev/schemas/2.5.7/schema.json",
   "files": {
-    "includes": ["**", "!!**/.safrs", "!!**/.turbo"],
+    "includes": [
+      "**",
+      "!!**/.safrs",
+      "!!**/.turbo",
+      "!!packages/database/src/generated"
+    ],
     "ignoreUnknown": true
   },
   "formatter": {

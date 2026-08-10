@@ -1,16 +1,24 @@
 import { execFileSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
+import { resolveLocalToolingDatabaseUrl } from "./local-tooling.ts";
 import { assertDisposableDatabase } from "./reset-guard.ts";
 
-assertDisposableDatabase(process.env.DATABASE_URL ?? "");
+const rootDirectory = fileURLToPath(new URL("../../../", import.meta.url));
+const databaseUrl = resolveLocalToolingDatabaseUrl(process.env, rootDirectory);
 
-const pnpmCommand = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
+assertDisposableDatabase(databaseUrl);
+process.env.DATABASE_URL = databaseUrl;
 
-execFileSync(pnpmCommand, ["exec", "prisma", "migrate", "reset", "--force"], {
-  cwd: new URL("..", import.meta.url),
+const prismaCli = fileURLToPath(
+  new URL("../node_modules/prisma/build/index.js", import.meta.url),
+);
+
+execFileSync(process.execPath, [prismaCli, "migrate", "reset", "--force"], {
+  cwd: fileURLToPath(new URL("..", import.meta.url)),
   stdio: "inherit",
 });
 
-execFileSync(pnpmCommand, ["exec", "prisma", "db", "seed"], {
-  cwd: new URL("..", import.meta.url),
+execFileSync(process.execPath, [prismaCli, "db", "seed"], {
+  cwd: fileURLToPath(new URL("..", import.meta.url)),
   stdio: "inherit",
 });
