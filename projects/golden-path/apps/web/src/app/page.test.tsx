@@ -38,6 +38,8 @@ describe("ReadinessDesk", () => {
       }),
     );
 
-    expect(markup).toContain('aria-label="Status akhir: Perlu perhatian"');
+    expect(markup).toContain(
+      '<li aria-label="Status akhir: Perlu perhatian" class="flow-step flow-step--attention"><span>04</span><strong>Perlu perhatian</strong>',
+    );
   });
 });

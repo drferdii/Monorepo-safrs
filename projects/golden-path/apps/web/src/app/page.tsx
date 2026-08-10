@@ -35,18 +35,22 @@ export function ReadinessDesk({ readiness }: { readiness: Readiness }) {
             <strong>API bertipe</strong>
             <small>Hono memvalidasi kontrak data.</small>
           </li>
-          <li
-            aria-label={`Status akhir: ${aggregateLabel}`}
-            className={`flow-step flow-step--${aggregateState}`}
-          >
+          <li className="flow-step flow-step--ready">
             <span>03</span>
             <strong>Web</strong>
             <small>Halaman server menampilkan hasil.</small>
           </li>
-          <li className="flow-step flow-step--ready">
+          <li
+            aria-label={`Status akhir: ${aggregateLabel}`}
+            className={`flow-step flow-step--${aggregateState}`}
+          >
             <span>04</span>
-            <strong>Siap</strong>
-            <small>Buktikan alur dengan satu contoh.</small>
+            <strong>{aggregateLabel}</strong>
+            <small>
+              {aggregateState === "ready"
+                ? "Buktikan alur dengan satu contoh."
+                : "Periksa status layanan sebelum menyimpan contoh."}
+            </small>
           </li>
         </ol>
       </section>
