@@ -1,11 +1,11 @@
 "use client";
 
-import { createApiClient } from "@safrs/api/client";
+import { type ApiClient, createApiClient } from "@safrs/api/client";
 import { clientEnv } from "@safrs/env/client";
 
-type ApiErrorBody = {
-  message?: string;
-};
+type CreateDemoRequest = (
+  name: string,
+) => ReturnType<ApiClient["api"]["demos"]["$post"]>;
 
 export type DemoSubmission =
   | { name: string; status: "success" }
@@ -26,21 +26,23 @@ export function createBrowserApiClient(locationOrigin: string) {
 }
 
 export async function submitDemo(
-  request: (name: string) => Promise<Response>,
+  request: CreateDemoRequest,
   name: string,
 ): Promise<DemoSubmission> {
   const response = await request(name);
 
-  if (response.ok) {
-    const demo = (await response.json()) as { name: string };
+  if (response.status === 201) {
+    const demo = await response.json();
     return { name: demo.name, status: "success" };
   }
 
-  const error = (await response.json().catch(() => ({}))) as ApiErrorBody;
-  return {
-    message:
-      error.message ??
-      "Contoh belum tersimpan. Periksa koneksi lalu coba kembali.",
-    status: "error",
-  };
+  try {
+    const error = await response.json();
+    return { message: error.message, status: "error" };
+  } catch {
+    return {
+      message: "Contoh belum tersimpan. Periksa koneksi lalu coba kembali.",
+      status: "error",
+    };
+  }
 }

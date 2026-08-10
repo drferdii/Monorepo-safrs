@@ -5,7 +5,9 @@
   "type": "module",
   "scripts": {
     "build": "next build",
+    "dev": "next dev",
     "lint": "biome check src",
+    "start": "next start",
     "test": "vitest run",
     "typecheck": "tsc --project tsconfig.json"
   },
