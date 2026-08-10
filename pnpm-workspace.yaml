@@ -10,7 +10,7 @@ allowBuilds:
 
 catalog:
   "@biomejs/biome": 2.5.7
-  "@hono/zod-validator": 0.5.0
+  "@hono/zod-validator": 0.9.0
   "@prisma/adapter-pg": 7.9.1
   "@prisma/client": 7.9.1
   "@t3-oss/env-core": 0.13.8
