@@ -16,10 +16,12 @@ Read the repository [AGENTS.md](../../AGENTS.md), [SAFRS_SPEC.md](../../SAFRS_SP
 
 ## Exact commands
 
+- First-run diagnosis: `pnpm run doctor`
 - Lint: `pnpm --filter @safrs/web lint`
 - Type check: `pnpm --filter @safrs/web typecheck`
 - Test: `pnpm --filter @safrs/web test`
 - Build: `pnpm --filter @safrs/web build`
+- Browser journey: `pnpm test:e2e`
 
 ## Runtime, data, and sensitive surfaces
 
