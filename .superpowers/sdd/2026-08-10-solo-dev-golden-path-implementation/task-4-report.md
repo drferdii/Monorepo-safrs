@@ -34,6 +34,10 @@
 - `zod`: `4.4.3`
 - `@hono/zod-validator`: `0.9.0` (replacing incompatible catalog `0.5.0`)
 
+## Commit
+
+- `45fc591 feat: add typed Hono RPC API`
+
 ## Verification
 
 - `pnpm install` — passed.
