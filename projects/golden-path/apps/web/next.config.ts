@@ -11,6 +11,7 @@ const nextConfig: NextConfig = {
     "@safrs/env",
     "@safrs/schemas",
     "@safrs/ui",
+    "@sentra/design-tokens",
   ],
   typedRoutes: true,
 };

@@ -1,19 +1,6 @@
 import type { Metadata } from "next";
-import { Archivo, JetBrains_Mono } from "next/font/google";
+import { fontMono, fontSans } from "@sentra/design-tokens/fonts";
 import "./globals.css";
-
-/* Sentra type spec: Archivo, one family — the display voice comes from the
-   width axis (--font-width-display: 112), not a second typeface. */
-const archivo = Archivo({
-  axes: ["wdth"],
-  subsets: ["latin"],
-  variable: "--font-sans",
-});
-
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ["latin"],
-  variable: "--font-mono",
-});
 
 export const metadata: Metadata = {
   description: "Pemeriksaan kesiapan alur SAFRS.",
@@ -25,7 +12,7 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="id">
-      <body className={`${archivo.variable} ${jetbrainsMono.variable}`}>
+      <body className={`${fontSans.variable} ${fontMono.variable}`}>
         {children}
       </body>
     </html>
