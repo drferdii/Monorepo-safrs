@@ -1,6 +1,6 @@
 @import "tailwindcss";
-@import "@sentra/design-tokens/tokens.css";
-@import "@sentra/design-tokens/tailwind.css";
+@import "@sentra/token/tokens.css";
+@import "@sentra/token/tailwind.css";
 
 /* Sentra design tokens only — raw colour/radius values are forbidden here and
    enforced by `node scripts/check-tokens.mjs` (see packages/token). */
