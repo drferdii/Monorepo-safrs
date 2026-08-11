@@ -1,5 +1,11 @@
 import type { NextConfig } from "next";
 
+// Build-time environment validation (Feature #2): importing the shared server
+// environment here makes `next build` fail fast with an explicit error when a
+// required variable is missing, instead of crashing at first request in
+// production. Runtime code paths still consume the same validated object.
+import "@safrs/env/server";
+
 const nextConfig: NextConfig = {
   cacheComponents: true,
   experimental: {
