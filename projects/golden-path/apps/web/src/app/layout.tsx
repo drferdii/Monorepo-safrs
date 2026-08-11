@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import { fontMono, fontSans } from "@sentra/token/fonts";
+import type { Metadata } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
