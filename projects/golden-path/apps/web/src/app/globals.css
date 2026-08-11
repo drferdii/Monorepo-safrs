@@ -3,7 +3,7 @@
 @import "@sentra/design-tokens/tailwind.css";
 
 /* Sentra design tokens only — raw colour/radius values are forbidden here and
-   enforced by `node scripts/check-tokens.mjs` (see packages/design-tokens). */
+   enforced by `node scripts/check-tokens.mjs` (see packages/token). */
 
 * {
   box-sizing: border-box;
