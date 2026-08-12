@@ -12,6 +12,7 @@
     "stripe:listen": "stripe listen --forward-to localhost:3000/api/webhooks/stripe",
     "test": "vitest run",
     "test:e2e": "playwright test --config playwright.config.ts",
+    "test:e2e:update": "playwright test --config playwright.config.ts --update-snapshots",
     "typecheck": "tsc --project tsconfig.json"
   },
   "dependencies": {
@@ -19,6 +20,7 @@
     "@safrs/api": "workspace:*",
     "@safrs/database": "workspace:*",
     "@safrs/env": "workspace:*",
+    "@safrs/telemetry": "workspace:*",
     "@safrs/ui": "workspace:*",
     "@sentra/token": "workspace:*",
     "hono": "catalog:",
