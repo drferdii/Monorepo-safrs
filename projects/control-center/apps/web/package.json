@@ -5,9 +5,9 @@
   "type": "module",
   "scripts": {
     "build": "next build",
-    "dev": "next dev --port 3100",
+    "dev": "next dev",
     "lint": "biome check src",
-    "start": "next start --port 3100",
+    "start": "next start",
     "test": "node --test src/**/*.test.ts",
     "typecheck": "tsc --project tsconfig.json"
   },
