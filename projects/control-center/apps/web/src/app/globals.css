@@ -1,0 +1,221 @@
+@import "tailwindcss";
+@import "@sentra/token/tokens.css";
+@import "@sentra/token/tailwind.css";
+
+/* Sentra design tokens only — raw colour/radius values are forbidden here and
+   enforced by `node scripts/check-tokens.mjs` (see packages/token). */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  background: var(--color-background-canvas);
+}
+
+body {
+  color: var(--color-text-primary);
+  font-family: var(--font-sans, var(--font-family-sans));
+  margin: 0;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+p {
+  color: var(--color-text-secondary);
+  line-height: var(--line-height-default);
+}
+
+a {
+  color: var(--color-accent-text);
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: var(--focus-ring-width) solid var(--color-focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+
+.shell {
+  margin: 0 auto;
+  max-width: 76rem;
+  padding: clamp(1.5rem, 5vw, 4rem) clamp(1rem, 4vw, 2.5rem);
+}
+
+.eyebrow {
+  color: var(--color-accent-text);
+  font-family: var(--font-mono, var(--font-family-mono));
+  font-size: 0.78rem;
+  font-weight: var(--font-weight-medium);
+  letter-spacing: var(--letter-spacing-label);
+  margin: 0 0 0.75rem;
+  text-transform: uppercase;
+}
+
+.page-header {
+  border-bottom: var(--border-width-hairline) solid var(--color-border-subtle);
+  padding-bottom: 2rem;
+}
+
+.page-header h1 {
+  font-size: clamp(1.9rem, 5vw, 3.4rem);
+  letter-spacing: var(--letter-spacing-display);
+  line-height: var(--line-height-tight);
+  margin-bottom: 1rem;
+}
+
+.lede {
+  max-width: 44rem;
+}
+
+.meta-rail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+}
+
+.meta-rail div {
+  display: grid;
+  gap: 0.2rem;
+}
+
+.meta-rail dt,
+.meta-rail .meta-label {
+  color: var(--color-text-secondary);
+  font-family: var(--font-mono, var(--font-family-mono));
+  font-size: 0.72rem;
+  letter-spacing: var(--letter-spacing-label);
+  text-transform: uppercase;
+}
+
+.meta-rail .meta-value {
+  font-weight: var(--font-weight-semibold);
+}
+
+.section {
+  border-bottom: var(--border-width-hairline) solid var(--color-border-subtle);
+  padding: 2.5rem 0;
+}
+
+.section:last-child {
+  border-bottom: 0;
+}
+
+.summary-grid {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  margin-top: 1.5rem;
+}
+
+.summary-tile {
+  border: var(--border-width-hairline) solid var(--color-border-subtle);
+  border-radius: var(--radius-structure);
+  padding: 1rem 1.1rem;
+}
+
+.summary-tile .count {
+  display: block;
+  font-size: 2rem;
+  font-weight: var(--font-weight-semibold);
+  line-height: var(--line-height-tight);
+}
+
+.summary-tile .label {
+  color: var(--color-text-secondary);
+  font-size: 0.85rem;
+}
+
+.feature-list {
+  display: grid;
+  gap: 1rem;
+  list-style: none;
+  margin: 1.5rem 0 0;
+  padding: 0;
+}
+
+.feature-card {
+  border: var(--border-width-hairline) solid var(--color-border-subtle);
+  border-left: 4px solid var(--color-border-strong);
+  border-radius: var(--radius-structure);
+  padding: 1.15rem 1.25rem;
+}
+
+.feature-card[data-status="connected"] {
+  border-left-color: var(--color-status-success);
+}
+
+.feature-card[data-status="partially-connected"],
+.feature-card[data-status="requires-configuration"],
+.feature-card[data-status="requires-human-action"] {
+  border-left-color: var(--color-status-warning);
+}
+
+.feature-card[data-status="error"] {
+  border-left-color: var(--color-status-danger);
+}
+
+.feature-card__head {
+  align-items: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  justify-content: space-between;
+}
+
+.feature-card h3 {
+  font-size: 1.05rem;
+  margin-bottom: 0.5rem;
+}
+
+.status-pill {
+  border: var(--border-width-hairline) solid var(--color-border-subtle);
+  border-radius: var(--radius-control);
+  font-family: var(--font-mono, var(--font-family-mono));
+  font-size: 0.7rem;
+  letter-spacing: var(--letter-spacing-label);
+  padding: 0.2rem 0.55rem;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.feature-card p {
+  margin-bottom: 0.6rem;
+}
+
+.feature-card p:last-child {
+  margin-bottom: 0;
+}
+
+.reason {
+  font-size: 0.9rem;
+}
+
+.caveat {
+  border-left: 3px solid var(--color-status-warning);
+  font-size: 0.9rem;
+  margin: 0.75rem 0 0;
+  padding-left: 0.75rem;
+}
+
+.entry-point {
+  font-family: var(--font-mono, var(--font-family-mono));
+  font-size: 0.82rem;
+}
+
+.problem-list {
+  margin: 1rem 0 0;
+  padding-left: 1.2rem;
+}
+
+@media (max-width: 40rem) {
+  .meta-rail {
+    gap: 1rem;
+  }
+}
