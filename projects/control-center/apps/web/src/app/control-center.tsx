@@ -256,35 +256,40 @@ function HomeSection({
           </span>
         </div>
         <div className="grid">
-          <div className="span-4">
+          <div className="span-7">
             <article className="panel">
               <div className="panel__body">
-                <p className="t-label">Working tree</p>
-                <h3>{live.dirtyPaths} changed paths</h3>
-                <p className="t-compact muted">
-                  Uncommitted changes in {live.repoRoot}.
-                </p>
+                <p className="t-label">Read from disk and git</p>
+                <dl className="factlist">
+                  <div>
+                    <dt>Working tree</dt>
+                    <dd>{live.dirtyPaths} changed paths</dd>
+                  </div>
+                  <div>
+                    <dt>Checkout</dt>
+                    <dd>{live.repoRoot}</dd>
+                  </div>
+                  <div>
+                    <dt>Features registered</dt>
+                    <dd>{live.features.length}</dd>
+                  </div>
+                  <div>
+                    <dt>Need attention</dt>
+                    <dd>{attention.length}</dd>
+                  </div>
+                  <div>
+                    <dt>Unmerged branches</dt>
+                    <dd>{live.unmergedBranches.length}</dd>
+                  </div>
+                </dl>
               </div>
             </article>
           </div>
           <div className="span-4">
             <article className="panel">
               <div className="panel__body">
-                <p className="t-label">Features registered</p>
-                <h3>{live.features.length}</h3>
-                <p className="t-compact muted">
-                  {attention.length === 0
-                    ? "All evidence found on disk."
-                    : `${attention.length} need attention.`}
-                </p>
-              </div>
-            </article>
-          </div>
-          <div className="span-4">
-            <article className="panel">
-              <div className="panel__body">
-                <p className="t-label">Unmerged branches</p>
-                <h3>{live.unmergedBranches.length}</h3>
+                <p className="t-label">Not on main</p>
+                <p className="t-data">{live.unmergedBranches.length}</p>
                 <p className="t-compact muted">
                   {live.unmergedBranches.length === 0
                     ? "Everything local is on main."
@@ -461,17 +466,40 @@ function ProjectsSection({
         </div>
 
         <div className="grid">
-          {workspace.groups.map((group) => (
-            <div className="span-4" key={group.group}>
-              <article className="panel">
-                <div className="panel__body">
-                  <p className="t-label">{group.group}</p>
-                  <p className="t-data">{group.count}</p>
-                  <p className="t-compact muted">workspace members</p>
-                </div>
-              </article>
-            </div>
-          ))}
+          <div className="span-7">
+            <article className="panel">
+              <div className="panel__body">
+                <p className="t-label">Workspace members</p>
+                <dl className="factlist">
+                  {workspace.groups.map((group) => (
+                    <div key={group.group}>
+                      <dt>{group.group}</dt>
+                      <dd>{group.count}</dd>
+                    </div>
+                  ))}
+                  <div>
+                    <dt>Total</dt>
+                    <dd>{workspace.members.length}</dd>
+                  </div>
+                </dl>
+              </div>
+            </article>
+          </div>
+          <div className="span-4">
+            <article className="panel">
+              <div className="panel__body">
+                <p className="t-label">Widest reach</p>
+                <p className="t-data">
+                  {byReach[0] ? byReach[0].blastRadius.length : 0}
+                </p>
+                <p className="t-compact muted">
+                  {byReach[0]
+                    ? `${byReach[0].name} moves ${byReach[0].blastRadius.length} other members`
+                    : "No workspace dependency recorded."}
+                </p>
+              </div>
+            </article>
+          </div>
         </div>
 
         {workspace.problems.length > 0 ? (
@@ -790,6 +818,33 @@ function HealthSection({
             </div>
 
             <div className="grid">
+              <div className="span-7">
+                <article className="panel">
+                  <div className="panel__body">
+                    <p className="t-label">Checked by tools/doctor</p>
+                    <dl className="factlist">
+                      <div>
+                        <dt>Verdict</dt>
+                        <dd>{health.ok ? "Ready" : "Not ready"}</dd>
+                      </div>
+                      <div>
+                        <dt>Checks passed</dt>
+                        <dd>
+                          {ready.length} of {health.checks.length}
+                        </dd>
+                      </div>
+                      <div>
+                        <dt>Blocked</dt>
+                        <dd>{blocked.length}</dd>
+                      </div>
+                      <div>
+                        <dt>Rejected as unsafe</dt>
+                        <dd>{unsafe.length}</dd>
+                      </div>
+                    </dl>
+                  </div>
+                </article>
+              </div>
               <div className="span-4">
                 <article className="panel">
                   <div className="panel__body">
@@ -807,30 +862,6 @@ function HealthSection({
                       {health.ok
                         ? "Semua prasyarat lokal terpenuhi."
                         : `${blocked.length} dari ${health.checks.length} pemeriksaan belum siap.`}
-                    </p>
-                  </div>
-                </article>
-              </div>
-              <div className="span-4">
-                <article className="panel">
-                  <div className="panel__body">
-                    <p className="t-label">Ready</p>
-                    <p className="t-data">{ready.length}</p>
-                    <p className="t-compact muted">
-                      of {health.checks.length} checks
-                    </p>
-                  </div>
-                </article>
-              </div>
-              <div className="span-4">
-                <article className="panel">
-                  <div className="panel__body">
-                    <p className="t-label">Unsafe</p>
-                    <p className="t-data">{unsafe.length}</p>
-                    <p className="t-compact muted">
-                      {unsafe.length === 0
-                        ? "no rejected configuration"
-                        : "configuration rejected as unsafe"}
                     </p>
                   </div>
                 </article>
@@ -993,12 +1024,28 @@ function ActivitySection({ live }: { live: LiveSnapshot }) {
             </div>
 
             <div className="grid">
-              <div className="span-4">
+              <div className="span-7">
                 <article className="panel">
                   <div className="panel__body">
-                    <p className="t-label">Commits landed</p>
-                    <p className="t-data">{activity.lastMonth}</p>
-                    <p className="t-compact muted">in the last 30 days</p>
+                    <p className="t-label">Last 30 days</p>
+                    <dl className="factlist">
+                      <div>
+                        <dt>Commits landed</dt>
+                        <dd>{activity.lastMonth}</dd>
+                      </div>
+                      <div>
+                        <dt>Written by agents</dt>
+                        <dd>{agentCommits}</dd>
+                      </div>
+                      <div>
+                        <dt>Written by people</dt>
+                        <dd>{activity.lastMonth - agentCommits}</dd>
+                      </div>
+                      <div>
+                        <dt>Branches not on main</dt>
+                        <dd>{live.unmergedBranches.length}</dd>
+                      </div>
+                    </dl>
                   </div>
                 </article>
               </div>
@@ -1008,17 +1055,8 @@ function ActivitySection({ live }: { live: LiveSnapshot }) {
                     <p className="t-label">Written by agents</p>
                     <p className="t-data">{agentCommits}</p>
                     <p className="t-compact muted">
-                      of {activity.lastMonth}, by machine identities
+                      of {activity.lastMonth} commits, by machine identities
                     </p>
-                  </div>
-                </article>
-              </div>
-              <div className="span-4">
-                <article className="panel">
-                  <div className="panel__body">
-                    <p className="t-label">Unmerged branches</p>
-                    <p className="t-data">{live.unmergedBranches.length}</p>
-                    <p className="t-compact muted">carrying work not on main</p>
                   </div>
                 </article>
               </div>
