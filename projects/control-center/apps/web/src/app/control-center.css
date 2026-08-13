@@ -676,3 +676,64 @@ tbody tr:hover {
     flex-wrap: wrap;
   }
 }
+
+/* Locked block — the reference's own summary pattern (01-design-system.html).
+   A 2px accent rule opens the list; the rows carry the hairlines. No container,
+   no corner marks: hierarchy comes from the rule and the type. */
+.locked {
+  border-top: 2px solid var(--color-accent);
+  padding-top: var(--space-3);
+}
+
+.locked > dl {
+  margin-top: var(--space-3);
+}
+
+/* Verdict block — opens with a 2px status rule, as the line vocabulary sets out
+   for a verdict. Used where the board reports a judgement, not a measurement. */
+.verdictline {
+  border-top: 2px solid var(--color-border-strong);
+  padding-top: var(--space-3);
+}
+
+.verdictline--warn {
+  border-top-color: var(--color-status-warning);
+}
+
+.verdictline--fail {
+  border-top-color: var(--color-status-critical);
+}
+
+.verdictline--pass {
+  border-top-color: var(--color-status-success);
+}
+
+.lede {
+  margin-top: var(--space-4);
+  max-width: 58ch;
+}
+
+/* Rule block — the reference's own list item (01-design-system.html, .rule).
+   A 1px strong line opens each entry. This is what replaces a card: the line
+   groups, the type ranks, and nothing is drawn around it. */
+.rule {
+  border-top: 1px solid var(--color-border-strong);
+  padding-top: var(--space-3);
+}
+
+.rule h3 {
+  font-size: var(--font-size-body);
+  font-weight: var(--font-weight-semibold);
+  margin-top: var(--space-2);
+}
+
+.rule p {
+  max-width: 68ch;
+}
+
+/* Failing-row tint. Only the worst state is tinted — a warning is not. If every
+   condition gets a wash the page is evenly coloured and nothing reads as
+   urgent. The tint is a second signal behind the glyph and the word. */
+tbody tr.row--fail {
+  background: var(--color-surface-critical);
+}

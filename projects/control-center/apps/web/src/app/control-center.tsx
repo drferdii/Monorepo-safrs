@@ -5,7 +5,6 @@ import { useMemo, useState } from "react";
 import { ACTIONS, actionById } from "../lib/actions";
 import {
   AGENTS,
-  DOCTOR_CHECKS,
   GATES,
   KNOWLEDGE,
   NEXT_ACTIONS,
@@ -257,48 +256,51 @@ function HomeSection({
         </div>
         <div className="grid">
           <div className="span-7">
-            <article className="panel">
-              <div className="panel__body">
-                <p className="t-label">Read from disk and git</p>
-                <dl className="factlist">
-                  <div>
-                    <dt>Working tree</dt>
-                    <dd>{live.dirtyPaths} changed paths</dd>
-                  </div>
-                  <div>
-                    <dt>Checkout</dt>
-                    <dd>{live.repoRoot}</dd>
-                  </div>
-                  <div>
-                    <dt>Features registered</dt>
-                    <dd>{live.features.length}</dd>
-                  </div>
-                  <div>
-                    <dt>Need attention</dt>
-                    <dd>{attention.length}</dd>
-                  </div>
-                  <div>
-                    <dt>Unmerged branches</dt>
-                    <dd>{live.unmergedBranches.length}</dd>
-                  </div>
-                </dl>
-              </div>
-            </article>
+            <div className="locked">
+              <p className="t-label">Read from disk and git</p>
+              <dl className="factlist">
+                <div>
+                  <dt>Working tree</dt>
+                  <dd>{live.dirtyPaths} changed paths</dd>
+                </div>
+                <div>
+                  <dt>Checkout</dt>
+                  <dd>{live.repoRoot}</dd>
+                </div>
+                <div>
+                  <dt>Features registered</dt>
+                  <dd>{live.features.length}</dd>
+                </div>
+                <div>
+                  <dt>Need attention</dt>
+                  <dd>{attention.length}</dd>
+                </div>
+                <div>
+                  <dt>Unmerged branches</dt>
+                  <dd>{live.unmergedBranches.length}</dd>
+                </div>
+              </dl>
+            </div>
           </div>
           <div className="span-4">
-            <article className="panel">
-              <div className="panel__body">
-                <p className="t-label">Not on main</p>
-                <p className="t-data">{live.unmergedBranches.length}</p>
-                <p className="t-compact muted">
-                  {live.unmergedBranches.length === 0
-                    ? "Everything local is on main."
-                    : live.unmergedBranches
-                        .map((item) => `${item.name} (${item.commitsAhead})`)
-                        .join(", ")}
-                </p>
-              </div>
-            </article>
+            <div className="locked">
+              <p className="t-label">Not on main</p>
+              <dl className="factlist" style={{ marginTop: "var(--space-3)" }}>
+                {live.unmergedBranches.length === 0 ? (
+                  <div>
+                    <dt>Everything local is on main</dt>
+                    <dd>0</dd>
+                  </div>
+                ) : (
+                  live.unmergedBranches.map((item) => (
+                    <div key={item.name}>
+                      <dt>{item.name}</dt>
+                      <dd>{item.commitsAhead}</dd>
+                    </div>
+                  ))
+                )}
+              </dl>
+            </div>
           </div>
         </div>
       </section>
@@ -313,24 +315,32 @@ function HomeSection({
           </div>
           <div className="stack">
             {attention.map((feature) => (
-              <article className="panel" key={feature.id}>
-                <div className="panel__body">
-                  <p className="t-label">
-                    {feature.risk} · {feature.area}
+              <div className="rule" key={feature.id}>
+                <p className="t-label">
+                  {feature.risk} · {feature.area}
+                </p>
+                <h3>{feature.name}</h3>
+                <p className="t-compact muted">{feature.purpose}</p>
+                <p style={{ marginTop: "var(--space-3)" }}>
+                  <span className={liveStatusClass(feature.status)}>
+                    {LIVE_STATUS_LABEL[feature.status] ?? feature.status}
+                  </span>
+                </p>
+                <p
+                  className="t-compact"
+                  style={{ marginTop: "var(--space-2)" }}
+                >
+                  {feature.statusReason}
+                </p>
+                {feature.caveat ? (
+                  <p
+                    className="t-compact muted"
+                    style={{ marginTop: "var(--space-2)", maxWidth: "68ch" }}
+                  >
+                    {feature.caveat}
                   </p>
-                  <h3>{feature.name}</h3>
-                  <p className="t-compact muted">{feature.purpose}</p>
-                  <p>
-                    <span className={liveStatusClass(feature.status)}>
-                      {LIVE_STATUS_LABEL[feature.status] ?? feature.status}
-                    </span>
-                  </p>
-                  <p className="t-compact">{feature.statusReason}</p>
-                  {feature.caveat ? (
-                    <p className="t-compact muted">{feature.caveat}</p>
-                  ) : null}
-                </div>
-              </article>
+                ) : null}
+              </div>
             ))}
           </div>
         </section>
@@ -467,38 +477,34 @@ function ProjectsSection({
 
         <div className="grid">
           <div className="span-7">
-            <article className="panel">
-              <div className="panel__body">
-                <p className="t-label">Workspace members</p>
-                <dl className="factlist">
-                  {workspace.groups.map((group) => (
-                    <div key={group.group}>
-                      <dt>{group.group}</dt>
-                      <dd>{group.count}</dd>
-                    </div>
-                  ))}
-                  <div>
-                    <dt>Total</dt>
-                    <dd>{workspace.members.length}</dd>
+            <div className="locked">
+              <p className="t-label">Workspace members</p>
+              <dl className="factlist">
+                {workspace.groups.map((group) => (
+                  <div key={group.group}>
+                    <dt>{group.group}</dt>
+                    <dd>{group.count}</dd>
                   </div>
-                </dl>
-              </div>
-            </article>
+                ))}
+                <div>
+                  <dt>Total</dt>
+                  <dd>{workspace.members.length}</dd>
+                </div>
+              </dl>
+            </div>
           </div>
           <div className="span-4">
-            <article className="panel">
-              <div className="panel__body">
-                <p className="t-label">Widest reach</p>
-                <p className="t-data">
-                  {byReach[0] ? byReach[0].blastRadius.length : 0}
-                </p>
-                <p className="t-compact muted">
-                  {byReach[0]
-                    ? `${byReach[0].name} moves ${byReach[0].blastRadius.length} other members`
-                    : "No workspace dependency recorded."}
-                </p>
-              </div>
-            </article>
+            <div className="locked">
+              <p className="t-label">Widest reach</p>
+              <dl className="factlist" style={{ marginTop: "var(--space-3)" }}>
+                {byReach.slice(0, 4).map((member) => (
+                  <div key={member.name}>
+                    <dt>{member.name}</dt>
+                    <dd>{member.blastRadius.length}</dd>
+                  </div>
+                ))}
+              </dl>
+            </div>
           </div>
         </div>
 
@@ -811,7 +817,7 @@ function HealthSection({
         <>
           <section className="section">
             <div className="section__head">
-              <h2 className="t-section">Machine readiness, checked just now</h2>
+              <h2 className="t-section">Machine readiness</h2>
               <span className="rulelabel">
                 Run by tools/doctor, not re-implemented here
               </span>
@@ -819,115 +825,109 @@ function HealthSection({
 
             <div className="grid">
               <div className="span-7">
-                <article className="panel">
-                  <div className="panel__body">
-                    <p className="t-label">Checked by tools/doctor</p>
-                    <dl className="factlist">
-                      <div>
-                        <dt>Verdict</dt>
-                        <dd>{health.ok ? "Ready" : "Not ready"}</dd>
-                      </div>
-                      <div>
-                        <dt>Checks passed</dt>
-                        <dd>
-                          {ready.length} of {health.checks.length}
-                        </dd>
-                      </div>
-                      <div>
-                        <dt>Blocked</dt>
-                        <dd>{blocked.length}</dd>
-                      </div>
-                      <div>
-                        <dt>Rejected as unsafe</dt>
-                        <dd>{unsafe.length}</dd>
-                      </div>
-                    </dl>
-                  </div>
-                </article>
+                <div
+                  className={
+                    health.ok
+                      ? "verdictline verdictline--pass"
+                      : "verdictline verdictline--warn"
+                  }
+                >
+                  <p className="t-label">Verdict</p>
+                  <h3
+                    className="t-display"
+                    style={{ marginTop: "var(--space-2)" }}
+                  >
+                    {health.ok ? "Siap dipakai" : "Belum siap"}
+                  </h3>
+                  <p className="lede muted">
+                    {health.ok
+                      ? "Setiap prasyarat lokal terpenuhi. Aplikasi dapat dijalankan di komputer ini."
+                      : `Sembilan pemeriksaan dijalankan. ${blocked.length} di antaranya menghalangi, dan masing-masing membawa langkah perbaikannya sendiri di bawah.`}
+                  </p>
+                </div>
               </div>
               <div className="span-4">
-                <article className="panel">
-                  <div className="panel__body">
-                    <p className="t-label">Verdict</p>
-                    <p
-                      className={
-                        health.ok
-                          ? "status status--pass"
-                          : "status status--warn"
-                      }
-                    >
-                      {health.ok ? "Ready" : "Not ready"}
-                    </p>
-                    <p className="t-compact muted">
-                      {health.ok
-                        ? "Semua prasyarat lokal terpenuhi."
-                        : `${blocked.length} dari ${health.checks.length} pemeriksaan belum siap.`}
-                    </p>
-                  </div>
-                </article>
+                <div className="locked">
+                  <p className="t-label">Counted</p>
+                  <dl
+                    className="factlist"
+                    style={{ marginTop: "var(--space-3)" }}
+                  >
+                    <div>
+                      <dt>Passed</dt>
+                      <dd>{ready.length}</dd>
+                    </div>
+                    <div>
+                      <dt>Blocked</dt>
+                      <dd>{blocked.length}</dd>
+                    </div>
+                    <div>
+                      <dt>Rejected as unsafe</dt>
+                      <dd>{unsafe.length}</dd>
+                    </div>
+                    <div>
+                      <dt>Checks run</dt>
+                      <dd>{health.checks.length}</dd>
+                    </div>
+                  </dl>
+                </div>
               </div>
             </div>
           </section>
 
-          {blocked.length > 0 ? (
-            <section className="section">
-              <div className="section__head">
-                <h2 className="t-section">What is blocking you</h2>
-                <span className="rulelabel">
-                  Each one carries its own recovery step
-                </span>
-              </div>
-              <div className="stack">
-                {blocked.map((check) => (
-                  <article className="panel" key={check.id}>
-                    <div className="panel__body">
-                      <p className="t-label">{check.area}</p>
-                      <h3>{check.summary}</h3>
-                      <p>
-                        <span
-                          className={
-                            check.severity === "unsafe"
-                              ? "status status--fail"
-                              : "status status--warn"
-                          }
-                        >
-                          {check.severity === "unsafe"
-                            ? "Ditolak — tidak aman"
-                            : "Belum siap"}
-                        </span>
-                      </p>
-                      <p className="t-compact">{check.recovery}</p>
-                      {check.technical ? (
-                        <details className="disclosure">
-                          <summary>Advanced</summary>
-                          <pre>{check.technical}</pre>
-                        </details>
-                      ) : null}
-                    </div>
-                  </article>
-                ))}
-              </div>
-            </section>
-          ) : null}
-
           <section className="section">
             <div className="section__head">
-              <h2 className="t-section">Checks that passed</h2>
-              <span className="rulelabel">{ready.length} ready</span>
+              <h2 className="t-section">Every check</h2>
+              <span className="rulelabel">
+                {health.checks.length} checks · recovery on the blocked ones
+              </span>
             </div>
             <div className="tablewrap">
               <table>
+                <caption className="sr-only">Machine readiness checks</caption>
                 <thead>
                   <tr>
-                    <th>Area</th>
-                    <th>Result</th>
+                    <th scope="col">No.</th>
+                    <th scope="col">Area</th>
+                    <th scope="col">Result</th>
+                    <th scope="col">Reading</th>
+                    <th scope="col">Recovery</th>
                   </tr>
                 </thead>
                 <tbody>
-                  {ready.map((check) => (
-                    <tr key={check.id}>
-                      <td>{check.area}</td>
+                  {health.checks.map((check, index) => (
+                    <tr
+                      // Tinted only when the configuration was rejected as
+                      // unsafe. A not-yet-ready check carries its glyph and
+                      // word; tinting it too would flatten the urgency.
+                      className={
+                        check.severity === "unsafe" ? "row--fail" : undefined
+                      }
+                      key={check.id}
+                    >
+                      <td className="num">
+                        {String(index + 1).padStart(2, "0")}
+                      </td>
+                      <th scope="row">{check.area}</th>
+                      <td>
+                        <span
+                          className={
+                            check.ok
+                              ? "status status--pass"
+                              : check.severity === "unsafe"
+                                ? "status status--fail"
+                                : "status status--warn"
+                          }
+                        >
+                          {check.ok
+                            ? "Siap"
+                            : check.severity === "unsafe"
+                              ? "Ditolak"
+                              : "Belum siap"}
+                        </span>
+                      </td>
                       <td>{check.summary}</td>
+                      <td>{check.ok ? "—" : check.recovery}</td>
                     </tr>
                   ))}
                 </tbody>
@@ -937,9 +937,13 @@ function HealthSection({
         </>
       ) : (
         <section className="section">
-          <div className="alert">
-            <h2>Kesiapan mesin tidak terbaca</h2>
-            <p>
+          <div className="section__head">
+            <h2 className="t-section">Machine readiness</h2>
+            <span className="rulelabel">Reading failed</span>
+          </div>
+          <div className="verdictline verdictline--fail">
+            <p className="t-label">Tidak terbaca</p>
+            <p className="lede">
               {health.problem ??
                 "Pemeriksaan kesiapan tidak dapat dijalankan pada checkout ini."}
             </p>
@@ -947,52 +951,6 @@ function HealthSection({
         </section>
       )}
 
-      <header className="pagehead grid">
-        <div className="pagehead__id">
-          <p className="t-label">Health</p>
-          <h1 className="t-page">Problem, meaning, then recovery</h1>
-          <p
-            className="muted"
-            style={{ marginTop: "var(--space-4)", maxWidth: "56ch" }}
-          >
-            These checks exist in the repository. Their results are not visible
-            from this board until they are run on the local machine.
-          </p>
-        </div>
-      </header>
-      <section className="section">
-        <div className="tablewrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Check</th>
-                <th>If ready</th>
-                <th>If not</th>
-                <th>Recovery</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {DOCTOR_CHECKS.map((check) => (
-                <tr key={check.id}>
-                  <td>
-                    <strong>{check.label}</strong>
-                    <p className="t-compact muted">{check.meaning}</p>
-                  </td>
-                  <td>{check.ready}</td>
-                  <td>{check.blocked}</td>
-                  <td>{check.recovery}</td>
-                  <td>
-                    <span className="status status--idle">
-                      {STATUS_LABEL.unknown}
-                    </span>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </section>
       <section className="section stack">
         {healthActions.map((action) => (
           <ActionPanel
@@ -1025,40 +983,43 @@ function ActivitySection({ live }: { live: LiveSnapshot }) {
 
             <div className="grid">
               <div className="span-7">
-                <article className="panel">
-                  <div className="panel__body">
-                    <p className="t-label">Last 30 days</p>
-                    <dl className="factlist">
-                      <div>
-                        <dt>Commits landed</dt>
-                        <dd>{activity.lastMonth}</dd>
-                      </div>
-                      <div>
-                        <dt>Written by agents</dt>
-                        <dd>{agentCommits}</dd>
-                      </div>
-                      <div>
-                        <dt>Written by people</dt>
-                        <dd>{activity.lastMonth - agentCommits}</dd>
-                      </div>
-                      <div>
-                        <dt>Branches not on main</dt>
-                        <dd>{live.unmergedBranches.length}</dd>
-                      </div>
-                    </dl>
-                  </div>
-                </article>
+                <div className="locked">
+                  <p className="t-label">Last 30 days</p>
+                  <dl className="factlist">
+                    <div>
+                      <dt>Commits landed</dt>
+                      <dd>{activity.lastMonth}</dd>
+                    </div>
+                    <div>
+                      <dt>Written by agents</dt>
+                      <dd>{agentCommits}</dd>
+                    </div>
+                    <div>
+                      <dt>Written by people</dt>
+                      <dd>{activity.lastMonth - agentCommits}</dd>
+                    </div>
+                    <div>
+                      <dt>Branches not on main</dt>
+                      <dd>{live.unmergedBranches.length}</dd>
+                    </div>
+                  </dl>
+                </div>
               </div>
               <div className="span-4">
-                <article className="panel">
-                  <div className="panel__body">
-                    <p className="t-label">Written by agents</p>
-                    <p className="t-data">{agentCommits}</p>
-                    <p className="t-compact muted">
-                      of {activity.lastMonth} commits, by machine identities
-                    </p>
-                  </div>
-                </article>
+                <div className="locked">
+                  <p className="t-label">Contributors</p>
+                  <dl
+                    className="factlist"
+                    style={{ marginTop: "var(--space-3)" }}
+                  >
+                    {activity.contributors.slice(0, 6).map((contributor) => (
+                      <div key={contributor.name}>
+                        <dt>{contributor.name}</dt>
+                        <dd>{contributor.commits}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
               </div>
             </div>
           </section>
@@ -1103,35 +1064,30 @@ function ActivitySection({ live }: { live: LiveSnapshot }) {
               </span>
             </div>
             <div className="grid">
-              <div className="span-4">
-                <article className="panel">
-                  <div className="panel__body">
-                    <p className="t-label">Contributors</p>
-                    <dl className="factlist">
-                      {activity.contributors.map((contributor) => (
-                        <div key={contributor.name}>
-                          <dt>{contributor.name}</dt>
-                          <dd>{contributor.commits}</dd>
-                        </div>
-                      ))}
-                    </dl>
-                  </div>
-                </article>
-              </div>
               <div className="span-7">
-                <article className="panel">
-                  <div className="panel__body">
-                    <p className="t-label">Busiest files</p>
-                    <dl className="factlist">
-                      {activity.hotPaths.map((entry) => (
-                        <div key={entry.path}>
-                          <dt>{entry.path}</dt>
-                          <dd>{entry.changes}</dd>
-                        </div>
-                      ))}
-                    </dl>
-                  </div>
-                </article>
+                <p className="t-label">Busiest files</p>
+                <dl
+                  className="factlist"
+                  style={{ marginTop: "var(--space-3)" }}
+                >
+                  {activity.hotPaths.map((entry) => (
+                    <div key={entry.path}>
+                      <dt>{entry.path}</dt>
+                      <dd>{entry.changes}</dd>
+                    </div>
+                  ))}
+                </dl>
+              </div>
+              <div className="span-4">
+                <p className="t-label">How to read this</p>
+                <p
+                  className="t-compact muted"
+                  style={{ marginTop: "var(--space-3)", maxWidth: "44ch" }}
+                >
+                  Counted over the same 30 days. A file near the top is where
+                  the repository&apos;s effort actually went — which is not
+                  always where the work was planned.
+                </p>
               </div>
             </div>
           </section>
