@@ -17,12 +17,16 @@ export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     // Archivo + JetBrains Mono, the typefaces the design system specifies. The
     // width axis carries the display voice, so no second family is needed.
-    <html lang="id">
-      <body
-        className={`${fontSansArchivo.variable} ${fontMonoJetBrains.variable}`}
-      >
-        {children}
-      </body>
+    // The font variables go on <html>, not <body>. --font-family-sans is
+    // declared on :root, and a var() inside a custom property is substituted on
+    // the element where that property is declared — so if --font-sans only
+    // exists on <body>, the whole font-family is invalid at computed-value time
+    // and the browser falls back to its serif default.
+    <html
+      lang="id"
+      className={`${fontSansArchivo.variable} ${fontMonoJetBrains.variable}`}
+    >
+      <body>{children}</body>
     </html>
   );
 }
