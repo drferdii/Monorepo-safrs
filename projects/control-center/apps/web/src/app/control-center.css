@@ -6,6 +6,10 @@
 
 html {
   -webkit-text-size-adjust: 100%;
+  /* The family is set on the root, not only on body. Anything rendered outside
+     body — or before body's rules apply — otherwise inherits the browser's
+     serif default, which is how Times New Roman got onto this page. */
+  font-family: var(--font-family-sans);
 }
 
 html,
