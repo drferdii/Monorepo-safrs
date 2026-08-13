@@ -82,9 +82,27 @@ export type FeatureDefinition = {
   caveat?: string;
 };
 
-/** A feature after the registry has checked it against the filesystem. */
-export type ResolvedFeature = FeatureDefinition & {
-  evidence: Required<Evidence>[];
+/**
+ * Evidence after the registry has looked for it.
+ *
+ * Spelled out rather than `Required<Evidence>`: under exactOptionalPropertyTypes
+ * that utility strips the `?` but leaves `| undefined` in the value type, which
+ * is exactly the uncertainty this type exists to remove.
+ */
+export type CheckedEvidence = {
+  path: string;
+  proves: string;
+  present: boolean;
+};
+
+/**
+ * A feature after the registry has checked it against the filesystem.
+ *
+ * `evidence` is omitted before being redeclared: intersecting the two shapes
+ * would leave `present` as `boolean | undefined` instead of replacing it.
+ */
+export type ResolvedFeature = Omit<FeatureDefinition, "evidence"> & {
+  evidence: CheckedEvidence[];
   availability: Availability;
   status: ConnectionStatus;
   /** Indonesian explanation of why the status is what it is. */
