@@ -164,6 +164,24 @@ export type LiveSnapshot = {
   problems: string[];
   workspace: LiveWorkspace;
   activity: LiveActivity;
+  health: LiveHealth;
+};
+
+/** Machine readiness, produced by `tools/doctor --json`. */
+export type LiveHealth = {
+  available: boolean;
+  ok: boolean;
+  exitCode: number;
+  checks: {
+    id: string;
+    area: string;
+    ok: boolean;
+    severity: string;
+    summary: string;
+    recovery: string;
+    technical: string;
+  }[];
+  problem: string | null;
 };
 
 /** Change flow: what has been happening in this repository lately. */

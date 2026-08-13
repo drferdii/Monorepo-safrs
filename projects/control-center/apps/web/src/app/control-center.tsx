@@ -762,16 +762,160 @@ function TasksSection({
 function HealthSection({
   selectedAction,
   onOpen,
+  live,
 }: {
   selectedAction: string | null;
   onOpen: (id: string) => void;
+  live: LiveSnapshot;
 }) {
   const healthActions = ACTIONS.filter((action) =>
     ["doctor", "setup", "db-start", "db-reset"].includes(action.id),
   );
 
+  const health = live.health;
+  const ready = health.checks.filter((check) => check.ok);
+  const blocked = health.checks.filter((check) => !check.ok);
+  const unsafe = blocked.filter((check) => check.severity === "unsafe");
+
   return (
     <>
+      {health.available && health.problem === null ? (
+        <>
+          <section className="section">
+            <div className="section__head">
+              <h2 className="t-section">Machine readiness, checked just now</h2>
+              <span className="rulelabel">
+                Run by tools/doctor, not re-implemented here
+              </span>
+            </div>
+
+            <div className="grid">
+              <div className="span-4">
+                <article className="panel">
+                  <div className="panel__body">
+                    <p className="t-label">Verdict</p>
+                    <p
+                      className={
+                        health.ok
+                          ? "status status--pass"
+                          : "status status--warn"
+                      }
+                    >
+                      {health.ok ? "Ready" : "Not ready"}
+                    </p>
+                    <p className="t-compact muted">
+                      {health.ok
+                        ? "Semua prasyarat lokal terpenuhi."
+                        : `${blocked.length} dari ${health.checks.length} pemeriksaan belum siap.`}
+                    </p>
+                  </div>
+                </article>
+              </div>
+              <div className="span-4">
+                <article className="panel">
+                  <div className="panel__body">
+                    <p className="t-label">Ready</p>
+                    <p className="t-data">{ready.length}</p>
+                    <p className="t-compact muted">
+                      of {health.checks.length} checks
+                    </p>
+                  </div>
+                </article>
+              </div>
+              <div className="span-4">
+                <article className="panel">
+                  <div className="panel__body">
+                    <p className="t-label">Unsafe</p>
+                    <p className="t-data">{unsafe.length}</p>
+                    <p className="t-compact muted">
+                      {unsafe.length === 0
+                        ? "no rejected configuration"
+                        : "configuration rejected as unsafe"}
+                    </p>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          {blocked.length > 0 ? (
+            <section className="section">
+              <div className="section__head">
+                <h2 className="t-section">What is blocking you</h2>
+                <span className="rulelabel">
+                  Each one carries its own recovery step
+                </span>
+              </div>
+              <div className="stack">
+                {blocked.map((check) => (
+                  <article className="panel" key={check.id}>
+                    <div className="panel__body">
+                      <p className="t-label">{check.area}</p>
+                      <h3>{check.summary}</h3>
+                      <p>
+                        <span
+                          className={
+                            check.severity === "unsafe"
+                              ? "status status--fail"
+                              : "status status--warn"
+                          }
+                        >
+                          {check.severity === "unsafe"
+                            ? "Ditolak — tidak aman"
+                            : "Belum siap"}
+                        </span>
+                      </p>
+                      <p className="t-compact">{check.recovery}</p>
+                      {check.technical ? (
+                        <details className="disclosure">
+                          <summary>Advanced</summary>
+                          <pre>{check.technical}</pre>
+                        </details>
+                      ) : null}
+                    </div>
+                  </article>
+                ))}
+              </div>
+            </section>
+          ) : null}
+
+          <section className="section">
+            <div className="section__head">
+              <h2 className="t-section">Checks that passed</h2>
+              <span className="rulelabel">{ready.length} ready</span>
+            </div>
+            <div className="tablewrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Area</th>
+                    <th>Result</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ready.map((check) => (
+                    <tr key={check.id}>
+                      <td>{check.area}</td>
+                      <td>{check.summary}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+        </>
+      ) : (
+        <section className="section">
+          <div className="alert">
+            <h2>Kesiapan mesin tidak terbaca</h2>
+            <p>
+              {health.problem ??
+                "Pemeriksaan kesiapan tidak dapat dijalankan pada checkout ini."}
+            </p>
+          </div>
+        </section>
+      )}
+
       <header className="pagehead grid">
         <div className="pagehead__id">
           <p className="t-label">Health</p>
@@ -1250,6 +1394,7 @@ export function ControlCenter({ live }: { live: LiveSnapshot }) {
               <HealthSection
                 selectedAction={selectedAction}
                 onOpen={openAction}
+                live={live}
               />
             ) : null}
             {section === "activity" ? <ActivitySection live={live} /> : null}
