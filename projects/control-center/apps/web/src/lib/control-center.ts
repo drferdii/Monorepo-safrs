@@ -162,6 +162,25 @@ export type LiveSnapshot = {
   features: LiveFeature[];
   counts: Record<string, number>;
   problems: string[];
+  workspace: LiveWorkspace;
+};
+
+/** The repository map: what it is made of, and what depends on what. */
+export type LiveWorkspace = {
+  members: LiveMember[];
+  groups: { group: string; count: number }[];
+  problems: string[];
+};
+
+export type LiveMember = {
+  name: string;
+  path: string;
+  group: string;
+  version: string;
+  dependsOn: string[];
+  usedBy: string[];
+  /** Every workspace member affected transitively by changing this one. */
+  blastRadius: string[];
 };
 
 export type LiveFeature = {

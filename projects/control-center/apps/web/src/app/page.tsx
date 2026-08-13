@@ -1,5 +1,6 @@
 import type { LiveSnapshot } from "../lib/control-center.ts";
 import { readRegistry } from "../lib/repo/registry.ts";
+import { readWorkspace } from "../lib/repo/workspace.ts";
 import { ControlCenter } from "./control-center.tsx";
 
 /**
@@ -13,7 +14,10 @@ import { ControlCenter } from "./control-center.tsx";
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  const snapshot = await readRegistry();
+  const [snapshot, workspace] = await Promise.all([
+    readRegistry(),
+    readWorkspace(),
+  ]);
 
   const live: LiveSnapshot = {
     readAt: snapshot.readAt,
@@ -25,6 +29,19 @@ export default async function Page() {
     unmergedBranches: snapshot.git.unmergedBranches,
     counts: snapshot.counts,
     problems: snapshot.problems,
+    workspace: {
+      groups: workspace.groups,
+      problems: workspace.problems,
+      members: workspace.members.map((member) => ({
+        name: member.name,
+        path: member.path,
+        group: member.group,
+        version: member.version,
+        dependsOn: member.dependsOn,
+        usedBy: member.usedBy,
+        blastRadius: member.blastRadius,
+      })),
+    },
     features: snapshot.features.map((feature) => ({
       id: feature.id,
       name: feature.name,

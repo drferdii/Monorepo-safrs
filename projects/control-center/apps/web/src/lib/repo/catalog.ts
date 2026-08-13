@@ -322,7 +322,7 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
   // ─── Data ──────────────────────────────────────────────────────────────────
   {
     id: "corpus-engine",
-    name: "Corpus Engine (PDF Medis → Basis Pengetahuan)",
+    name: "Pustaka Medis (PDF → Basis Pengetahuan)",
     area: "data",
     purpose:
       "Mengubah korpus PDF medis terkurasi menjadi basis pengetahuan yang bisa ditanya dengan sitasi: Docling → JSON kanonik → gerbang mutu → potongan → embedding BGE-M3 → PostgreSQL/pgvector.",

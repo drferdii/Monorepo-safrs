@@ -426,9 +426,11 @@ function HomeSection({
 function ProjectsSection({
   selectedAction,
   onOpen,
+  live,
 }: {
   selectedAction: string | null;
   onOpen: (id: string) => void;
+  live: LiveSnapshot;
 }) {
   const projectActions = ACTIONS.filter((action) =>
     ["dev", "test", "capability-preview", "capability-apply"].includes(
@@ -436,8 +438,88 @@ function ProjectsSection({
     ),
   );
 
+  const workspace = live.workspace;
+  const byReach = [...workspace.members].sort(
+    (a, b) => b.blastRadius.length - a.blastRadius.length,
+  );
+
   return (
     <>
+      <section className="section">
+        <div className="section__head">
+          <h2 className="t-section">Repository map</h2>
+          <span className="rulelabel">
+            Read from pnpm-workspace.yaml and every package.json
+          </span>
+        </div>
+
+        <div className="grid">
+          {workspace.groups.map((group) => (
+            <div className="span-4" key={group.group}>
+              <article className="panel">
+                <div className="panel__body">
+                  <p className="t-label">{group.group}</p>
+                  <p className="t-data">{group.count}</p>
+                  <p className="t-compact muted">workspace members</p>
+                </div>
+              </article>
+            </div>
+          ))}
+        </div>
+
+        {workspace.problems.length > 0 ? (
+          <div className="notice">
+            {workspace.problems.map((problem) => (
+              <p key={problem}>{problem}</p>
+            ))}
+          </div>
+        ) : null}
+      </section>
+
+      <section className="section">
+        <div className="section__head">
+          <h2 className="t-section">Blast radius</h2>
+          <span className="rulelabel">What moves when one member changes</span>
+        </div>
+        <p className="t-compact muted">
+          The question only a monorepo has. Change a member here and everything
+          in its reach column is affected — that is the number to know before
+          approving a change to a shared package.
+        </p>
+        <div className="tablewrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Member</th>
+                <th>Location</th>
+                <th>Reach</th>
+                <th>Affected</th>
+                <th>Depends on</th>
+              </tr>
+            </thead>
+            <tbody>
+              {byReach.map((member) => (
+                <tr key={member.name}>
+                  <td>{member.name}</td>
+                  <td>{member.path}</td>
+                  <td>{member.blastRadius.length}</td>
+                  <td>
+                    {member.blastRadius.length === 0
+                      ? "Nothing depends on it"
+                      : member.blastRadius.join(", ")}
+                  </td>
+                  <td>
+                    {member.dependsOn.length === 0
+                      ? "No workspace dependency"
+                      : member.dependsOn.join(", ")}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+
       <header className="pagehead grid">
         <div className="pagehead__id">
           <p className="t-label">Projects</p>
@@ -987,6 +1069,7 @@ export function ControlCenter({ live }: { live: LiveSnapshot }) {
               <ProjectsSection
                 selectedAction={selectedAction}
                 onOpen={openAction}
+                live={live}
               />
             ) : null}
             {section === "agents" ? <AgentsSection /> : null}
