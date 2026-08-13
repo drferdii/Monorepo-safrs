@@ -46,6 +46,13 @@ const LIVE_STATUS_ORDER = [
   "connected",
 ];
 
+/**
+ * Machine identities that commit to this repository. Matching on the author
+ * name is a heuristic, not an authority — a human can set any name — so the
+ * count is presented as an observation about names, never as a security claim.
+ */
+const AGENT_AUTHORS = /codex|claude|cursor|droid|agent|bot/i;
+
 function liveStatusClass(status: string) {
   if (status === "error") return "status status--fail";
   if (status === "connected") return "status status--pass";
@@ -825,9 +832,169 @@ function HealthSection({
   );
 }
 
-function ActivitySection() {
+function ActivitySection({ live }: { live: LiveSnapshot }) {
+  const activity = live.activity;
+  const agentCommits = activity.contributors
+    .filter((contributor) => AGENT_AUTHORS.test(contributor.name))
+    .reduce((total, contributor) => total + contributor.commits, 0);
+
   return (
     <>
+      {activity.available ? (
+        <>
+          <section className="section">
+            <div className="section__head">
+              <h2 className="t-section">Change flow</h2>
+              <span className="rulelabel">Last 30 days on {live.branch}</span>
+            </div>
+
+            <div className="grid">
+              <div className="span-4">
+                <article className="panel">
+                  <div className="panel__body">
+                    <p className="t-label">Commits landed</p>
+                    <p className="t-data">{activity.lastMonth}</p>
+                    <p className="t-compact muted">in the last 30 days</p>
+                  </div>
+                </article>
+              </div>
+              <div className="span-4">
+                <article className="panel">
+                  <div className="panel__body">
+                    <p className="t-label">Written by agents</p>
+                    <p className="t-data">{agentCommits}</p>
+                    <p className="t-compact muted">
+                      of {activity.lastMonth}, by machine identities
+                    </p>
+                  </div>
+                </article>
+              </div>
+              <div className="span-4">
+                <article className="panel">
+                  <div className="panel__body">
+                    <p className="t-label">Unmerged branches</p>
+                    <p className="t-data">{live.unmergedBranches.length}</p>
+                    <p className="t-compact muted">carrying work not on main</p>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          <section className="section">
+            <div className="section__head">
+              <h2 className="t-section">Recent commits</h2>
+              <span className="rulelabel">Read from git, newest first</span>
+            </div>
+            <div className="tablewrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>When</th>
+                    <th>Commit</th>
+                    <th>Subject</th>
+                    <th>Author</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {activity.recent.map((commit) => (
+                    <tr key={commit.hash}>
+                      <td>{commit.relative}</td>
+                      <td>{commit.hash}</td>
+                      <td>
+                        {commit.subject}
+                        {commit.isMerge ? " (merge)" : ""}
+                      </td>
+                      <td>{commit.author}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section className="section">
+            <div className="section__head">
+              <h2 className="t-section">Who and where</h2>
+              <span className="rulelabel">
+                Contributors and the files they moved
+              </span>
+            </div>
+            <div className="grid">
+              <div className="span-4">
+                <article className="panel">
+                  <div className="panel__body">
+                    <p className="t-label">Contributors</p>
+                    <dl className="factlist">
+                      {activity.contributors.map((contributor) => (
+                        <div key={contributor.name}>
+                          <dt>{contributor.name}</dt>
+                          <dd>{contributor.commits}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+                </article>
+              </div>
+              <div className="span-7">
+                <article className="panel">
+                  <div className="panel__body">
+                    <p className="t-label">Busiest files</p>
+                    <dl className="factlist">
+                      {activity.hotPaths.map((entry) => (
+                        <div key={entry.path}>
+                          <dt>{entry.path}</dt>
+                          <dd>{entry.changes}</dd>
+                        </div>
+                      ))}
+                    </dl>
+                  </div>
+                </article>
+              </div>
+            </div>
+          </section>
+
+          {live.unmergedBranches.length > 0 ? (
+            <section className="section">
+              <div className="section__head">
+                <h2 className="t-section">Work not yet on main</h2>
+                <span className="rulelabel">
+                  Each one is a decision waiting
+                </span>
+              </div>
+              <div className="tablewrap">
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Branch</th>
+                      <th>Commits ahead</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {live.unmergedBranches.map((branch) => (
+                      <tr key={branch.name}>
+                        <td>{branch.name}</td>
+                        <td>{branch.commitsAhead}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </section>
+          ) : null}
+        </>
+      ) : (
+        <section className="section">
+          <div className="alert">
+            <h2>Git tidak terbaca</h2>
+            <p>
+              Riwayat perubahan tidak dapat ditampilkan karena git tidak dapat
+              dijalankan pada checkout ini.
+            </p>
+          </div>
+        </section>
+      )}
+
       <header className="pagehead grid">
         <div className="pagehead__id">
           <p className="t-label">Activity</p>
@@ -1085,7 +1252,7 @@ export function ControlCenter({ live }: { live: LiveSnapshot }) {
                 onOpen={openAction}
               />
             ) : null}
-            {section === "activity" ? <ActivitySection /> : null}
+            {section === "activity" ? <ActivitySection live={live} /> : null}
             {section === "governance" ? <GovernanceSection /> : null}
             {section === "knowledge" ? <KnowledgeSection /> : null}
           </div>

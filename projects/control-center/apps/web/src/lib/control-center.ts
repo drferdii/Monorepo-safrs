@@ -163,6 +163,24 @@ export type LiveSnapshot = {
   counts: Record<string, number>;
   problems: string[];
   workspace: LiveWorkspace;
+  activity: LiveActivity;
+};
+
+/** Change flow: what has been happening in this repository lately. */
+export type LiveActivity = {
+  available: boolean;
+  recent: {
+    hash: string;
+    subject: string;
+    author: string;
+    relative: string;
+    isMerge: boolean;
+  }[];
+  /** Commits on the current branch in the last 30 days. */
+  lastMonth: number;
+  contributors: { name: string; commits: number }[];
+  /** Files touched most often in the last 30 days. */
+  hotPaths: { path: string; changes: number }[];
 };
 
 /** The repository map: what it is made of, and what depends on what. */

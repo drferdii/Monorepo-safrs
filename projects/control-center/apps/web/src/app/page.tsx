@@ -1,4 +1,5 @@
 import type { LiveSnapshot } from "../lib/control-center.ts";
+import { readActivity } from "../lib/repo/git.ts";
 import { readRegistry } from "../lib/repo/registry.ts";
 import { readWorkspace } from "../lib/repo/workspace.ts";
 import { ControlCenter } from "./control-center.tsx";
@@ -14,9 +15,10 @@ import { ControlCenter } from "./control-center.tsx";
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  const [snapshot, workspace] = await Promise.all([
+  const [snapshot, workspace, activity] = await Promise.all([
     readRegistry(),
     readWorkspace(),
+    readActivity(),
   ]);
 
   const live: LiveSnapshot = {
@@ -29,6 +31,19 @@ export default async function Page() {
     unmergedBranches: snapshot.git.unmergedBranches,
     counts: snapshot.counts,
     problems: snapshot.problems,
+    activity: {
+      available: activity.available,
+      lastMonth: activity.lastMonth,
+      contributors: activity.contributors,
+      hotPaths: activity.hotPaths,
+      recent: activity.recent.map((commit) => ({
+        hash: commit.hash,
+        subject: commit.subject,
+        author: commit.author,
+        relative: commit.relative,
+        isMerge: commit.isMerge,
+      })),
+    },
     workspace: {
       groups: workspace.groups,
       problems: workspace.problems,

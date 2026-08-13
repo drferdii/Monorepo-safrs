@@ -95,3 +95,111 @@ export async function branchFiles(branchName: string): Promise<string[]> {
     return [];
   }
 }
+
+/**
+ * Change flow: what has been happening in this repository lately.
+ *
+ * A board that only shows current state reads as a photograph. Movement — what
+ * landed, what is growing on a branch, who has been touching it — is what makes
+ * the repository legible as something alive.
+ */
+export type Commit = {
+  hash: string;
+  subject: string;
+  author: string;
+  /** Human phrasing straight from git, e.g. "2 days ago". */
+  relative: string;
+  isoDate: string;
+  isMerge: boolean;
+};
+
+export type Contributor = {
+  name: string;
+  commits: number;
+};
+
+export type ActivitySnapshot = {
+  recent: Commit[];
+  /** Commits landed on the current branch in the last 30 days. */
+  lastMonth: number;
+  contributors: Contributor[];
+  /** Files changed most often in the last 30 days — where the work is. */
+  hotPaths: { path: string; changes: number }[];
+  available: boolean;
+};
+
+/** Unit and record separators keep subjects containing any character safe. */
+const UNIT = "";
+const RECORD = "";
+
+function parseCommits(raw: string): Commit[] {
+  return raw
+    .split(RECORD)
+    .map((record) => record.trim())
+    .filter((record) => record.length > 0)
+    .map((record) => {
+      const [hash, subject, author, relative, isoDate, parents] =
+        record.split(UNIT);
+      return {
+        hash: hash ?? "",
+        subject: subject ?? "",
+        author: author ?? "",
+        relative: relative ?? "",
+        isoDate: isoDate ?? "",
+        // More than one parent means a merge.
+        isMerge: (parents ?? "").trim().split(/\s+/).length > 1,
+      };
+    });
+}
+
+export async function readActivity(limit = 12): Promise<ActivitySnapshot> {
+  try {
+    const format = ["%h", "%s", "%an", "%cr", "%cI", "%p"].join(UNIT) + RECORD;
+
+    const [recentRaw, monthAuthors, hotRaw] = await Promise.all([
+      git(["log", `-n${limit}`, `--format=${format}`]),
+      git(["log", "--since=30.days", "--format=%an"]),
+      git(["log", "--since=30.days", "--name-only", "--format="]),
+    ]);
+
+    const authorCounts = new Map<string, number>();
+    for (const line of monthAuthors.split("\n")) {
+      const name = line.trim();
+      if (name.length > 0) {
+        authorCounts.set(name, (authorCounts.get(name) ?? 0) + 1);
+      }
+    }
+
+    const pathCounts = new Map<string, number>();
+    for (const line of hotRaw.split("\n")) {
+      const path = line.trim();
+      if (path.length > 0) {
+        pathCounts.set(path, (pathCounts.get(path) ?? 0) + 1);
+      }
+    }
+
+    return {
+      recent: parseCommits(recentRaw),
+      lastMonth: [...authorCounts.values()].reduce(
+        (total, count) => total + count,
+        0,
+      ),
+      contributors: [...authorCounts.entries()]
+        .map(([name, commits]) => ({ name, commits }))
+        .sort((a, b) => b.commits - a.commits),
+      hotPaths: [...pathCounts.entries()]
+        .map(([path, changes]) => ({ path, changes }))
+        .sort((a, b) => b.changes - a.changes)
+        .slice(0, 10),
+      available: true,
+    };
+  } catch {
+    return {
+      recent: [],
+      lastMonth: 0,
+      contributors: [],
+      hotPaths: [],
+      available: false,
+    };
+  }
+}
