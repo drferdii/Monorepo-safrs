@@ -1,5 +1,6 @@
 import { readdir } from "node:fs/promises";
 
+import { deriveCounts } from "./library-derive.ts";
 import { readRepoFile, repoPath, repoPathExists } from "./root.ts";
 
 /**
@@ -163,62 +164,38 @@ export async function readLibrary(): Promise<LibrarySnapshot> {
     }
   }
 
-  let sourcePdfs = await countFiles(`${CORPUS_ROOT}/sources`, ".pdf");
-  let canonicalDocuments = await countFiles(
-    `${CORPUS_ROOT}/canonical`,
-    ".json",
-  );
+  const sourcePdfsRaw = await countFiles(`${CORPUS_ROOT}/sources`, ".pdf");
+  const canonicalRaw = await countFiles(`${CORPUS_ROOT}/canonical`, ".json");
 
-  // The corpus directories are tracked only as .gitkeep placeholders, so a
-  // worktree sees them empty even though the main checkout holds the data. An
-  // empty directory beside a manifest that has entries is not "nothing
-  // processed" — it is "not available from this checkout", and reporting zero
-  // would be a lie an operator could act on.
-  const dataMissingHere = entries > 0 && canonicalDocuments === 0;
-  if (dataMissingHere) {
-    canonicalDocuments = null;
-    sourcePdfs = sourcePdfs === 0 ? null : sourcePdfs;
+  const derived = deriveCounts({
+    entries,
+    readyCount: readyToUse,
+    sourcePdfs: sourcePdfsRaw,
+    canonicalDocuments: canonicalRaw,
+  });
+
+  if (derived.dataMissingHere) {
     problems.push(
       "Berkas korpus tidak ada di checkout ini — data tidak ikut git. Hitungan dokumen hanya terbaca dari checkout utama; catatan manifest di bawah tetap akurat.",
     );
   }
-
-  // The manifest records runs; it is not a census. When canonical output on
-  // disk outnumbers it, it cannot answer how much of the library is usable —
-  // and neither can the canonical files, which carry no quality verdict. The
-  // only authority is the pgvector projection, which needs the database up.
-  // Reporting a number derived from a damaged record would be worse than
-  // reporting none.
-  const unrecorded =
-    canonicalDocuments === null
-      ? null
-      : Math.max(0, canonicalDocuments - entries);
-  const notYetParsed =
-    sourcePdfs === null || canonicalDocuments === null
-      ? null
-      : Math.max(0, sourcePdfs - canonicalDocuments);
-
-  if (unrecorded !== null && unrecorded > 0) {
+  if (derived.unrecorded !== null && derived.unrecorded > 0) {
     problems.push(
-      `${unrecorded} dokumen sudah ada sebagai hasil parse di disk tetapi tidak tercatat di manifest. Catatan tertinggal di belakang isi sebenarnya.`,
+      `${derived.unrecorded} dokumen sudah ada sebagai hasil parse di disk tetapi tidak tercatat di manifest. Catatan tertinggal di belakang isi sebenarnya.`,
     );
   }
 
-  const manifestIsBehind = unrecorded !== null && unrecorded > 0;
-
   return {
     available: true,
-    sourcePdfs,
-    canonicalDocuments,
+    sourcePdfs: derived.sourcePdfs,
+    canonicalDocuments: derived.canonicalDocuments,
     manifestEntries: entries,
     parsed,
     failed,
-    readyToUse: manifestIsBehind ? null : readyToUse,
-    readyUnknownReason: manifestIsBehind
-      ? `Tidak dapat dipastikan. Manifest hanya mencatat ${entries} dari ${canonicalDocuments} dokumen yang ada di disk, dan berkas kanonik tidak menyimpan hasil gerbang mutu. Jawaban yang sah hanya ada di basis data pgvector — nyalakan basis data lalu jalankan sensus.`
-      : null,
-    unrecorded,
-    notYetParsed,
+    readyToUse: derived.readyToUse,
+    readyUnknownReason: derived.readyUnknownReason,
+    unrecorded: derived.unrecorded,
+    notYetParsed: derived.notYetParsed,
     failures,
     problems,
   };
