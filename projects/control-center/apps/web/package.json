@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "next build",
-    "dev": "next dev",
+    "dev": "next dev -H 127.0.0.1",
     "lint": "biome check src",
     "start": "next start",
     "test": "node --test \"src/**/*.test.ts\"",
