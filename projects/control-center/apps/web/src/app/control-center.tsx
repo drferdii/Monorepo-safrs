@@ -25,6 +25,8 @@ import {
   type SafetyClass,
   SITE,
 } from "../lib/control-center";
+import { runnableById } from "../lib/exec/commands";
+import { runCommand } from "../lib/exec/run";
 
 const LIVE_STATUS_LABEL: Record<string, string> = {
   connected: "Connected",
@@ -97,6 +99,134 @@ function SentraMark() {
   );
 }
 
+/**
+ * Run control.
+ *
+ * Only renders a live button when the action's id is in the allowlist. Anything
+ * else keeps the honest disabled state — the board does not pretend it can run
+ * what it has not been given permission to run.
+ *
+ * A mutating command shows its effect and demands the exact confirmation phrase
+ * before the button enables. The phrase is compared on the server too; this is
+ * the explanation, not the gate.
+ */
+function RunControl({ action }: { action: ControlAction }) {
+  const runnable = runnableById(action.id);
+  const [state, setState] = useState<"idle" | "running" | "done">("idle");
+  const [typed, setTyped] = useState("");
+  const [outcome, setOutcome] = useState<{
+    ok: boolean;
+    summary: string;
+    exitCode: number | null;
+    stdout: string;
+    stderr: string;
+    durationMs: number;
+  } | null>(null);
+
+  if (!runnable) {
+    return (
+      <button type="button" className="btn" disabled aria-disabled="true">
+        Tidak tersedia di sini
+      </button>
+    );
+  }
+
+  const needsPhrase = runnable.mutation && runnable.confirmPhrase !== undefined;
+  const confirmed = !needsPhrase || typed === runnable.confirmPhrase;
+
+  // Captured after the early return above, so the closure carries a value the
+  // compiler can see is defined.
+  const command = runnable;
+
+  async function run() {
+    setState("running");
+    setOutcome(null);
+    const result = await runCommand(command.id, typed);
+    setOutcome(result);
+    setState("done");
+  }
+
+  return (
+    <div className="stack">
+      <p className="t-compact muted" style={{ maxWidth: "68ch" }}>
+        {runnable.effect}
+      </p>
+
+      {needsPhrase ? (
+        <label className="field">
+          <span
+            className="t-compact"
+            style={{ display: "block", marginBottom: "var(--space-2)" }}
+          >
+            Ketik persis untuk mengizinkan: {runnable.confirmPhrase}
+          </span>
+          <input
+            type="text"
+            value={typed}
+            onChange={(event) => setTyped(event.target.value)}
+            placeholder={runnable.confirmPhrase}
+            spellCheck={false}
+          />
+        </label>
+      ) : null}
+
+      <div className="actions">
+        <button
+          type="button"
+          className="btn btn--primary"
+          onClick={run}
+          disabled={state === "running" || !confirmed}
+          aria-disabled={state === "running" || !confirmed}
+        >
+          {state === "running" ? "Sedang berjalan…" : runnable.label}
+        </button>
+        <span className="rulelabel">
+          {runnable.risk} · batas {Math.round(runnable.timeoutMs / 1000)}s
+        </span>
+      </div>
+
+      {state === "running" ? (
+        <p className="t-compact muted" aria-live="polite">
+          Perintah dijalankan di repository ini. Halaman menunggu sampai
+          selesai; tidak ada progres yang bisa diukur, jadi tidak ada bar yang
+          digerakkan.
+        </p>
+      ) : null}
+
+      {outcome ? (
+        <div
+          className={
+            outcome.ok
+              ? "verdictline verdictline--pass"
+              : "verdictline verdictline--fail"
+          }
+          aria-live="polite"
+        >
+          <p className="t-label">
+            {outcome.ok ? "Berhasil" : "Gagal"} · {outcome.durationMs} ms
+            {outcome.exitCode === null ? "" : ` · exit ${outcome.exitCode}`}
+          </p>
+          <p className="t-compact" style={{ marginTop: "var(--space-2)" }}>
+            {outcome.summary}
+          </p>
+          {outcome.stdout ? (
+            <details className="disclosure">
+              <summary>Keluaran</summary>
+              <pre>{outcome.stdout}</pre>
+            </details>
+          ) : null}
+          {outcome.stderr ? (
+            <details className="disclosure">
+              <summary>Keluaran kesalahan</summary>
+              <pre>{outcome.stderr}</pre>
+            </details>
+          ) : null}
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
 function ActionPanel({
   action,
   onOpen,
@@ -122,19 +252,14 @@ function ActionPanel({
         <div className="actions">
           <button
             type="button"
-            className="btn btn--primary"
-            disabled
-            aria-disabled="true"
-          >
-            Run here
-          </button>
-          <button
-            type="button"
             className="btn"
             onClick={() => onOpen(action.id)}
           >
             {selected ? "Hide explanation" : "Review decision"}
           </button>
+        </div>
+        <div style={{ marginTop: "var(--space-4)" }}>
+          <RunControl action={action} />
         </div>
         {selected ? <ActionDisclosure action={action} /> : null}
       </div>
