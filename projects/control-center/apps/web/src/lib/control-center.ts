@@ -118,13 +118,6 @@ export type KnowledgeRecord = {
   purpose: string;
 };
 
-export type GateRecord = {
-  id: string;
-  name: string;
-  purpose: string;
-  status: ObservationStatus;
-};
-
 export type NextAction = {
   id: string;
   title: string;
@@ -166,6 +159,16 @@ export type LiveSnapshot = {
   health: LiveHealth;
   library: LiveLibrary;
   plane: LivePlane;
+  gates: {
+    available: boolean;
+    gates: {
+      check_id: string;
+      verdict: string;
+      reason: string;
+      checked: number;
+    }[];
+    problem: string | null;
+  };
 };
 
 /** SAFRS control plane, read through `tools/status --json`. */

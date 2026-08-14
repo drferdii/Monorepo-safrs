@@ -1,7 +1,6 @@
 import type {
   AgentRecord,
   DoctorCheck,
-  GateRecord,
   KnowledgeRecord,
   NextAction,
   PackageRecord,
@@ -437,57 +436,6 @@ export const KNOWLEDGE: KnowledgeRecord[] = [
     kind: "reference",
     path: "projects/golden-path/README.md",
     purpose: "How to use the only real product capsule.",
-  },
-];
-
-export const GATES: GateRecord[] = [
-  {
-    id: "contract",
-    name: "SAFRS Contract",
-    purpose: "The task contract and scope match.",
-    status: "unknown",
-  },
-  {
-    id: "lease",
-    name: "SAFRS Lease",
-    purpose: "Task ownership is valid and not colliding.",
-    status: "unknown",
-  },
-  {
-    id: "risk",
-    name: "SAFRS Risk",
-    purpose: "The risk level and its controls are aligned.",
-    status: "unknown",
-  },
-  {
-    id: "budgets",
-    name: "SAFRS Budgets",
-    purpose: "Time, retry, and resource limits are observed.",
-    status: "unknown",
-  },
-  {
-    id: "verification",
-    name: "SAFRS Verification",
-    purpose: "The required quality checks pass.",
-    status: "unknown",
-  },
-  {
-    id: "review",
-    name: "SAFRS Review",
-    purpose: "The required review is present.",
-    status: "unknown",
-  },
-  {
-    id: "evidence",
-    name: "SAFRS Evidence",
-    purpose: "Durable evidence is already written.",
-    status: "unknown",
-  },
-  {
-    id: "platform",
-    name: "SAFRS Platform",
-    purpose: "Claimed platform controls actually exist.",
-    status: "unknown",
   },
 ];
 

@@ -1,5 +1,6 @@
 import type { LiveSnapshot } from "../lib/control-center.ts";
 import { readControlPlane } from "../lib/repo/control-plane.ts";
+import { readGates } from "../lib/repo/gates.ts";
 import { readActivity } from "../lib/repo/git.ts";
 import { readHealth } from "../lib/repo/health.ts";
 import { readLibrary } from "../lib/repo/library.ts";
@@ -8,8 +9,8 @@ import { readWorkspace } from "../lib/repo/workspace.ts";
 import { ControlCenter } from "./control-center.tsx";
 
 /**
- * Server boundary. The board itself stays a client component — it owns the
- * navigation state — so the repository reading happens here and is handed down
+ * Server boundary. The board itself stays a client component; it owns the
+ * navigation state, so the repository reading happens here and is handed down
  * as a plain snapshot.
  *
  * No caching: a cached page could report a repository state that no longer
@@ -18,7 +19,7 @@ import { ControlCenter } from "./control-center.tsx";
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  const [snapshot, workspace, activity, health, library, plane] =
+  const [snapshot, workspace, activity, health, library, plane, gates] =
     await Promise.all([
       readRegistry(),
       readWorkspace(),
@@ -26,6 +27,7 @@ export default async function Page() {
       readHealth(),
       readLibrary(),
       readControlPlane(),
+      readGates(),
     ]);
 
   const live: LiveSnapshot = {
@@ -40,6 +42,7 @@ export default async function Page() {
     problems: snapshot.problems,
     library,
     plane,
+    gates,
     health: {
       available: health.available,
       ok: health.ok,

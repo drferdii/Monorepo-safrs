@@ -6,7 +6,6 @@ import { actionStatus } from "../lib/action-status";
 import { ACTIONS, actionById } from "../lib/actions";
 import {
   AGENTS,
-  GATES,
   KNOWLEDGE,
   PACKAGES,
   PROJECTS,
@@ -1741,59 +1740,64 @@ function ActivitySection({ live }: { live: LiveSnapshot }) {
           </div>
         </section>
       )}
-
-      <header className="pagehead grid">
-        <div className="pagehead__id">
-          <p className="t-label">Activity</p>
-          <h1 className="t-page">No invented trail</h1>
-          <p
-            className="muted"
-            style={{ marginTop: "var(--space-4)", maxWidth: "56ch" }}
-          >
-            This board cannot see the task registry, logs, or publication gates
-            that are currently running. Empty here means not observed, not
-            healthy.
-          </p>
-        </div>
-      </header>
       <section className="section">
-        <div className="grid">
-          <article className="span-7 panel">
-            <div className="panel__body">
-              <p className="t-label">Task trail</p>
-              <h2>No activity observed</h2>
-              <p className="muted">
-                To see real work, run List Tasks or Review Governance Status on
-                the local machine.
-              </p>
-              <p>
-                <span className="status status--idle">
-                  {STATUS_LABEL.unknown}
-                </span>
-              </p>
-            </div>
-          </article>
-          <aside className="span-4">
-            <article className="panel">
-              <div className="panel__body">
-                <p className="t-label">Eight publication gates</p>
-                <div className="gates" aria-hidden="true">
-                  {GATES.map((gate) => (
-                    <i key={gate.id} title={gate.name} />
-                  ))}
-                </div>
-                <ul className="stack" style={{ marginTop: "var(--space-4)" }}>
-                  {GATES.map((gate) => (
-                    <li key={gate.id}>
-                      <strong>{gate.name}</strong>
-                      <p className="t-compact muted">{gate.purpose}</p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </article>
-          </aside>
+        <div className="section__head">
+          <h2 className="t-section">Delapan gerbang publikasi</h2>
+          <span className="rulelabel">
+            Dievaluasi oleh saf gate --all, bukan disusun tangan
+          </span>
         </div>
+        {live.gates.available ? (
+          <div className="tablewrap">
+            <table>
+              <caption className="sr-only">Verdict gerbang publikasi</caption>
+              <thead>
+                <tr>
+                  <th scope="col">No.</th>
+                  <th scope="col">Gerbang</th>
+                  <th scope="col">Verdict</th>
+                  <th scope="col">Alasan</th>
+                  <th scope="col">Diperiksa</th>
+                </tr>
+              </thead>
+              <tbody>
+                {live.gates.gates.map((gate, index) => (
+                  <tr
+                    className={
+                      gate.verdict === "PASS" ? undefined : "row--fail"
+                    }
+                    key={gate.check_id}
+                  >
+                    <td className="num">
+                      {String(index + 1).padStart(2, "0")}
+                    </td>
+                    <th scope="row" className="t-data">
+                      {gate.check_id}
+                    </th>
+                    <td>
+                      <span
+                        className={
+                          gate.verdict === "PASS"
+                            ? "status status--pass"
+                            : "status status--fail"
+                        }
+                      >
+                        {gate.verdict === "PASS" ? "Lolos" : "Ditolak"}
+                      </span>
+                    </td>
+                    <td>{gate.reason}</td>
+                    <td className="num">{gate.checked}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="verdictline verdictline--fail">
+            <p className="t-label">Tidak terbaca</p>
+            <p className="lede">{live.gates.problem}</p>
+          </div>
+        )}
       </section>
     </>
   );
