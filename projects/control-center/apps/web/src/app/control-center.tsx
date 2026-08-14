@@ -7,7 +7,6 @@ import {
   AGENTS,
   GATES,
   KNOWLEDGE,
-  NEXT_ACTIONS,
   PACKAGES,
   PROJECTS,
   RISK_COPY,
@@ -22,6 +21,7 @@ import {
   type LiveSnapshot,
   NAV,
   type NavId,
+  type RiskTier,
   type SafetyClass,
   SITE,
 } from "../lib/control-center";
@@ -193,6 +193,89 @@ function ActionDisclosure({ action }: { action: ControlAction }) {
   );
 }
 
+/**
+ * The next steps are derived, never authored.
+ *
+ * Each one comes from something just read: a readiness check that is blocking,
+ * a feature whose code sits on an unmerged branch, a catalog entry pointing at
+ * nothing, an uncommitted working tree. If the repository has nothing pending,
+ * the list is genuinely empty and says so — a report, not an invitation.
+ *
+ * Order is real information here, so the entries carry sequence markers: what
+ * blocks the machine comes before what waits on a decision, because a decision
+ * taken on a machine that cannot run is a decision taken blind.
+ */
+type NextStep = {
+  id: string;
+  title: string;
+  why: string;
+  command: string | null;
+  risk: RiskTier;
+};
+
+function deriveNextSteps(live: LiveSnapshot): NextStep[] {
+  const steps: NextStep[] = [];
+
+  // 1. Anything blocking the machine. Docker first: it is the prerequisite the
+  //    database, Postgres, and Prisma checks all wait on.
+  const blocked = live.health.available
+    ? live.health.checks.filter((check) => !check.ok)
+    : [];
+  const dockerFirst = [...blocked].sort((a, b) => {
+    const rank = (area: string) => (area === "DOCKER" ? 0 : 1);
+    return rank(a.area) - rank(b.area);
+  });
+
+  for (const check of dockerFirst) {
+    steps.push({
+      id: `health-${check.id}`,
+      title: check.recovery || check.summary,
+      why: `${check.area}: ${check.summary} Selama ini belum beres, ${blocked.length} pemeriksaan kesiapan tetap terhalang.`,
+      command: null,
+      risk: check.severity === "unsafe" ? "R2" : "R1",
+    });
+  }
+
+  // 2. Work that exists but waits on a human decision.
+  for (const feature of live.features) {
+    if (feature.status === "requires-human-action") {
+      steps.push({
+        id: `decision-${feature.id}`,
+        title: `Putuskan penggabungan ${feature.name}`,
+        why: feature.statusReason,
+        command: feature.branch ? `git merge ${feature.branch}` : null,
+        risk: feature.risk,
+      });
+    }
+  }
+
+  // 3. Defects in the board's own catalog. These are ours to fix, not Chief's.
+  for (const feature of live.features) {
+    if (feature.status === "error") {
+      steps.push({
+        id: `defect-${feature.id}`,
+        title: `Perbaiki katalog untuk ${feature.name}`,
+        why: feature.statusReason,
+        command: null,
+        risk: "R1",
+      });
+    }
+  }
+
+  // 4. Housekeeping that blocks governance from passing.
+  if (live.dirtyPaths > 0) {
+    steps.push({
+      id: "dirty-tree",
+      title: "Simpan atau kembalikan perubahan yang belum di-commit",
+      why: `${live.dirtyPaths} berkas berubah di working tree. Pemeriksa kepemilikan task menolak perubahan yang tidak dimiliki task aktif, sehingga tata kelola tidak akan lolos.`,
+      command: "pnpm task claim",
+      risk: "R1",
+    });
+  }
+
+  return steps;
+}
+
 function HomeSection({
   selectedAction,
   onOpen,
@@ -209,6 +292,8 @@ function HomeSection({
   const attention = live.features
     .filter((feature) => feature.status !== "connected")
     .sort(byAttention);
+
+  const nextSteps = deriveNextSteps(live);
 
   return (
     <>
@@ -363,65 +448,108 @@ function HomeSection({
         <div className="section__head">
           <h2 className="t-section">Next steps</h2>
           <span className="rulelabel">
-            From recorded evidence, not guesswork
+            {nextSteps.length === 0
+              ? "Nothing pending"
+              : `${nextSteps.length} derived from this reading`}
           </span>
         </div>
-        <div className="grid">
-          <div className="span-7 stack">
-            {NEXT_ACTIONS.map((item) => {
-              const action = actionById(item.actionId);
-              return (
-                <article className="panel" key={item.id}>
-                  <div className="panel__body">
-                    <p className="t-label">{action?.risk ?? "R0"}</p>
-                    <h3>{item.title}</h3>
-                    <p className="t-compact muted">{item.reason}</p>
-                    {action ? (
-                      <div className="actions">
-                        <button
-                          type="button"
-                          className="btn"
-                          onClick={() => onOpen(action.id)}
-                        >
-                          Review {action.name}
-                        </button>
-                      </div>
-                    ) : null}
-                  </div>
-                </article>
-              );
-            })}
+
+        {nextSteps.length === 0 ? (
+          <div className="grid">
+            <div className="span-7">
+              <p>Tidak ada langkah yang tertunda.</p>
+              <p
+                className="t-compact muted"
+                style={{ marginTop: "var(--space-3)" }}
+              >
+                Mesin siap, tidak ada keputusan yang menunggu, dan working tree
+                bersih. Langkah baru akan muncul di sini sendiri ketika sebuah
+                pemeriksaan gagal atau pekerjaan baru menunggu keputusan.
+              </p>
+            </div>
           </div>
-          <aside className="span-4">
-            <article className="panel">
-              <div className="panel__body">
-                <p className="t-label">What is visible now</p>
-                <dl className="factlist">
+        ) : (
+          <div className="grid">
+            <div className="span-7 stack">
+              {nextSteps.map((step, index) => (
+                <div className="rule" key={step.id}>
+                  <p className="t-label">
+                    <span className="seq">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>{" "}
+                    {step.risk}
+                  </p>
+                  <h3>{step.title}</h3>
+                  <p
+                    className="t-compact muted"
+                    style={{ marginTop: "var(--space-2)" }}
+                  >
+                    {step.why}
+                  </p>
+                  {step.command ? (
+                    <p
+                      className="t-data"
+                      style={{ marginTop: "var(--space-3)" }}
+                    >
+                      {step.command}
+                    </p>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+            <aside className="span-4">
+              <div className="locked">
+                <p className="t-label">Where these come from</p>
+                <dl
+                  className="factlist"
+                  style={{ marginTop: "var(--space-3)" }}
+                >
                   <div>
-                    <dt>Active product</dt>
-                    <dd>Golden Path</dd>
+                    <dt>Readiness checks blocking</dt>
+                    <dd>
+                      {live.health.available
+                        ? live.health.checks.filter((check) => !check.ok).length
+                        : "—"}
+                    </dd>
                   </div>
                   <div>
-                    <dt>Running services</dt>
-                    <dd>{STATUS_LABEL.unknown}</dd>
+                    <dt>Decisions waiting</dt>
+                    <dd>
+                      {
+                        live.features.filter(
+                          (feature) =>
+                            feature.status === "requires-human-action",
+                        ).length
+                      }
+                    </dd>
                   </div>
                   <div>
-                    <dt>Pending approvals</dt>
-                    <dd>{STATUS_LABEL.unknown}</dd>
+                    <dt>Catalog defects</dt>
+                    <dd>
+                      {
+                        live.features.filter(
+                          (feature) => feature.status === "error",
+                        ).length
+                      }
+                    </dd>
                   </div>
                   <div>
-                    <dt>Active tasks</dt>
-                    <dd>{STATUS_LABEL.unknown}</dd>
-                  </div>
-                  <div>
-                    <dt>Production deploy</dt>
-                    <dd>Blocked</dd>
+                    <dt>Uncommitted paths</dt>
+                    <dd>{live.dirtyPaths}</dd>
                   </div>
                 </dl>
+                <p
+                  className="t-compact muted"
+                  style={{ marginTop: "var(--space-4)", maxWidth: "44ch" }}
+                >
+                  Setiap langkah di kiri berasal dari salah satu hitungan ini.
+                  Tidak ada yang ditulis tangan — perbaiki penyebabnya, dan
+                  langkahnya hilang sendiri.
+                </p>
               </div>
-            </article>
-          </aside>
-        </div>
+            </aside>
+          </div>
+        )}
       </section>
 
       <section className="section">
