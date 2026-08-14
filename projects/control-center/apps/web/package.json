@@ -8,7 +8,7 @@
     "dev": "next dev",
     "lint": "biome check src",
     "start": "next start",
-    "test": "node --test src/**/*.test.ts",
+    "test": "node --test \"src/**/*.test.ts\"",
     "typecheck": "tsc --project tsconfig.json"
   },
   "dependencies": {
