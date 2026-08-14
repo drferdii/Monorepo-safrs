@@ -176,7 +176,8 @@ export type LiveLibrary = {
   manifestEntries: number;
   parsed: number;
   failed: number;
-  readyToUse: number;
+  readyToUse: number | null;
+  readyUnknownReason: string | null;
   unrecorded: number | null;
   notYetParsed: number | null;
   failures: { docId: string; error: string }[];

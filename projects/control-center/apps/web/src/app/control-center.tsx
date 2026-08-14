@@ -646,7 +646,7 @@ function HomeSection({
                     >
                       <div>
                         <dt>Siap dipakai</dt>
-                        <dd>{library.readyToUse}</dd>
+                        <dd>{library.readyToUse ?? "belum diketahui"}</dd>
                       </div>
                       <div>
                         <dt>Sudah diproses</dt>
@@ -669,14 +669,28 @@ function HomeSection({
                         <dd>{library.manifestEntries}</dd>
                       </div>
                     </dl>
-                    <p
-                      className="t-compact muted"
-                      style={{ marginTop: "var(--space-4)", maxWidth: "44ch" }}
-                    >
-                      Siap dipakai hanya menghitung dokumen yang tercatat, lolos
-                      parse, dan lolos gerbang mutu. Bila berbeda dari sudah
-                      diproses, catatan tertinggal di belakang isi disk.
-                    </p>
+                    {library.readyUnknownReason ? (
+                      <p
+                        className="t-compact"
+                        style={{
+                          marginTop: "var(--space-4)",
+                          maxWidth: "44ch",
+                        }}
+                      >
+                        {library.readyUnknownReason}
+                      </p>
+                    ) : (
+                      <p
+                        className="t-compact muted"
+                        style={{
+                          marginTop: "var(--space-4)",
+                          maxWidth: "44ch",
+                        }}
+                      >
+                        Menghitung dokumen yang tercatat, lolos parse, dan lolos
+                        gerbang mutu.
+                      </p>
+                    )}
                     {library.failures.length > 0 ? (
                       <details
                         className="disclosure"

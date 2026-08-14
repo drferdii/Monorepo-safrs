@@ -33,8 +33,14 @@ export type LibrarySnapshot = {
   parsed: number;
   /** Recorded as failed, with the reason kept. */
   failed: number;
-  /** Recorded, parsed, and passing the quality gate — ready to be queried. */
-  readyToUse: number;
+  /**
+   * Documents that can honestly be called queryable, or null when that cannot
+   * be established. The only authority is the pgvector projection; the manifest
+   * is a record of runs, not a census.
+   */
+  readyToUse: number | null;
+  /** Why readyToUse is unknown, when it is. */
+  readyUnknownReason: string | null;
   /** On disk as canonical output but absent from the manifest. */
   unrecorded: number | null;
   /** Curated but not yet turned into canonical output. */
@@ -91,7 +97,8 @@ export async function readLibrary(): Promise<LibrarySnapshot> {
       manifestEntries: 0,
       parsed: 0,
       failed: 0,
-      readyToUse: 0,
+      readyToUse: null,
+      readyUnknownReason: "Catatan pustaka tidak terbaca di checkout ini.",
       unrecorded: null,
       notYetParsed: null,
       failures: [],
@@ -176,6 +183,12 @@ export async function readLibrary(): Promise<LibrarySnapshot> {
     );
   }
 
+  // The manifest records runs; it is not a census. When canonical output on
+  // disk outnumbers it, it cannot answer how much of the library is usable —
+  // and neither can the canonical files, which carry no quality verdict. The
+  // only authority is the pgvector projection, which needs the database up.
+  // Reporting a number derived from a damaged record would be worse than
+  // reporting none.
   const unrecorded =
     canonicalDocuments === null
       ? null
@@ -191,6 +204,8 @@ export async function readLibrary(): Promise<LibrarySnapshot> {
     );
   }
 
+  const manifestIsBehind = unrecorded !== null && unrecorded > 0;
+
   return {
     available: true,
     sourcePdfs,
@@ -198,7 +213,10 @@ export async function readLibrary(): Promise<LibrarySnapshot> {
     manifestEntries: entries,
     parsed,
     failed,
-    readyToUse,
+    readyToUse: manifestIsBehind ? null : readyToUse,
+    readyUnknownReason: manifestIsBehind
+      ? `Tidak dapat dipastikan. Manifest hanya mencatat ${entries} dari ${canonicalDocuments} dokumen yang ada di disk, dan berkas kanonik tidak menyimpan hasil gerbang mutu. Jawaban yang sah hanya ada di basis data pgvector — nyalakan basis data lalu jalankan sensus.`
+      : null,
     unrecorded,
     notYetParsed,
     failures,
