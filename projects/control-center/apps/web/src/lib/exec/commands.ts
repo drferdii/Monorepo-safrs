@@ -120,6 +120,30 @@ export const RUNNABLE_COMMANDS: RunnableCommand[] = [
     timeoutMs: 900_000,
   },
   {
+    id: "setup",
+    label: "Siapkan lingkungan lokal",
+    file: "pnpm",
+    args: ["setup"],
+    risk: "R1",
+    mutation: true,
+    effect:
+      "Membuat berkas .env dari .env.example dan menyiapkan basis data lokal sekali pakai. Mengubah berkas di komputer ini; tidak menyentuh produksi.",
+    confirmPhrase: "SIAPKAN LINGKUNGAN LOKAL",
+    timeoutMs: 600_000,
+  },
+  {
+    id: "db-generate",
+    label: "Buat Prisma Client",
+    file: "pnpm",
+    args: ["db:generate"],
+    risk: "R1",
+    mutation: true,
+    effect:
+      "Menghasilkan Prisma Client dari skema. Menulis berkas hasil generate di dalam paket database; tidak menyentuh data.",
+    confirmPhrase: "BUAT PRISMA CLIENT",
+    timeoutMs: 300_000,
+  },
+  {
     id: "db-start",
     label: "Nyalakan basis data lokal",
     file: "pnpm",
@@ -151,3 +175,17 @@ export function runnableById(id: string): RunnableCommand | undefined {
 
 /** Ids the board may render a live Run button for. */
 export const RUNNABLE_IDS = new Set(RUNNABLE_COMMANDS.map((c) => c.id));
+
+/**
+ * Which allowlisted command repairs a given readiness check.
+ *
+ * A check with no entry here needs a human at the machine — starting Docker
+ * Desktop is not something a web request can do, and pretending otherwise would
+ * put a button on the page that cannot work.
+ */
+export const RECOVERY_COMMAND: Record<string, string> = {
+  "environment-file": "setup",
+  "database-url": "setup",
+  "postgres-ready": "db-start",
+  "prisma-client": "db-generate",
+};

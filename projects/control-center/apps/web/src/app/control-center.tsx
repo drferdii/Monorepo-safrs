@@ -25,7 +25,7 @@ import {
   type SafetyClass,
   SITE,
 } from "../lib/control-center";
-import { runnableById } from "../lib/exec/commands";
+import { RECOVERY_COMMAND, runnableById } from "../lib/exec/commands";
 import { runCommand } from "../lib/exec/run";
 
 const LIVE_STATUS_LABEL: Record<string, string> = {
@@ -227,6 +227,31 @@ function RunControl({ action }: { action: ControlAction }) {
   );
 }
 
+/**
+ * A next step that can be performed here.
+ *
+ * Next steps are derived from readings, not from the action catalog, so they
+ * have no ControlAction to hang off. This wraps the same control by id, which
+ * keeps one execution path — and one allowlist — for the whole board.
+ */
+function RunStep({ id }: { id: string }) {
+  const command = runnableById(id);
+  if (!command) {
+    return null;
+  }
+  return (
+    <RunControl
+      action={
+        {
+          id: command.id,
+          name: command.label,
+          risk: command.risk,
+        } as ControlAction
+      }
+    />
+  );
+}
+
 function ActionPanel({
   action,
   onOpen,
@@ -334,7 +359,12 @@ type NextStep = {
   id: string;
   title: string;
   why: string;
+  /** Shown as the equivalent terminal command, for the operator who wants it. */
   command: string | null;
+  /** Allowlisted command that performs this step, when one can. */
+  runId: string | null;
+  /** Stated when no button can exist, so the gap is explicit. */
+  humanOnly: string | null;
   risk: RiskTier;
 };
 
@@ -352,11 +382,16 @@ function deriveNextSteps(live: LiveSnapshot): NextStep[] {
   });
 
   for (const check of dockerFirst) {
+    const runId = RECOVERY_COMMAND[check.id] ?? null;
     steps.push({
       id: `health-${check.id}`,
       title: check.recovery || check.summary,
       why: `${check.area}: ${check.summary} Selama ini belum beres, ${blocked.length} pemeriksaan kesiapan tetap terhalang.`,
       command: null,
+      runId,
+      humanOnly: runId
+        ? null
+        : "Langkah ini harus Anda lakukan sendiri di komputer — tidak ada perintah yang bisa menggantikannya.",
       risk: check.severity === "unsafe" ? "R2" : "R1",
     });
   }
@@ -369,6 +404,9 @@ function deriveNextSteps(live: LiveSnapshot): NextStep[] {
         title: `Putuskan penggabungan ${feature.name}`,
         why: feature.statusReason,
         command: feature.branch ? `git merge ${feature.branch}` : null,
+        runId: null,
+        humanOnly:
+          "Penggabungan adalah keputusan manusia bertingkat R2. Papan ini menyiapkannya, tidak pernah menjalankannya.",
         risk: feature.risk,
       });
     }
@@ -382,6 +420,9 @@ function deriveNextSteps(live: LiveSnapshot): NextStep[] {
         title: `Perbaiki katalog untuk ${feature.name}`,
         why: feature.statusReason,
         command: null,
+        runId: null,
+        humanOnly:
+          "Cacat ini ada di katalog papan ini sendiri, jadi perbaikannya lewat perubahan kode.",
         risk: "R1",
       });
     }
@@ -394,6 +435,9 @@ function deriveNextSteps(live: LiveSnapshot): NextStep[] {
       title: "Simpan atau kembalikan perubahan yang belum di-commit",
       why: `${live.dirtyPaths} berkas berubah di working tree. Pemeriksa kepemilikan task menolak perubahan yang tidak dimiliki task aktif, sehingga tata kelola tidak akan lolos.`,
       command: "pnpm task claim",
+      runId: null,
+      humanOnly:
+        "Klaim task membutuhkan id, judul, dan cakupan yang hanya Anda ketahui, jadi tidak bisa dijalankan dari satu tombol.",
       risk: "R1",
     });
   }
@@ -619,6 +663,18 @@ function HomeSection({
                       {step.command}
                     </p>
                   ) : null}
+                  {step.runId ? (
+                    <div style={{ marginTop: "var(--space-4)" }}>
+                      <RunStep id={step.runId} />
+                    </div>
+                  ) : (
+                    <p
+                      className="t-compact muted"
+                      style={{ marginTop: "var(--space-3)", maxWidth: "68ch" }}
+                    >
+                      {step.humanOnly}
+                    </p>
+                  )}
                 </div>
               ))}
             </div>

@@ -1,8 +1,8 @@
 "use server";
 
 import { execFile } from "node:child_process";
-import { appendFile } from "node:fs/promises";
-import { join } from "node:path";
+import { access, appendFile } from "node:fs/promises";
+import { delimiter, dirname, join } from "node:path";
 
 import { repoRoot } from "../repo/root.ts";
 import { runnableById } from "./commands.ts";
@@ -67,6 +67,59 @@ async function audit(entry: Record<string, unknown>): Promise<string | null> {
   }
 }
 
+/**
+ * Resolve `pnpm` to a JavaScript entry point runnable by node.
+ *
+ * On Windows `pnpm` on PATH is `pnpm.cmd`, and execFile without a shell cannot
+ * launch a .cmd — the spawn fails in milliseconds with no output, which is
+ * exactly how this was found. Adding `shell: true` would fix it by reintroducing
+ * the one thing this executor is built to avoid, so instead the CLI's own .cjs
+ * is located and handed to node directly.
+ *
+ * Returns null when pnpm cannot be found, so the caller can refuse honestly
+ * rather than run something unexpected.
+ */
+async function resolvePnpm(): Promise<string | null> {
+  const candidates: string[] = [];
+
+  if (process.env.PNPM_HOME) {
+    candidates.push(join(process.env.PNPM_HOME, "pnpm.cjs"));
+  }
+  if (process.env.APPDATA) {
+    candidates.push(
+      join(
+        process.env.APPDATA,
+        "npm",
+        "node_modules",
+        "pnpm",
+        "bin",
+        "pnpm.cjs",
+      ),
+    );
+  }
+  candidates.push(
+    join(dirname(process.execPath), "node_modules", "pnpm", "bin", "pnpm.cjs"),
+  );
+
+  // Anything on PATH that ships the CLI beside its shim.
+  for (const entry of (process.env.PATH ?? "").split(delimiter)) {
+    if (entry.trim().length > 0) {
+      candidates.push(join(entry, "node_modules", "pnpm", "bin", "pnpm.cjs"));
+    }
+  }
+
+  for (const candidate of candidates) {
+    try {
+      await access(candidate);
+      return candidate;
+    } catch {
+      // Try the next one.
+    }
+  }
+
+  return null;
+}
+
 export async function runCommand(
   id: string,
   confirmation?: string,
@@ -118,10 +171,34 @@ export async function runCommand(
 
   const cwd = await repoRoot();
 
+  // pnpm is invoked through node rather than through its platform shim; see
+  // resolvePnpm for why.
+  let file = command.file;
+  let args = command.args;
+
+  if (file === "pnpm") {
+    const cli = await resolvePnpm();
+    if (!cli) {
+      await audit({ id, result: "refused", reason: "pnpm-not-found" });
+      return {
+        ok: false,
+        summary:
+          "pnpm tidak ditemukan di komputer ini, jadi perintah tidak dijalankan.",
+        exitCode: null,
+        stdout: "",
+        stderr: "",
+        durationMs: Date.now() - started,
+        refused: "pnpm-not-found",
+      };
+    }
+    file = process.execPath;
+    args = [cli, ...command.args];
+  }
+
   const outcome = await new Promise<RunOutcome>((resolve) => {
     execFile(
-      command.file,
-      command.args,
+      file,
+      args,
       {
         cwd,
         timeout: command.timeoutMs,
