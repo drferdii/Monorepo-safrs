@@ -127,7 +127,7 @@ export const RUNNABLE_COMMANDS: RunnableCommand[] = [
     risk: "R1",
     mutation: true,
     effect:
-      "Membuat berkas .env dari .env.example dan menyiapkan basis data lokal sekali pakai. Mengubah berkas di komputer ini; tidak menyentuh produksi.",
+      "Empat langkah berurutan: (1) membuat .env dari .env.example — berkas .env yang sudah ada tidak ditimpa; (2) menolak seluruh proses jika DATABASE_URL bukan PostgreSQL lokal sekali pakai; (3) menyalakan kontainer PostgreSQL lokal lewat Docker; (4) menjalankan generate, migrate, lalu seed sehingga tabel dan data contoh terisi. Membutuhkan Docker Desktop sudah berjalan — tanpa itu berhenti di langkah 3. Tidak menyentuh produksi.",
     confirmPhrase: "SIAPKAN LINGKUNGAN LOKAL",
     timeoutMs: 600_000,
   },
@@ -139,7 +139,7 @@ export const RUNNABLE_COMMANDS: RunnableCommand[] = [
     risk: "R1",
     mutation: true,
     effect:
-      "Menghasilkan Prisma Client dari skema. Menulis berkas hasil generate di dalam paket database; tidak menyentuh data.",
+      "Menghasilkan Prisma Client dari skema Prisma. Hanya menulis berkas hasil generate di dalam packages/database; tidak menyentuh isi basis data dan tidak membutuhkan Docker.",
     confirmPhrase: "BUAT PRISMA CLIENT",
     timeoutMs: 300_000,
   },
@@ -151,7 +151,7 @@ export const RUNNABLE_COMMANDS: RunnableCommand[] = [
     risk: "R1",
     mutation: true,
     effect:
-      "Menyalakan kontainer PostgreSQL lokal yang sekali pakai. Tidak menyentuh data produksi. Membutuhkan Docker Desktop sudah berjalan.",
+      "Menyalakan kontainer PostgreSQL lokal sekali pakai dan menunggu sampai siap menerima koneksi. Tidak membuat tabel dan tidak mengisi data — itu pekerjaan Siapkan lingkungan lokal. Membutuhkan Docker Desktop sudah berjalan.",
     confirmPhrase: "NYALAKAN BASIS DATA LOKAL",
     timeoutMs: 300_000,
   },
