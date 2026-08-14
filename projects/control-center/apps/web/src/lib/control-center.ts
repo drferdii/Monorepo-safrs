@@ -165,6 +165,22 @@ export type LiveSnapshot = {
   workspace: LiveWorkspace;
   activity: LiveActivity;
   health: LiveHealth;
+  library: LiveLibrary;
+};
+
+/** Medical library figures, read from the corpus data root. */
+export type LiveLibrary = {
+  available: boolean;
+  sourcePdfs: number | null;
+  canonicalDocuments: number | null;
+  manifestEntries: number;
+  parsed: number;
+  failed: number;
+  readyToUse: number;
+  unrecorded: number | null;
+  notYetParsed: number | null;
+  failures: { docId: string; error: string }[];
+  problems: string[];
 };
 
 /** Machine readiness, produced by `tools/doctor --json`. */

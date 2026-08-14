@@ -499,6 +499,7 @@ function HomeSection({
     .sort(byAttention);
 
   const nextSteps = deriveNextSteps(live);
+  const library = live.library;
 
   return (
     <>
@@ -603,35 +604,117 @@ function HomeSection({
               Derived from evidence, not hand-authored
             </span>
           </div>
-          <div className="stack">
-            {attention.map((feature) => (
-              <div className="rule" key={feature.id}>
-                <p className="t-label">
-                  {feature.risk} · {feature.area}
-                </p>
-                <h3>{feature.name}</h3>
-                <p className="t-compact muted">{feature.purpose}</p>
-                <p style={{ marginTop: "var(--space-3)" }}>
-                  <span className={liveStatusClass(feature.status)}>
-                    {LIVE_STATUS_LABEL[feature.status] ?? feature.status}
-                  </span>
-                </p>
-                <p
-                  className="t-compact"
-                  style={{ marginTop: "var(--space-2)" }}
-                >
-                  {feature.statusReason}
-                </p>
-                {feature.caveat ? (
+          <div className="grid">
+            <div className="span-7 stack">
+              {attention.map((feature) => (
+                <div className="rule" key={feature.id}>
+                  <p className="t-label">
+                    {feature.risk} · {feature.area}
+                  </p>
+                  <h3>{feature.name}</h3>
+                  <p className="t-compact muted">{feature.purpose}</p>
+                  <p style={{ marginTop: "var(--space-3)" }}>
+                    <span className={liveStatusClass(feature.status)}>
+                      {LIVE_STATUS_LABEL[feature.status] ?? feature.status}
+                    </span>
+                  </p>
+                  <p
+                    className="t-compact"
+                    style={{ marginTop: "var(--space-2)" }}
+                  >
+                    {feature.statusReason}
+                  </p>
+                  {feature.caveat ? (
+                    <p
+                      className="t-compact muted"
+                      style={{ marginTop: "var(--space-2)", maxWidth: "68ch" }}
+                    >
+                      {feature.caveat}
+                    </p>
+                  ) : null}
+                </div>
+              ))}
+            </div>
+            <aside className="span-4">
+              <div className="locked">
+                <p className="t-label">Pustaka Medis</p>
+                {library.available ? (
+                  <>
+                    <dl
+                      className="factlist"
+                      style={{ marginTop: "var(--space-3)" }}
+                    >
+                      <div>
+                        <dt>Siap dipakai</dt>
+                        <dd>{library.readyToUse}</dd>
+                      </div>
+                      <div>
+                        <dt>Sudah diproses</dt>
+                        <dd>{library.canonicalDocuments ?? "—"}</dd>
+                      </div>
+                      <div>
+                        <dt>Belum diproses</dt>
+                        <dd>{library.notYetParsed ?? "—"}</dd>
+                      </div>
+                      <div>
+                        <dt>Gagal</dt>
+                        <dd>{library.failed}</dd>
+                      </div>
+                      <div>
+                        <dt>PDF sumber</dt>
+                        <dd>{library.sourcePdfs ?? "—"}</dd>
+                      </div>
+                      <div>
+                        <dt>Tercatat di manifest</dt>
+                        <dd>{library.manifestEntries}</dd>
+                      </div>
+                    </dl>
+                    <p
+                      className="t-compact muted"
+                      style={{ marginTop: "var(--space-4)", maxWidth: "44ch" }}
+                    >
+                      Siap dipakai hanya menghitung dokumen yang tercatat, lolos
+                      parse, dan lolos gerbang mutu. Bila berbeda dari sudah
+                      diproses, catatan tertinggal di belakang isi disk.
+                    </p>
+                    {library.failures.length > 0 ? (
+                      <details
+                        className="disclosure"
+                        style={{ marginTop: "var(--space-3)" }}
+                      >
+                        <summary>
+                          Yang gagal ({library.failures.length})
+                        </summary>
+                        {library.failures.map((failure) => (
+                          <p className="t-compact" key={failure.docId}>
+                            <strong>{failure.docId}</strong> — {failure.error}
+                          </p>
+                        ))}
+                      </details>
+                    ) : null}
+                    {library.problems.map((problem) => (
+                      <p
+                        className="t-compact"
+                        key={problem}
+                        style={{
+                          marginTop: "var(--space-3)",
+                          maxWidth: "44ch",
+                        }}
+                      >
+                        {problem}
+                      </p>
+                    ))}
+                  </>
+                ) : (
                   <p
                     className="t-compact muted"
-                    style={{ marginTop: "var(--space-2)", maxWidth: "68ch" }}
+                    style={{ marginTop: "var(--space-3)", maxWidth: "44ch" }}
                   >
-                    {feature.caveat}
+                    {library.problems[0]}
                   </p>
-                ) : null}
+                )}
               </div>
-            ))}
+            </aside>
           </div>
         </section>
       ) : null}
