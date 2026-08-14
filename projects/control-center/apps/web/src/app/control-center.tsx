@@ -112,7 +112,9 @@ function SentraMark() {
  */
 function RunControl({ action }: { action: ControlAction }) {
   const runnable = runnableById(action.id);
-  const [state, setState] = useState<"idle" | "running" | "done">("idle");
+  const [phase, setPhase] = useState<
+    "ready" | "confirming" | "running" | "done"
+  >("ready");
   const [typed, setTyped] = useState("");
   const [outcome, setOutcome] = useState<{
     ok: boolean;
@@ -131,65 +133,106 @@ function RunControl({ action }: { action: ControlAction }) {
     );
   }
 
-  const needsPhrase = runnable.mutation && runnable.confirmPhrase !== undefined;
-  const confirmed = !needsPhrase || typed === runnable.confirmPhrase;
-
-  // Captured after the early return above, so the closure carries a value the
-  // compiler can see is defined.
   const command = runnable;
+  const needsPhrase = command.mutation && command.confirmPhrase !== undefined;
 
   async function run() {
-    setState("running");
+    setPhase("running");
     setOutcome(null);
     const result = await runCommand(command.id, typed);
     setOutcome(result);
-    setState("done");
+    setPhase("done");
   }
+
+  // The first button is always live. A mutating command opens its confirmation
+  // on press rather than sitting disabled behind a phrase nobody has read yet —
+  // a board whose every button is greyed out reads as broken, and the operator
+  // cannot tell a safeguard from a defect.
+  function press() {
+    if (needsPhrase && phase !== "confirming") {
+      setPhase("confirming");
+      return;
+    }
+    void run();
+  }
+
+  const confirmed = !needsPhrase || typed === command.confirmPhrase;
 
   return (
     <div className="stack">
-      <p className="t-compact muted" style={{ maxWidth: "68ch" }}>
-        {runnable.effect}
-      </p>
-
-      {needsPhrase ? (
-        <label className="field">
-          <span
-            className="t-compact"
-            style={{ display: "block", marginBottom: "var(--space-2)" }}
-          >
-            Ketik persis untuk mengizinkan: {runnable.confirmPhrase}
-          </span>
-          <input
-            type="text"
-            value={typed}
-            onChange={(event) => setTyped(event.target.value)}
-            placeholder={runnable.confirmPhrase}
-            spellCheck={false}
-          />
-        </label>
-      ) : null}
-
       <div className="actions">
         <button
           type="button"
           className="btn btn--primary"
-          onClick={run}
-          disabled={state === "running" || !confirmed}
-          aria-disabled={state === "running" || !confirmed}
+          onClick={press}
+          disabled={phase === "running"}
+          aria-disabled={phase === "running"}
         >
-          {state === "running" ? "Sedang berjalan…" : runnable.label}
+          {phase === "running" ? "Sedang berjalan…" : command.label}
         </button>
         <span className="rulelabel">
-          {runnable.risk} · batas {Math.round(runnable.timeoutMs / 1000)}s
+          {command.risk} · batas {Math.round(command.timeoutMs / 1000)}s
         </span>
       </div>
 
-      {state === "running" ? (
+      {phase === "confirming" ? (
+        <div className="verdictline verdictline--warn">
+          <p className="t-label">Konfirmasi diperlukan</p>
+          <p
+            className="t-compact"
+            style={{ marginTop: "var(--space-2)", maxWidth: "68ch" }}
+          >
+            {command.effect}
+          </p>
+          <label className="field" style={{ marginTop: "var(--space-3)" }}>
+            <span
+              className="t-compact"
+              style={{ display: "block", marginBottom: "var(--space-2)" }}
+            >
+              Ketik persis untuk mengizinkan: {command.confirmPhrase}
+            </span>
+            <input
+              type="text"
+              value={typed}
+              onChange={(event) => setTyped(event.target.value)}
+              placeholder={command.confirmPhrase}
+              spellCheck={false}
+            />
+          </label>
+          <div className="actions" style={{ marginTop: "var(--space-3)" }}>
+            <button
+              type="button"
+              className="btn btn--primary"
+              onClick={() => void run()}
+              disabled={!confirmed}
+              aria-disabled={!confirmed}
+            >
+              Jalankan sekarang
+            </button>
+            <button
+              type="button"
+              className="btn"
+              onClick={() => {
+                setPhase("ready");
+                setTyped("");
+              }}
+            >
+              Batal
+            </button>
+          </div>
+        </div>
+      ) : null}
+
+      {phase !== "confirming" ? (
+        <p className="t-compact muted" style={{ maxWidth: "68ch" }}>
+          {command.effect}
+        </p>
+      ) : null}
+
+      {phase === "running" ? (
         <p className="t-compact muted" aria-live="polite">
-          Perintah dijalankan di repository ini. Halaman menunggu sampai
-          selesai; tidak ada progres yang bisa diukur, jadi tidak ada bar yang
-          digerakkan.
+          Perintah dijalankan di repository ini. Progresnya tidak bisa diukur,
+          jadi tidak ada bar yang digerakkan.
         </p>
       ) : null}
 
@@ -227,13 +270,6 @@ function RunControl({ action }: { action: ControlAction }) {
   );
 }
 
-/**
- * A next step that can be performed here.
- *
- * Next steps are derived from readings, not from the action catalog, so they
- * have no ControlAction to hang off. This wraps the same control by id, which
- * keeps one execution path — and one allowlist — for the whole board.
- */
 function RunStep({ id }: { id: string }) {
   const command = runnableById(id);
   if (!command) {
