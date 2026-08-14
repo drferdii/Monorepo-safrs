@@ -1,4 +1,5 @@
 import type { LiveSnapshot } from "../lib/control-center.ts";
+import { readControlPlane } from "../lib/repo/control-plane.ts";
 import { readActivity } from "../lib/repo/git.ts";
 import { readHealth } from "../lib/repo/health.ts";
 import { readLibrary } from "../lib/repo/library.ts";
@@ -17,13 +18,15 @@ import { ControlCenter } from "./control-center.tsx";
 export const dynamic = "force-dynamic";
 
 export default async function Page() {
-  const [snapshot, workspace, activity, health, library] = await Promise.all([
-    readRegistry(),
-    readWorkspace(),
-    readActivity(),
-    readHealth(),
-    readLibrary(),
-  ]);
+  const [snapshot, workspace, activity, health, library, plane] =
+    await Promise.all([
+      readRegistry(),
+      readWorkspace(),
+      readActivity(),
+      readHealth(),
+      readLibrary(),
+      readControlPlane(),
+    ]);
 
   const live: LiveSnapshot = {
     readAt: snapshot.readAt,
@@ -36,6 +39,7 @@ export default async function Page() {
     counts: snapshot.counts,
     problems: snapshot.problems,
     library,
+    plane,
     health: {
       available: health.available,
       ok: health.ok,

@@ -166,6 +166,32 @@ export type LiveSnapshot = {
   activity: LiveActivity;
   health: LiveHealth;
   library: LiveLibrary;
+  plane: LivePlane;
+};
+
+/** SAFRS control plane, read through `tools/status --json`. */
+export type LivePlane = {
+  available: boolean;
+  status: string;
+  observedAt: string | null;
+  tasks: {
+    id: string;
+    title: string;
+    state: string;
+    risk: string;
+    owner_label?: string;
+    worktree_id?: string;
+    updated_at?: string;
+  }[];
+  activeTasks: { id: string; state: string }[];
+  ownershipOk: boolean;
+  conflicts: string[];
+  governance: string | null;
+  failedChecks: string[];
+  leases: { task_id: string; events: number; chain_valid: boolean }[];
+  nextAction: string | null;
+  warnings: string[];
+  problem: string | null;
 };
 
 /** Medical library figures, read from the corpus data root. */

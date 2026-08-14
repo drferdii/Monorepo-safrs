@@ -1152,10 +1152,13 @@ function AgentsSection() {
 function TasksSection({
   selectedAction,
   onOpen,
+  live,
 }: {
   selectedAction: string | null;
   onOpen: (id: string) => void;
+  live: LiveSnapshot;
 }) {
+  const plane = live.plane;
   const taskActions = ACTIONS.filter((action) =>
     [
       "doctor",
@@ -1180,6 +1183,167 @@ function TasksSection({
 
   return (
     <>
+      {plane.available ? (
+        <>
+          <section className="section">
+            <div className="section__head">
+              <h2 className="t-section">Task registry, as recorded now</h2>
+              <span className="rulelabel">
+                Read through tools/status, not re-implemented here
+              </span>
+            </div>
+            <div className="grid">
+              <div className="span-7">
+                <div className="tablewrap">
+                  <table>
+                    <caption className="sr-only">Recorded tasks</caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Task</th>
+                        <th scope="col">State</th>
+                        <th scope="col">Risk</th>
+                        <th scope="col">Owner</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {plane.tasks.map((task) => (
+                        <tr key={task.id}>
+                          <th scope="row">{task.title}</th>
+                          <td>
+                            <span
+                              className={
+                                task.state === "CLOSED" ||
+                                task.state === "MERGED"
+                                  ? "status status--pass"
+                                  : task.state === "FAILED" ||
+                                      task.state === "CONFLICT"
+                                    ? "status status--fail"
+                                    : task.state === "ABORTED"
+                                      ? "status status--idle"
+                                      : "status status--warn"
+                              }
+                            >
+                              {task.state}
+                            </span>
+                          </td>
+                          <td className="num">{task.risk}</td>
+                          <td>{task.owner_label ?? "—"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div className="span-4">
+                <div className="locked">
+                  <p className="t-label">Counted</p>
+                  <dl
+                    className="factlist"
+                    style={{ marginTop: "var(--space-3)" }}
+                  >
+                    <div>
+                      <dt>Recorded</dt>
+                      <dd>{plane.tasks.length}</dd>
+                    </div>
+                    <div>
+                      <dt>Still mutating</dt>
+                      <dd>{plane.activeTasks.length}</dd>
+                    </div>
+                    <div>
+                      <dt>Ownership conflicts</dt>
+                      <dd>{plane.conflicts.length}</dd>
+                    </div>
+                    <div>
+                      <dt>Lease chains valid</dt>
+                      <dd>
+                        {
+                          plane.leases.filter((lease) => lease.chain_valid)
+                            .length
+                        }
+                        {" of "}
+                        {plane.leases.length}
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="section">
+            <div className="section__head">
+              <h2 className="t-section">Governance verdict</h2>
+              <span className="rulelabel">
+                {plane.observedAt ?? "just now"}
+              </span>
+            </div>
+            <div className="grid">
+              <div className="span-7">
+                <div
+                  className={
+                    plane.status === "PASS"
+                      ? "verdictline verdictline--pass"
+                      : "verdictline verdictline--fail"
+                  }
+                >
+                  <p className="t-label">Status</p>
+                  <h3
+                    className="t-display"
+                    style={{ marginTop: "var(--space-2)" }}
+                  >
+                    {plane.status}
+                  </h3>
+                  {plane.failedChecks.length > 0 ? (
+                    <p className="lede">
+                      Pemeriksa yang menolak: {plane.failedChecks.join(", ")}
+                    </p>
+                  ) : (
+                    <p className="lede muted">
+                      Seluruh pemeriksa tata kelola lolos pada pembacaan ini.
+                    </p>
+                  )}
+                  {plane.nextAction ? (
+                    <p
+                      className="t-compact"
+                      style={{ marginTop: "var(--space-3)" }}
+                    >
+                      <strong>Langkah menurut repository:</strong>{" "}
+                      {plane.nextAction}
+                    </p>
+                  ) : null}
+                </div>
+              </div>
+              <div className="span-4">
+                {plane.warnings.length > 0 ? (
+                  <>
+                    <p className="t-label">
+                      Peringatan ({plane.warnings.length})
+                    </p>
+                    <ul
+                      className="t-compact muted stack"
+                      style={{ marginTop: "var(--space-3)", maxWidth: "44ch" }}
+                    >
+                      {plane.warnings.map((warning) => (
+                        <li key={warning}>{warning}</li>
+                      ))}
+                    </ul>
+                  </>
+                ) : (
+                  <p className="t-compact muted">Tidak ada peringatan.</p>
+                )}
+              </div>
+            </div>
+          </section>
+        </>
+      ) : (
+        <section className="section">
+          <div className="verdictline verdictline--fail">
+            <p className="t-label">Bidang kendali tidak terbaca</p>
+            <p className="lede">{plane.problem}</p>
+          </div>
+        </section>
+      )}
+
       <header className="pagehead grid">
         <div className="pagehead__id">
           <p className="t-label">Tasks and flows</p>
@@ -1824,6 +1988,7 @@ export function ControlCenter({ live }: { live: LiveSnapshot }) {
               <TasksSection
                 selectedAction={selectedAction}
                 onOpen={openAction}
+                live={live}
               />
             ) : null}
             {section === "health" ? (
