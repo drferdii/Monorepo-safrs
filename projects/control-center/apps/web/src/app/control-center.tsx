@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 
+import { actionStatus } from "../lib/action-status";
 import { ACTIONS, actionById } from "../lib/actions";
 import {
   AGENTS,
@@ -22,7 +23,6 @@ import {
   NAV,
   type NavId,
   type RiskTier,
-  type SafetyClass,
   SITE,
 } from "../lib/control-center";
 import { RECOVERY_COMMAND, runnableById } from "../lib/exec/commands";
@@ -74,13 +74,6 @@ const HOME_ACTION_IDS = [
   "test",
   "deploy-production",
 ] as const;
-
-function statusClass(safety: SafetyClass) {
-  if (safety === "destructive") return "status status--fail";
-  if (safety === "approval") return "status status--warn";
-  if (safety === "caution") return "status status--warn";
-  return "status status--pass";
-}
 
 function SentraMark() {
   return (
@@ -306,8 +299,14 @@ function ActionPanel({
         <h3>{action.name}</h3>
         <p className="t-compact muted">{action.purpose}</p>
         <p>
-          <span className={statusClass(action.safety)}>
-            {STATUS_LABEL[action.status]}
+          <span
+            className={
+              actionStatus(action.id) === "available"
+                ? "status status--pass"
+                : "status status--idle"
+            }
+          >
+            {STATUS_LABEL[actionStatus(action.id)]}
           </span>
         </p>
         <div className="actions">
@@ -340,8 +339,7 @@ function ActionDisclosure({ action }: { action: ControlAction }) {
         <br />
         <strong>If it were run.</strong> {action.expected}
         <br />
-        <strong>Result here.</strong> Not executed.{" "}
-        {STATUS_LABEL[action.status]}.
+        <strong>Result here.</strong> {STATUS_LABEL[actionStatus(action.id)]}.
         <br />
         <strong>Next.</strong> {action.next}
       </div>
@@ -1448,7 +1446,7 @@ function HealthSection({
                   <p className="lede muted">
                     {health.ok
                       ? "Setiap prasyarat lokal terpenuhi. Aplikasi dapat dijalankan di komputer ini."
-                      : `Sembilan pemeriksaan dijalankan. ${blocked.length} di antaranya menghalangi, dan masing-masing membawa langkah perbaikannya sendiri di bawah.`}
+                      : `${health.checks.length} pemeriksaan dijalankan. ${blocked.length} di antaranya menghalangi, dan masing-masing membawa langkah perbaikannya sendiri di bawah.`}
                   </p>
                 </div>
               </div>

@@ -56,8 +56,7 @@ export type ControlAction = {
   mutation: boolean;
   approval: string;
   timeout: string;
-  executableHere: false;
-  status: ActionStatus;
+  executableHere: boolean;
   confirmation: string;
 };
 
@@ -140,7 +139,7 @@ export const SITE = {
   promise:
     "Turn Monorepo-safrs complexity into plain-language decisions, with authority kept visible.",
   honesty:
-    "This board reads the repository directly on every request. Feature status is derived from evidence on disk and from git — never hand-authored. Commands are still not executed from here.",
+    "Papan ini membaca repository langsung pada setiap permintaan. Status fitur diderivasi dari bukti di disk dan git — tidak pernah ditulis tangan. Perintah dalam daftar izin dapat dijalankan dari papan ini dengan konfirmasi; di luar daftar itu tidak ada yang dieksekusi.",
   repo: "https://github.com/drferdii/Monorepo-safrs",
   declaration: "SAFRS Core",
   operatingModel: "Human-Governed · Agent-Executed · Machine-Enforced",
