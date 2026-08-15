@@ -35,10 +35,6 @@ holds no credentials.
 
 ## Commands
 
-> This capsule lands ahead of its implementation (`apps/web`). These commands resolve once the
-> `feat/control-center` package merges; until then `@sentra/control-center` is not a workspace
-> member.
-
 ```bash
 pnpm --filter @sentra/control-center dev        # http://localhost:3100
 pnpm --filter @sentra/control-center build
