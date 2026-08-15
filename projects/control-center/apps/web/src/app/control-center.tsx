@@ -4,6 +4,7 @@ import { useMemo, useState } from "react";
 
 import { actionStatus } from "../lib/action-status";
 import { ACTIONS, actionById } from "../lib/actions";
+import { mergeAgentRows } from "../lib/agents-view";
 import {
   AGENTS,
   KNOWLEDGE,
@@ -1097,7 +1098,12 @@ function ProjectsSection({
   );
 }
 
-function AgentsSection() {
+function AgentsSection({ live }: { live: LiveSnapshot }) {
+  const rows = mergeAgentRows(
+    AGENTS,
+    live.roles.available ? live.roles.roles : {},
+  );
+
   return (
     <>
       <header className="pagehead grid">
@@ -1113,6 +1119,12 @@ function AgentsSection() {
           </p>
         </div>
       </header>
+      {!live.roles.available ? (
+        <p className="t-compact muted">
+          .safrs/policy.json tidak terbaca di checkout ini — kolom May memakai
+          teks katalog, bukan kebijakan live.
+        </p>
+      ) : null}
       <section className="section">
         <div className="tablewrap">
           <table>
@@ -1126,14 +1138,21 @@ function AgentsSection() {
               </tr>
             </thead>
             <tbody>
-              {AGENTS.map((agent) => (
+              {rows.map((agent) => (
                 <tr key={agent.id}>
                   <td>
                     <strong>{agent.name}</strong>
                     <p className="t-compact muted">{agent.purpose}</p>
                   </td>
                   <td>{agent.kind === "role" ? "Role" : "Automation"}</td>
-                  <td>{agent.may}</td>
+                  <td>
+                    {agent.may}
+                    {agent.fromPolicy ? (
+                      <p className="t-compact muted">
+                        Dibaca dari .safrs/policy.json
+                      </p>
+                    ) : null}
+                  </td>
                   <td>{agent.mayNot}</td>
                   <td>{agent.risk}</td>
                 </tr>
@@ -1990,7 +2009,7 @@ export function ControlCenter({ live }: { live: LiveSnapshot }) {
                 live={live}
               />
             ) : null}
-            {section === "agents" ? <AgentsSection /> : null}
+            {section === "agents" ? <AgentsSection live={live} /> : null}
             {section === "tasks" ? (
               <TasksSection
                 selectedAction={selectedAction}

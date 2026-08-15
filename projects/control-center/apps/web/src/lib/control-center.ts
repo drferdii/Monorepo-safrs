@@ -169,6 +169,7 @@ export type LiveSnapshot = {
     }[];
     problem: string | null;
   };
+  roles: { available: boolean; roles: Record<string, string[]> };
 };
 
 /** SAFRS control plane, read through `tools/status --json`. */
