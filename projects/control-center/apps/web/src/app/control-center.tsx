@@ -1879,7 +1879,7 @@ function GovernanceSection() {
   );
 }
 
-function KnowledgeSection() {
+function KnowledgeSection({ live }: { live: LiveSnapshot }) {
   return (
     <>
       <header className="pagehead grid">
@@ -1895,30 +1895,78 @@ function KnowledgeSection() {
         </div>
       </header>
       <section className="section">
-        <div className="tablewrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Document</th>
-                <th>Type</th>
-                <th>Purpose</th>
-                <th>Recorded location</th>
-              </tr>
-            </thead>
-            <tbody>
-              {KNOWLEDGE.map((item) => (
-                <tr key={item.id}>
-                  <td>
-                    <strong>{item.title}</strong>
-                  </td>
-                  <td>{item.kind}</td>
-                  <td>{item.purpose}</td>
-                  <td className="t-data">{item.path}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        {live.knowledge.available ? (
+          <>
+            <div className="section__head">
+              <h2 className="t-section">Registry dokumen resmi</h2>
+              <span className="rulelabel">
+                Dibaca dari .safrs/document-registry.json
+              </span>
+            </div>
+            <div className="tablewrap">
+              <table>
+                <caption className="sr-only">Registry dokumen resmi</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Urutan</th>
+                    <th scope="col">Dokumen</th>
+                    <th scope="col">Jenis</th>
+                    <th scope="col">Normativitas</th>
+                    <th scope="col">Cakupan</th>
+                    <th scope="col">Lokasi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {live.knowledge.documents.map((document) => (
+                    <tr key={document.id}>
+                      <td className="num">
+                        {document.read_order === undefined
+                          ? "—"
+                          : String(document.read_order).padStart(2, "0")}
+                      </td>
+                      <th scope="row">{document.id}</th>
+                      <td>{document.type}</td>
+                      <td>{document.normativity}</td>
+                      <td>{document.scope}</td>
+                      <td className="t-data">{document.path}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="t-compact muted">
+              Registry dokumen tidak terbaca di checkout ini — daftar di bawah
+              adalah katalog papan, bukan registry live.
+            </p>
+            <div className="tablewrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Document</th>
+                    <th>Type</th>
+                    <th>Purpose</th>
+                    <th>Recorded location</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {KNOWLEDGE.map((item) => (
+                    <tr key={item.id}>
+                      <td>
+                        <strong>{item.title}</strong>
+                      </td>
+                      <td>{item.kind}</td>
+                      <td>{item.purpose}</td>
+                      <td className="t-data">{item.path}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
       </section>
     </>
   );
@@ -2026,7 +2074,7 @@ export function ControlCenter({ live }: { live: LiveSnapshot }) {
             ) : null}
             {section === "activity" ? <ActivitySection live={live} /> : null}
             {section === "governance" ? <GovernanceSection /> : null}
-            {section === "knowledge" ? <KnowledgeSection /> : null}
+            {section === "knowledge" ? <KnowledgeSection live={live} /> : null}
           </div>
         </main>
       </div>

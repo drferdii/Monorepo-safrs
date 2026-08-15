@@ -170,6 +170,18 @@ export type LiveSnapshot = {
     problem: string | null;
   };
   roles: { available: boolean; roles: Record<string, string[]> };
+  knowledge: {
+    available: boolean;
+    documents: {
+      id: string;
+      path: string;
+      type: string;
+      status: string;
+      normativity: string;
+      read_order?: number | undefined;
+      scope: string;
+    }[];
+  };
 };
 
 /** SAFRS control plane, read through `tools/status --json`. */
