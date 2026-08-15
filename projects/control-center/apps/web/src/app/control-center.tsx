@@ -1804,8 +1804,22 @@ function ActivitySection({ live }: { live: LiveSnapshot }) {
                         {gate.verdict === "PASS" ? "Lolos" : "Ditolak"}
                       </span>
                     </td>
-                    <td>{gate.reason}</td>
-                    <td className="num">{gate.checked}</td>
+                    <td>
+                      {gate.reason}
+                      {gate.errors.length > 0
+                        ? gate.errors.map((error, errorIndex) => (
+                            <p
+                              className="t-compact muted"
+                              key={`${gate.check_id}-error-${errorIndex}`}
+                            >
+                              {error}
+                            </p>
+                          ))
+                        : null}
+                    </td>
+                    <td className="num">
+                      {gate.checked === null ? "—" : gate.checked}
+                    </td>
                   </tr>
                 ))}
               </tbody>

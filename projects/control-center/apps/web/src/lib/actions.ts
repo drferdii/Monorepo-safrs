@@ -18,7 +18,6 @@ export const ACTIONS: ControlAction[] = [
     mutation: false,
     approval: "Not required. Read-only operation.",
     timeout: "A few seconds until the Docker engine responds.",
-    executableHere: false,
     confirmation:
       "This action only reads. It must still be run on the local machine, not from this board.",
   },
@@ -39,7 +38,6 @@ export const ACTIONS: ControlAction[] = [
     mutation: false,
     approval: "Not required. Read-only operation.",
     timeout: "A few seconds.",
-    executableHere: false,
     confirmation:
       "This action only reads. This board does not see the registry on the local machine.",
   },
@@ -59,7 +57,6 @@ export const ACTIONS: ControlAction[] = [
     mutation: false,
     approval: "Not required. Read-only operation.",
     timeout: "A few seconds.",
-    executableHere: false,
     confirmation: "This action only reads the task registry.",
   },
   {
@@ -81,7 +78,6 @@ export const ACTIONS: ControlAction[] = [
     approval:
       "Human approval is not required, but confirmation is still required.",
     timeout: "May take several minutes if Docker and Prisma are not ready.",
-    executableHere: false,
     confirmation:
       "This action changes the local machine. Continue only on a work computer, never in production, and never from this board.",
   },
@@ -103,7 +99,6 @@ export const ACTIONS: ControlAction[] = [
     mutation: true,
     approval: "Human approval is not required. It remains local.",
     timeout: "May take several minutes when services first start.",
-    executableHere: false,
     confirmation:
       "This action starts services on the local computer. Production remains blocked.",
   },
@@ -123,7 +118,6 @@ export const ACTIONS: ControlAction[] = [
     mutation: false,
     approval: "Human approval is not required.",
     timeout: "May take several minutes.",
-    executableHere: false,
     confirmation:
       "This action runs tests on the local machine. The results are not visible on this board.",
   },
@@ -145,7 +139,6 @@ export const ACTIONS: ControlAction[] = [
     mutation: false,
     approval: "Human approval is not required.",
     timeout: "Longer than an ordinary test run.",
-    executableHere: false,
     confirmation:
       "This action runs the full quality check on the local machine.",
   },
@@ -165,7 +158,6 @@ export const ACTIONS: ControlAction[] = [
     mutation: false,
     approval: "Human approval is not required.",
     timeout: "Several minutes.",
-    executableHere: false,
     confirmation:
       "This action only verifies governance. It does not raise the conformance level.",
   },
@@ -186,7 +178,6 @@ export const ACTIONS: ControlAction[] = [
     mutation: true,
     approval: "Human approval is not required. Local only.",
     timeout: "Until the container is ready.",
-    executableHere: false,
     confirmation: "This action only starts the disposable local database.",
   },
   {
@@ -205,7 +196,6 @@ export const ACTIONS: ControlAction[] = [
     mutation: true,
     approval: "Human approval is not required. Local only.",
     timeout: "A few seconds.",
-    executableHere: false,
     confirmation:
       "This action stops the local database. The local app will no longer be able to write data.",
   },
@@ -226,7 +216,6 @@ export const ACTIONS: ControlAction[] = [
     approval:
       "Human approval is not required if the target remains disposable.",
     timeout: "Several minutes.",
-    executableHere: false,
     confirmation:
       "This action changes the local database schema. Do not point it at a production database.",
   },
@@ -247,7 +236,6 @@ export const ACTIONS: ControlAction[] = [
     approval:
       "Human approval is not required if the target remains disposable.",
     timeout: "Several minutes.",
-    executableHere: false,
     confirmation: "This action writes sample data to the local database only.",
   },
   {
@@ -269,7 +257,6 @@ export const ACTIONS: ControlAction[] = [
     approval:
       "Explicit confirmation is required. The reset guard rejects a non-disposable URL.",
     timeout: "Several minutes.",
-    executableHere: false,
     confirmation:
       "This action deletes local data. Continue only if the database is disposable and Chief accepts the loss of sample data.",
   },
@@ -289,7 +276,6 @@ export const ACTIONS: ControlAction[] = [
     mutation: false,
     approval: "Human approval is not required. It remains local.",
     timeout: "Until Studio opens.",
-    executableHere: false,
     confirmation: "This action opens a local database tool, not production.",
   },
   {
@@ -309,7 +295,6 @@ export const ACTIONS: ControlAction[] = [
     mutation: false,
     approval: "Not required. This is a preview.",
     timeout: "A few seconds.",
-    executableHere: false,
     confirmation:
       "This action only shows a preview. It does not enable the capability.",
   },
@@ -332,7 +317,6 @@ export const ACTIONS: ControlAction[] = [
     mutation: true,
     approval: "Explicit confirmation with the exact phrase is required.",
     timeout: "Several minutes.",
-    executableHere: false,
     confirmation:
       "This action changes the project. Recording email or Stripe as R2 is not proof that the service is installed and running.",
   },
@@ -354,7 +338,6 @@ export const ACTIONS: ControlAction[] = [
     mutation: false,
     approval: "Human approval is not required. It remains local.",
     timeout: "Until the preview opens.",
-    executableHere: false,
     confirmation: "This action only opens the local email preview.",
   },
   {
@@ -375,7 +358,6 @@ export const ACTIONS: ControlAction[] = [
     mutation: false,
     approval: "Test environments only. Do not use production credentials.",
     timeout: "Runs for as long as the test channel remains open.",
-    executableHere: false,
     confirmation:
       "This action is for Stripe test use only. Production remains forbidden.",
   },
@@ -398,7 +380,6 @@ export const ACTIONS: ControlAction[] = [
     approval:
       "Confirmation is required. Overlapping claims on the same workspace are not allowed.",
     timeout: "A few seconds.",
-    executableHere: false,
     confirmation:
       "This action writes to the task registry. Do not claim overlapping work.",
   },
@@ -419,7 +400,6 @@ export const ACTIONS: ControlAction[] = [
     mutation: true,
     approval: "Confirmation is required. The transition must be valid.",
     timeout: "A few seconds.",
-    executableHere: false,
     confirmation:
       "This action changes task status. Invalid transitions will be rejected.",
   },
@@ -439,7 +419,6 @@ export const ACTIONS: ControlAction[] = [
     mutation: true,
     approval: "Confirmation is required.",
     timeout: "A few seconds.",
-    executableHere: false,
     confirmation: "This action closes the task in the shared registry.",
   },
   {
@@ -461,7 +440,6 @@ export const ACTIONS: ControlAction[] = [
     approval:
       "Human authorization is required for the exact operation proposed.",
     timeout: "Not executed here.",
-    executableHere: false,
     confirmation:
       "This action is blocked. This board does not deploy production.",
   },
@@ -481,7 +459,6 @@ export const ACTIONS: ControlAction[] = [
     mutation: false,
     approval: "Not required. Read-only operation.",
     timeout: "A few minutes.",
-    executableHere: true,
     confirmation: "This action only reads. It changes nothing.",
   },
   {
@@ -500,7 +477,6 @@ export const ACTIONS: ControlAction[] = [
     mutation: false,
     approval: "Not required.",
     timeout: "Several minutes.",
-    executableHere: true,
     confirmation: "This action only checks types.",
   },
   {
@@ -519,7 +495,6 @@ export const ACTIONS: ControlAction[] = [
     mutation: false,
     approval: "Not required.",
     timeout: "Can exceed ten minutes on a cold cache.",
-    executableHere: true,
     confirmation: "This action builds locally. It does not deploy.",
   },
   {
@@ -538,7 +513,6 @@ export const ACTIONS: ControlAction[] = [
     mutation: false,
     approval: "Not required. Read-only operation.",
     timeout: "A few minutes.",
-    executableHere: true,
     confirmation: "This action only reads dependency metadata.",
   },
   {
@@ -558,7 +532,6 @@ export const ACTIONS: ControlAction[] = [
     mutation: false,
     approval: "Not required. Read-only operation.",
     timeout: "Under two minutes.",
-    executableHere: true,
     confirmation: "This action only evaluates gates.",
   },
 ];

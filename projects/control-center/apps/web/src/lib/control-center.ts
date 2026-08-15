@@ -56,7 +56,6 @@ export type ControlAction = {
   mutation: boolean;
   approval: string;
   timeout: string;
-  executableHere: boolean;
   confirmation: string;
 };
 
@@ -165,7 +164,8 @@ export type LiveSnapshot = {
       check_id: string;
       verdict: string;
       reason: string;
-      checked: number;
+      checked: number | null;
+      errors: string[];
     }[];
     problem: string | null;
   };

@@ -14,7 +14,7 @@ const SAMPLE = JSON.stringify([
     check_id: "safrs.review",
     verdict: "FAIL",
     reason: "independent review missing",
-    checked: 1,
+    errors: ["some detail"],
   },
 ]);
 
@@ -23,6 +23,8 @@ test("parseGates membaca array verdict", () => {
   assert.equal(gates.length, 2);
   assert.equal(gates[0]?.check_id, "safrs.contract");
   assert.equal(gates[1]?.verdict, "FAIL");
+  assert.equal(gates[1]?.checked, null);
+  assert.deepEqual(gates[1]?.errors, ["some detail"]);
 });
 
 test("parseGates menolak bentuk yang bukan array", () => {
