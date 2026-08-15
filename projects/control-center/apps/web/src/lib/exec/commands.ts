@@ -167,6 +167,96 @@ export const RUNNABLE_COMMANDS: RunnableCommand[] = [
     confirmPhrase: "MATIKAN BASIS DATA LOKAL",
     timeoutMs: 120_000,
   },
+  {
+    id: "lint",
+    label: "Periksa gaya kode",
+    file: "pnpm",
+    args: ["lint"],
+    risk: "R1",
+    mutation: false,
+    effect:
+      "Hanya membaca. Menjalankan Biome atas seluruh repository dan melaporkan pelanggaran gaya tanpa mengubah berkas.",
+    timeoutMs: 300_000,
+  },
+  {
+    id: "typecheck",
+    label: "Periksa tipe TypeScript",
+    file: "pnpm",
+    args: ["typecheck"],
+    risk: "R1",
+    mutation: false,
+    effect:
+      "Hanya membaca kode dan menulis cache compiler. Menjalankan tsc untuk setiap paket melalui turbo.",
+    timeoutMs: 600_000,
+  },
+  {
+    id: "build",
+    label: "Bangun seluruh paket",
+    file: "pnpm",
+    args: ["build"],
+    risk: "R1",
+    mutation: false,
+    effect:
+      "Menjalankan build setiap paket melalui turbo. Hasilnya hanya artefak cache yang tidak dilacak git; tidak ada berkas sumber yang berubah.",
+    timeoutMs: 1_200_000,
+  },
+  {
+    id: "check",
+    label: "Jalankan pemeriksaan mutu penuh",
+    file: "pnpm",
+    args: ["check"],
+    risk: "R1",
+    mutation: false,
+    effect:
+      "Rantai enam gerbang berurutan: governance, token, lint, typecheck, test, build. Berhenti pada gerbang pertama yang gagal. Bisa memakan waktu lama.",
+    timeoutMs: 1_800_000,
+  },
+  {
+    id: "supply-chain",
+    label: "Periksa rantai pasok dependensi",
+    file: "node",
+    args: ["scripts/check-supply-chain.mjs"],
+    risk: "R1",
+    mutation: false,
+    effect:
+      "Hanya membaca. Memeriksa kebijakan dependensi dan rantai pasok tanpa memasang atau mengubah apa pun.",
+    timeoutMs: 300_000,
+  },
+  {
+    id: "saf-gate-all",
+    label: "Jalankan delapan gerbang publikasi",
+    file: "node",
+    args: ["tools/automation/src/cli.mjs", "gate", "--all"],
+    risk: "R0",
+    mutation: false,
+    effect:
+      "Hanya membaca. Mengevaluasi kedelapan gerbang publikasi SAFRS terhadap keadaan repository saat ini dan melaporkan verdict per gerbang.",
+    timeoutMs: 120_000,
+  },
+  {
+    id: "db-migrate",
+    label: "Terapkan skema basis data lokal",
+    file: "pnpm",
+    args: ["db:migrate"],
+    risk: "R1",
+    mutation: true,
+    effect:
+      "Menerapkan migrasi Prisma ke basis data PostgreSQL lokal sekali pakai. Membutuhkan Docker dan basis data lokal sudah menyala. Tidak menyentuh produksi.",
+    confirmPhrase: "TERAPKAN SKEMA LOKAL",
+    timeoutMs: 300_000,
+  },
+  {
+    id: "db-seed",
+    label: "Isi data contoh",
+    file: "pnpm",
+    args: ["db:seed"],
+    risk: "R1",
+    mutation: true,
+    effect:
+      "Menulis data contoh ke basis data lokal sekali pakai. Membutuhkan skema sudah diterapkan. Tidak menyentuh produksi.",
+    confirmPhrase: "ISI DATA CONTOH",
+    timeoutMs: 300_000,
+  },
 ];
 
 export function runnableById(id: string): RunnableCommand | undefined {

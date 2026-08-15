@@ -2,10 +2,11 @@
 
 import { useMemo, useState } from "react";
 
+import { actionStatus } from "../lib/action-status";
 import { ACTIONS, actionById } from "../lib/actions";
+import { mergeAgentRows } from "../lib/agents-view";
 import {
   AGENTS,
-  GATES,
   KNOWLEDGE,
   PACKAGES,
   PROJECTS,
@@ -22,7 +23,6 @@ import {
   NAV,
   type NavId,
   type RiskTier,
-  type SafetyClass,
   SITE,
 } from "../lib/control-center";
 import { RECOVERY_COMMAND, runnableById } from "../lib/exec/commands";
@@ -74,13 +74,6 @@ const HOME_ACTION_IDS = [
   "test",
   "deploy-production",
 ] as const;
-
-function statusClass(safety: SafetyClass) {
-  if (safety === "destructive") return "status status--fail";
-  if (safety === "approval") return "status status--warn";
-  if (safety === "caution") return "status status--warn";
-  return "status status--pass";
-}
 
 function SentraMark() {
   return (
@@ -306,8 +299,14 @@ function ActionPanel({
         <h3>{action.name}</h3>
         <p className="t-compact muted">{action.purpose}</p>
         <p>
-          <span className={statusClass(action.safety)}>
-            {STATUS_LABEL[action.status]}
+          <span
+            className={
+              actionStatus(action.id) === "available"
+                ? "status status--pass"
+                : "status status--idle"
+            }
+          >
+            {STATUS_LABEL[actionStatus(action.id)]}
           </span>
         </p>
         <div className="actions">
@@ -340,8 +339,7 @@ function ActionDisclosure({ action }: { action: ControlAction }) {
         <br />
         <strong>If it were run.</strong> {action.expected}
         <br />
-        <strong>Result here.</strong> Not executed.{" "}
-        {STATUS_LABEL[action.status]}.
+        <strong>Result here.</strong> {STATUS_LABEL[actionStatus(action.id)]}.
         <br />
         <strong>Next.</strong> {action.next}
       </div>
@@ -1100,7 +1098,12 @@ function ProjectsSection({
   );
 }
 
-function AgentsSection() {
+function AgentsSection({ live }: { live: LiveSnapshot }) {
+  const rows = mergeAgentRows(
+    AGENTS,
+    live.roles.available ? live.roles.roles : {},
+  );
+
   return (
     <>
       <header className="pagehead grid">
@@ -1116,6 +1119,12 @@ function AgentsSection() {
           </p>
         </div>
       </header>
+      {!live.roles.available ? (
+        <p className="t-compact muted">
+          .safrs/policy.json tidak terbaca di checkout ini — kolom May memakai
+          teks katalog, bukan kebijakan live.
+        </p>
+      ) : null}
       <section className="section">
         <div className="tablewrap">
           <table>
@@ -1129,14 +1138,21 @@ function AgentsSection() {
               </tr>
             </thead>
             <tbody>
-              {AGENTS.map((agent) => (
+              {rows.map((agent) => (
                 <tr key={agent.id}>
                   <td>
                     <strong>{agent.name}</strong>
                     <p className="t-compact muted">{agent.purpose}</p>
                   </td>
                   <td>{agent.kind === "role" ? "Role" : "Automation"}</td>
-                  <td>{agent.may}</td>
+                  <td>
+                    {agent.may}
+                    {agent.fromPolicy ? (
+                      <p className="t-compact muted">
+                        Dibaca dari .safrs/policy.json
+                      </p>
+                    ) : null}
+                  </td>
                   <td>{agent.mayNot}</td>
                   <td>{agent.risk}</td>
                 </tr>
@@ -1152,17 +1168,25 @@ function AgentsSection() {
 function TasksSection({
   selectedAction,
   onOpen,
+  live,
 }: {
   selectedAction: string | null;
   onOpen: (id: string) => void;
+  live: LiveSnapshot;
 }) {
+  const plane = live.plane;
   const taskActions = ACTIONS.filter((action) =>
     [
       "doctor",
       "setup",
       "dev",
       "test",
+      "lint",
+      "typecheck",
+      "build",
       "check",
+      "supply-chain",
+      "saf-gate-all",
       "governance",
       "db-start",
       "db-stop",
@@ -1180,6 +1204,167 @@ function TasksSection({
 
   return (
     <>
+      {plane.available ? (
+        <>
+          <section className="section">
+            <div className="section__head">
+              <h2 className="t-section">Task registry, as recorded now</h2>
+              <span className="rulelabel">
+                Read through tools/status, not re-implemented here
+              </span>
+            </div>
+            <div className="grid">
+              <div className="span-7">
+                <div className="tablewrap">
+                  <table>
+                    <caption className="sr-only">Recorded tasks</caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Task</th>
+                        <th scope="col">State</th>
+                        <th scope="col">Risk</th>
+                        <th scope="col">Owner</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {plane.tasks.map((task) => (
+                        <tr key={task.id}>
+                          <th scope="row">{task.title}</th>
+                          <td>
+                            <span
+                              className={
+                                task.state === "CLOSED" ||
+                                task.state === "MERGED"
+                                  ? "status status--pass"
+                                  : task.state === "FAILED" ||
+                                      task.state === "CONFLICT"
+                                    ? "status status--fail"
+                                    : task.state === "ABORTED"
+                                      ? "status status--idle"
+                                      : "status status--warn"
+                              }
+                            >
+                              {task.state}
+                            </span>
+                          </td>
+                          <td className="num">{task.risk}</td>
+                          <td>{task.owner_label ?? "—"}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+              <div className="span-4">
+                <div className="locked">
+                  <p className="t-label">Counted</p>
+                  <dl
+                    className="factlist"
+                    style={{ marginTop: "var(--space-3)" }}
+                  >
+                    <div>
+                      <dt>Recorded</dt>
+                      <dd>{plane.tasks.length}</dd>
+                    </div>
+                    <div>
+                      <dt>Still mutating</dt>
+                      <dd>{plane.activeTasks.length}</dd>
+                    </div>
+                    <div>
+                      <dt>Ownership conflicts</dt>
+                      <dd>{plane.conflicts.length}</dd>
+                    </div>
+                    <div>
+                      <dt>Lease chains valid</dt>
+                      <dd>
+                        {
+                          plane.leases.filter((lease) => lease.chain_valid)
+                            .length
+                        }
+                        {" of "}
+                        {plane.leases.length}
+                      </dd>
+                    </div>
+                  </dl>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <section className="section">
+            <div className="section__head">
+              <h2 className="t-section">Governance verdict</h2>
+              <span className="rulelabel">
+                {plane.observedAt ?? "just now"}
+              </span>
+            </div>
+            <div className="grid">
+              <div className="span-7">
+                <div
+                  className={
+                    plane.status === "PASS"
+                      ? "verdictline verdictline--pass"
+                      : "verdictline verdictline--fail"
+                  }
+                >
+                  <p className="t-label">Status</p>
+                  <h3
+                    className="t-display"
+                    style={{ marginTop: "var(--space-2)" }}
+                  >
+                    {plane.status}
+                  </h3>
+                  {plane.failedChecks.length > 0 ? (
+                    <p className="lede">
+                      Pemeriksa yang menolak: {plane.failedChecks.join(", ")}
+                    </p>
+                  ) : (
+                    <p className="lede muted">
+                      Seluruh pemeriksa tata kelola lolos pada pembacaan ini.
+                    </p>
+                  )}
+                  {plane.nextAction ? (
+                    <p
+                      className="t-compact"
+                      style={{ marginTop: "var(--space-3)" }}
+                    >
+                      <strong>Langkah menurut repository:</strong>{" "}
+                      {plane.nextAction}
+                    </p>
+                  ) : null}
+                </div>
+              </div>
+              <div className="span-4">
+                {plane.warnings.length > 0 ? (
+                  <>
+                    <p className="t-label">
+                      Peringatan ({plane.warnings.length})
+                    </p>
+                    <ul
+                      className="t-compact muted stack"
+                      style={{ marginTop: "var(--space-3)", maxWidth: "44ch" }}
+                    >
+                      {plane.warnings.map((warning) => (
+                        <li key={warning}>{warning}</li>
+                      ))}
+                    </ul>
+                  </>
+                ) : (
+                  <p className="t-compact muted">Tidak ada peringatan.</p>
+                )}
+              </div>
+            </div>
+          </section>
+        </>
+      ) : (
+        <section className="section">
+          <div className="verdictline verdictline--fail">
+            <p className="t-label">Bidang kendali tidak terbaca</p>
+            <p className="lede">{plane.problem}</p>
+          </div>
+        </section>
+      )}
+
       <header className="pagehead grid">
         <div className="pagehead__id">
           <p className="t-label">Tasks and flows</p>
@@ -1284,7 +1469,7 @@ function HealthSection({
                   <p className="lede muted">
                     {health.ok
                       ? "Setiap prasyarat lokal terpenuhi. Aplikasi dapat dijalankan di komputer ini."
-                      : `Sembilan pemeriksaan dijalankan. ${blocked.length} di antaranya menghalangi, dan masing-masing membawa langkah perbaikannya sendiri di bawah.`}
+                      : `${health.checks.length} pemeriksaan dijalankan. ${blocked.length} di antaranya menghalangi, dan masing-masing membawa langkah perbaikannya sendiri di bawah.`}
                   </p>
                 </div>
               </div>
@@ -1574,59 +1759,78 @@ function ActivitySection({ live }: { live: LiveSnapshot }) {
           </div>
         </section>
       )}
-
-      <header className="pagehead grid">
-        <div className="pagehead__id">
-          <p className="t-label">Activity</p>
-          <h1 className="t-page">No invented trail</h1>
-          <p
-            className="muted"
-            style={{ marginTop: "var(--space-4)", maxWidth: "56ch" }}
-          >
-            This board cannot see the task registry, logs, or publication gates
-            that are currently running. Empty here means not observed, not
-            healthy.
-          </p>
-        </div>
-      </header>
       <section className="section">
-        <div className="grid">
-          <article className="span-7 panel">
-            <div className="panel__body">
-              <p className="t-label">Task trail</p>
-              <h2>No activity observed</h2>
-              <p className="muted">
-                To see real work, run List Tasks or Review Governance Status on
-                the local machine.
-              </p>
-              <p>
-                <span className="status status--idle">
-                  {STATUS_LABEL.unknown}
-                </span>
-              </p>
-            </div>
-          </article>
-          <aside className="span-4">
-            <article className="panel">
-              <div className="panel__body">
-                <p className="t-label">Eight publication gates</p>
-                <div className="gates" aria-hidden="true">
-                  {GATES.map((gate) => (
-                    <i key={gate.id} title={gate.name} />
-                  ))}
-                </div>
-                <ul className="stack" style={{ marginTop: "var(--space-4)" }}>
-                  {GATES.map((gate) => (
-                    <li key={gate.id}>
-                      <strong>{gate.name}</strong>
-                      <p className="t-compact muted">{gate.purpose}</p>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </article>
-          </aside>
+        <div className="section__head">
+          <h2 className="t-section">Delapan gerbang publikasi</h2>
+          <span className="rulelabel">
+            Dievaluasi oleh saf gate --all, bukan disusun tangan
+          </span>
         </div>
+        {live.gates.available ? (
+          <div className="tablewrap">
+            <table>
+              <caption className="sr-only">Verdict gerbang publikasi</caption>
+              <thead>
+                <tr>
+                  <th scope="col">No.</th>
+                  <th scope="col">Gerbang</th>
+                  <th scope="col">Verdict</th>
+                  <th scope="col">Alasan</th>
+                  <th scope="col">Diperiksa</th>
+                </tr>
+              </thead>
+              <tbody>
+                {live.gates.gates.map((gate, index) => (
+                  <tr
+                    className={
+                      gate.verdict === "PASS" ? undefined : "row--fail"
+                    }
+                    key={gate.check_id}
+                  >
+                    <td className="num">
+                      {String(index + 1).padStart(2, "0")}
+                    </td>
+                    <th scope="row" className="t-data">
+                      {gate.check_id}
+                    </th>
+                    <td>
+                      <span
+                        className={
+                          gate.verdict === "PASS"
+                            ? "status status--pass"
+                            : "status status--fail"
+                        }
+                      >
+                        {gate.verdict === "PASS" ? "Lolos" : "Ditolak"}
+                      </span>
+                    </td>
+                    <td>
+                      {gate.reason}
+                      {gate.errors.length > 0
+                        ? gate.errors.map((error, errorIndex) => (
+                            <p
+                              className="t-compact muted"
+                              key={`${gate.check_id}-error-${errorIndex}`}
+                            >
+                              {error}
+                            </p>
+                          ))
+                        : null}
+                    </td>
+                    <td className="num">
+                      {gate.checked === null ? "—" : gate.checked}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div className="verdictline verdictline--fail">
+            <p className="t-label">Tidak terbaca</p>
+            <p className="lede">{live.gates.problem}</p>
+          </div>
+        )}
       </section>
     </>
   );
@@ -1689,7 +1893,7 @@ function GovernanceSection() {
   );
 }
 
-function KnowledgeSection() {
+function KnowledgeSection({ live }: { live: LiveSnapshot }) {
   return (
     <>
       <header className="pagehead grid">
@@ -1705,30 +1909,78 @@ function KnowledgeSection() {
         </div>
       </header>
       <section className="section">
-        <div className="tablewrap">
-          <table>
-            <thead>
-              <tr>
-                <th>Document</th>
-                <th>Type</th>
-                <th>Purpose</th>
-                <th>Recorded location</th>
-              </tr>
-            </thead>
-            <tbody>
-              {KNOWLEDGE.map((item) => (
-                <tr key={item.id}>
-                  <td>
-                    <strong>{item.title}</strong>
-                  </td>
-                  <td>{item.kind}</td>
-                  <td>{item.purpose}</td>
-                  <td className="t-data">{item.path}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
+        {live.knowledge.available ? (
+          <>
+            <div className="section__head">
+              <h2 className="t-section">Registry dokumen resmi</h2>
+              <span className="rulelabel">
+                Dibaca dari .safrs/document-registry.json
+              </span>
+            </div>
+            <div className="tablewrap">
+              <table>
+                <caption className="sr-only">Registry dokumen resmi</caption>
+                <thead>
+                  <tr>
+                    <th scope="col">Urutan</th>
+                    <th scope="col">Dokumen</th>
+                    <th scope="col">Jenis</th>
+                    <th scope="col">Normativitas</th>
+                    <th scope="col">Cakupan</th>
+                    <th scope="col">Lokasi</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {live.knowledge.documents.map((document) => (
+                    <tr key={document.id}>
+                      <td className="num">
+                        {document.read_order === undefined
+                          ? "—"
+                          : String(document.read_order).padStart(2, "0")}
+                      </td>
+                      <th scope="row">{document.id}</th>
+                      <td>{document.type}</td>
+                      <td>{document.normativity}</td>
+                      <td>{document.scope}</td>
+                      <td className="t-data">{document.path}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        ) : (
+          <>
+            <p className="t-compact muted">
+              Registry dokumen tidak terbaca di checkout ini — daftar di bawah
+              adalah katalog papan, bukan registry live.
+            </p>
+            <div className="tablewrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Document</th>
+                    <th>Type</th>
+                    <th>Purpose</th>
+                    <th>Recorded location</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {KNOWLEDGE.map((item) => (
+                    <tr key={item.id}>
+                      <td>
+                        <strong>{item.title}</strong>
+                      </td>
+                      <td>{item.kind}</td>
+                      <td>{item.purpose}</td>
+                      <td className="t-data">{item.path}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </>
+        )}
       </section>
     </>
   );
@@ -1819,11 +2071,12 @@ export function ControlCenter({ live }: { live: LiveSnapshot }) {
                 live={live}
               />
             ) : null}
-            {section === "agents" ? <AgentsSection /> : null}
+            {section === "agents" ? <AgentsSection live={live} /> : null}
             {section === "tasks" ? (
               <TasksSection
                 selectedAction={selectedAction}
                 onOpen={openAction}
+                live={live}
               />
             ) : null}
             {section === "health" ? (
@@ -1835,7 +2088,7 @@ export function ControlCenter({ live }: { live: LiveSnapshot }) {
             ) : null}
             {section === "activity" ? <ActivitySection live={live} /> : null}
             {section === "governance" ? <GovernanceSection /> : null}
-            {section === "knowledge" ? <KnowledgeSection /> : null}
+            {section === "knowledge" ? <KnowledgeSection live={live} /> : null}
           </div>
         </main>
       </div>

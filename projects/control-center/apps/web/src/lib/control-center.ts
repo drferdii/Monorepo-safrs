@@ -56,8 +56,6 @@ export type ControlAction = {
   mutation: boolean;
   approval: string;
   timeout: string;
-  executableHere: false;
-  status: ActionStatus;
   confirmation: string;
 };
 
@@ -119,13 +117,6 @@ export type KnowledgeRecord = {
   purpose: string;
 };
 
-export type GateRecord = {
-  id: string;
-  name: string;
-  purpose: string;
-  status: ObservationStatus;
-};
-
 export type NextAction = {
   id: string;
   title: string;
@@ -140,7 +131,7 @@ export const SITE = {
   promise:
     "Turn Monorepo-safrs complexity into plain-language decisions, with authority kept visible.",
   honesty:
-    "This board reads the repository directly on every request. Feature status is derived from evidence on disk and from git — never hand-authored. Commands are still not executed from here.",
+    "Papan ini membaca repository langsung pada setiap permintaan. Status fitur diderivasi dari bukti di disk dan git — tidak pernah ditulis tangan. Perintah dalam daftar izin dapat dijalankan dari papan ini dengan konfirmasi; di luar daftar itu tidak ada yang dieksekusi.",
   repo: "https://github.com/drferdii/Monorepo-safrs",
   declaration: "SAFRS Core",
   operatingModel: "Human-Governed · Agent-Executed · Machine-Enforced",
@@ -166,6 +157,56 @@ export type LiveSnapshot = {
   activity: LiveActivity;
   health: LiveHealth;
   library: LiveLibrary;
+  plane: LivePlane;
+  gates: {
+    available: boolean;
+    gates: {
+      check_id: string;
+      verdict: string;
+      reason: string;
+      checked: number | null;
+      errors: string[];
+    }[];
+    problem: string | null;
+  };
+  roles: { available: boolean; roles: Record<string, string[]> };
+  knowledge: {
+    available: boolean;
+    documents: {
+      id: string;
+      path: string;
+      type: string;
+      status: string;
+      normativity: string;
+      read_order?: number | undefined;
+      scope: string;
+    }[];
+  };
+};
+
+/** SAFRS control plane, read through `tools/status --json`. */
+export type LivePlane = {
+  available: boolean;
+  status: string;
+  observedAt: string | null;
+  tasks: {
+    id: string;
+    title: string;
+    state: string;
+    risk: string;
+    owner_label?: string;
+    worktree_id?: string;
+    updated_at?: string;
+  }[];
+  activeTasks: { id: string; state: string }[];
+  ownershipOk: boolean;
+  conflicts: string[];
+  governance: string | null;
+  failedChecks: string[];
+  leases: { task_id: string; events: number; chain_valid: boolean }[];
+  nextAction: string | null;
+  warnings: string[];
+  problem: string | null;
 };
 
 /** Medical library figures, read from the corpus data root. */
