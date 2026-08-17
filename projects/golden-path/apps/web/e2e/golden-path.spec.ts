@@ -35,4 +35,7 @@ test("Chief can see health and create a demo record", async ({ page }) => {
   await page.getByLabel("Nama contoh").fill(name);
   await page.getByRole("button", { name: "Simpan contoh" }).click();
   await expect(page.getByText(`Contoh ${name} tersimpan.`)).toBeVisible();
+  await expect(
+    page.getByRole("list", { name: "Contoh tersimpan" }),
+  ).toContainText(name);
 });

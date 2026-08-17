@@ -2,9 +2,20 @@ import { StatusCard } from "@safrs/ui";
 import { connection } from "next/server";
 import { Suspense } from "react";
 import { DemoForm } from "../components/demo-form";
-import { getReadiness, type Readiness } from "../lib/server-data";
+import {
+  type DemoView,
+  getReadiness,
+  type Readiness,
+  readDemos,
+} from "../lib/server-data";
 
-export function ReadinessDesk({ readiness }: { readiness: Readiness }) {
+export function ReadinessDesk({
+  demos,
+  readiness,
+}: {
+  demos: DemoView[];
+  readiness: Readiness;
+}) {
   const aggregateState =
     readiness.api.state === "ready" && readiness.database.state === "ready"
       ? "ready"
@@ -77,6 +88,11 @@ export function ReadinessDesk({ readiness }: { readiness: Readiness }) {
           <p>Nama akan divalidasi oleh API sebelum tersimpan di database.</p>
         </div>
         <DemoForm />
+        <ul aria-label="Contoh tersimpan" className="demo-list">
+          {demos.map((demo) => (
+            <li key={demo.id}>{demo.name}</li>
+          ))}
+        </ul>
       </section>
     </main>
   );
@@ -84,9 +100,9 @@ export function ReadinessDesk({ readiness }: { readiness: Readiness }) {
 
 async function DynamicReadinessDesk() {
   await connection();
-  const readiness = await getReadiness();
+  const [readiness, demos] = await Promise.all([getReadiness(), readDemos()]);
 
-  return <ReadinessDesk readiness={readiness} />;
+  return <ReadinessDesk demos={demos} readiness={readiness} />;
 }
 
 export default function Page() {

@@ -55,3 +55,27 @@ export async function getReadiness(): Promise<Readiness> {
 
   return { api, database };
 }
+
+export type DemoView = {
+  createdAt: string;
+  id: string;
+  name: string;
+};
+
+export async function readDemos(): Promise<DemoView[]> {
+  try {
+    const { database } = await import("@safrs/database");
+    const rows = await database.demo.findMany({
+      orderBy: { createdAt: "desc" },
+      take: 50,
+    });
+
+    return rows.map((demo) => ({
+      createdAt: demo.createdAt.toISOString(),
+      id: demo.id,
+      name: demo.name,
+    }));
+  } catch {
+    return [];
+  }
+}

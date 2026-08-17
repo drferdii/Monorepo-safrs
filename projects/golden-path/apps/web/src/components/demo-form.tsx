@@ -1,5 +1,6 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
   createBrowserApiClient,
@@ -8,6 +9,7 @@ import {
 } from "../lib/api-client";
 
 export function DemoForm() {
+  const router = useRouter();
   const [result, setResult] = useState<DemoSubmission | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
@@ -23,6 +25,9 @@ export function DemoForm() {
         name,
       );
       setResult(nextResult);
+      if (nextResult.status === "success") {
+        router.refresh();
+      }
     } catch {
       setResult({
         message: "Koneksi tidak tersedia. Coba lagi setelah API siap.",
