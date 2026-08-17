@@ -446,7 +446,7 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
     actionIds: [],
     docs: ["sentrawiki/how-to-contribute/development-workflow.md"],
     caveat:
-      "Alur `ci` sedang merah di `main` pada langkah browser-smoke: aplikasi tidak pernah menyala di 127.0.0.1:3001, sementara `APP_URL` menunjuk port 3000. Membutuhkan pemilik aplikasi untuk memperbaiki.",
+      "Alur `ci.yml` memverifikasi pull request dan push ke `main`. Ia membutuhkan Git LFS untuk snapshot visual dan PostgreSQL disposable di port 54329. Ia tidak men-deploy produksi.",
   },
   {
     id: "supply-chain",
