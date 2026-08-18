@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "next build",
-    "dev": "next dev",
+    "build": "node ../../../../scripts/next-production-build.mjs",
+    "dev": "next dev -H 127.0.0.1",
     "dev:email": "email dev --dir src/email",
     "lint": "biome check src",
     "start": "next start",

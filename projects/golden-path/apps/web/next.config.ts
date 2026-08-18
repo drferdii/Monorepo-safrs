@@ -7,6 +7,7 @@ import type { NextConfig } from "next";
 import "@safrs/env/server";
 
 const nextConfig: NextConfig = {
+  allowedDevOrigins: ["127.0.0.1"],
   cacheComponents: true,
   experimental: {
     useTypeScriptCli: true,

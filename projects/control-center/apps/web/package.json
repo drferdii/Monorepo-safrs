@@ -4,8 +4,8 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "build": "next build",
-    "dev": "next dev -H 127.0.0.1",
+    "build": "node ../../../../scripts/next-production-build.mjs",
+    "dev": "next dev -H 127.0.0.1 -p 3100",
     "lint": "biome check src",
     "start": "next start",
     "test": "node --test \"src/**/*.test.ts\"",
