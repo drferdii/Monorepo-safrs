@@ -25,6 +25,14 @@ export default defineConfig({
     cwd: fileURLToPath(new URL(".", import.meta.url)),
     env: canonicalEnvironment,
     reuseExistingServer: false,
-    timeout: 60_000,
+    // Without `url` Playwright never waits for readiness: it spawns the dev
+    // server and starts the tests in the same tick, so every navigation hits
+    // ERR_CONNECTION_REFUSED. The probe also drives the first compile, which
+    // is why the budget is well above a warm boot.
+    url: "http://127.0.0.1:3001",
+    timeout: 180_000,
+    // Surface the dev server's own output so a boot failure in CI is readable
+    // from the job log instead of only as a refused connection.
+    stdout: "pipe",
   },
 });
