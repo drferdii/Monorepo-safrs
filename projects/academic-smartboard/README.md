@@ -20,3 +20,19 @@ Status: Draft governance capsule — implementation is not created by this wizar
 ## Local verification
 
 Document only commands that exist and have been run. Root verification remains mandatory.
+
+## Status migrasi
+
+Capsule ini menampung semua permukaan produk smartboard hasil migrasi dari repo
+arsip `abyss-monorepo` (ADR 0003; spec:
+`docs/superpowers/specs/2026-08-20-smartboard-migration-design.md`).
+
+| App | Status |
+| --- | --- |
+| `apps/web` (aplikasi utama) | belum di-port |
+| `apps/site` (promo/publik) | belum di-port |
+| `apps/api` (backend) | belum di-port |
+| `apps/demo` (environment demo) | belum dibuat |
+
+Sudah bermigrasi: `ai/kayyisa/` (knowledge package v3.0.0),
+`data/curriculum/`, `data/reference/`.
