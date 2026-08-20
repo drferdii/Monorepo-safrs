@@ -14,6 +14,18 @@ Record the exact build, lint, type-check, unit, integration, and end-to-end comm
   `operations/*` dan `docs/*` sengaja dikecualikan dari migrasi (ADR 0003),
   jadi validator melaporkan file itu hilang; hash 36 file yang ada sudah
   diverifikasi cocok.
+- `apps/site` (`@sentra/smartboard-site`), dari
+  `pnpm --filter @sentra/smartboard-site <script>`:
+  - `test` — Vitest content-integrity (`src/content/content.test.ts`): 10
+    halaman, slug unik, field wajib terisi, semua href internal (nav + CTA)
+    menunjuk route yang ada.
+  - `test:build` — `node --test tests/build-output.test.mjs`: 10 route
+    diekspor ke `out/<route>/index.html`, plus guard vendor-reference (tidak
+    ada sisa string `temlis`/`aeline` dari arsip di output build). Jalankan
+    build (`pnpm --filter @sentra/smartboard-site build`) dulu kalau `out/`
+    belum ada.
+  - `lint` — Biome (`biome check src`).
+  - `typecheck` — `tsc --project tsconfig.json`.
 
 ## Rencana test fase port
 
