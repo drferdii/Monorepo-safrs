@@ -1,8 +1,11 @@
 import { beranda } from "./beranda.ts";
+import { caraBelajar } from "./cara-belajar.ts";
 import { programPemantauanPerkembangan } from "./program-pemantauan-perkembangan.ts";
 import { programPemetaanBelajar } from "./program-pemetaan-belajar.ts";
 import { programPendampinganPersonal } from "./program-pendampingan-personal.ts";
+import { tentang } from "./tentang.ts";
 import type { NavItem, PageContent } from "./types.ts";
+import { wawasan } from "./wawasan.ts";
 
 export const NAV_ITEMS: NavItem[] = [
   { label: "Beranda", href: "/" },
@@ -11,30 +14,6 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Tentang", href: "/tentang" },
   { label: "Smartboard", href: "/smartboard" },
 ];
-
-const caraBelajar: PageContent = {
-  slug: "cara-belajar",
-  title: "Stub — cara-belajar",
-  description: "Stub — Cara Belajar",
-  hero: { heading: "Stub cara-belajar", sub: "Stub — Cara Belajar" },
-  sections: [],
-};
-
-const tentang: PageContent = {
-  slug: "tentang",
-  title: "Stub — tentang",
-  description: "Stub — Tentang",
-  hero: { heading: "Stub tentang", sub: "Stub — Tentang" },
-  sections: [],
-};
-
-const wawasan: PageContent = {
-  slug: "wawasan",
-  title: "Stub — wawasan",
-  description: "Stub — Wawasan",
-  hero: { heading: "Stub wawasan", sub: "Stub — Wawasan" },
-  sections: [],
-};
 
 const smartboard: PageContent = {
   slug: "smartboard",
