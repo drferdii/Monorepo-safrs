@@ -3,6 +3,7 @@ import { caraBelajar } from "./cara-belajar.ts";
 import { programPemantauanPerkembangan } from "./program-pemantauan-perkembangan.ts";
 import { programPemetaanBelajar } from "./program-pemetaan-belajar.ts";
 import { programPendampinganPersonal } from "./program-pendampingan-personal.ts";
+import { smartboard } from "./smartboard.ts";
 import { tentang } from "./tentang.ts";
 import type { NavItem, PageContent } from "./types.ts";
 import { wawasan } from "./wawasan.ts";
@@ -14,14 +15,6 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Tentang", href: "/tentang" },
   { label: "Smartboard", href: "/smartboard" },
 ];
-
-const smartboard: PageContent = {
-  slug: "smartboard",
-  title: "Stub — smartboard",
-  description: "Stub — Smartboard",
-  hero: { heading: "Stub smartboard", sub: "Stub — Smartboard" },
-  sections: [],
-};
 
 const kebijakanPrivasi: PageContent = {
   slug: "kebijakan-privasi",
