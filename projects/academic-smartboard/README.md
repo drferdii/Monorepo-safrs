@@ -30,9 +30,15 @@ arsip `abyss-monorepo` (ADR 0003; spec:
 | App | Status |
 | --- | --- |
 | `apps/web` (aplikasi utama) | belum di-port |
-| `apps/site` (promo/publik) | belum di-port |
+| `apps/site` (promo/publik) | di-port |
 | `apps/api` (backend) | belum di-port |
 | `apps/demo` (environment demo) | belum dibuat |
 
 Sudah bermigrasi: `ai/kayyisa/` (knowledge package v3.0.0),
-`data/curriculum/`, `data/reference/`.
+`data/curriculum/`, `data/reference/`, `apps/site` (website publik El-Kayyisa).
+
+## `apps/site` — website publik El-Kayyisa
+
+Website promo/publik El-Kayyisa: Next.js 16, static export (`output: "export"`),
+10 route. Detail arsitektur, data, dan verifikasi ada di
+`docs/architecture.md`, `docs/data.md`, `docs/testing.md`.

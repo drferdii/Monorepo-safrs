@@ -16,6 +16,24 @@ Record actual data classes, ownership, retention, privacy constraints, environme
 - `ai/kayyisa/runtime/knowledge/`: JSONL knowledge pack, integritas dijaga
   `manifest.json` (sha256); perubahan terklasifikasi R2 via `.safrs/sensitive-paths.json`
   (pola `projects/**/ai/**`)
+- `apps/site/src/content/`: konten publik situs El-Kayyisa (modul TS bertipe,
+  10 halaman) — publik, R1
+- `apps/site/public/`: 6 gambar webp artikel wawasan hasil optimasi
+  (504K total) — publik, R1
+
+## `apps/site` — data
+
+Konten publik saja; **nol data pribadi**. Testimoni placeholder ("Testimoni
+menunggu persetujuan") dari arsip **tidak di-port** — bagian testimoni
+dihilangkan sampai ada testimoni riil yang disetujui, bukan diisi data
+placeholder.
+
+2 foto orang dari arsip (`tutor-profile.png`, `mentor-berhijab.png`)
+**DIKECUALIKAN** dari `public/` — konsen/lisensi belum terverifikasi.
+Kedua foto **DIHILANGKAN** dari situs (tidak dirender, tanpa placeholder —
+bagian `tentang` tidak punya field gambar) sampai ada konfirmasi tertulis
+dari Chief. `public/` hanya memuat 6 gambar webp artikel wawasan hasil
+optimasi (504K total), tanpa foto orang.
 
 ## Data yang DILARANG masuk
 
