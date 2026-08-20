@@ -62,7 +62,11 @@ export function Hero({ content }: { content: PageContent["hero"] }) {
             // may still be a Task 5-9 stub, so typedRoutes cannot verify it.
             <Link
               href={content.cta.href as Route}
-              className="hover:bg-[var(--color-action-primary-hover)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus-ring)]"
+              // Ledge lives in the className (not inline style) so the
+              // :active variant below can win the cascade and override it —
+              // UI-RULES: the button-ledge "travels" on press (06-button-lab
+              // treatment C — translate by the ledge offset, shadow to none).
+              className="shadow-[var(--button-ledge)_var(--button-ledge)_0_0_var(--color-action-ledge)] transition-[background-color,translate,box-shadow] duration-[var(--motion-duration-fast)] ease-[var(--motion-easing-standard)] hover:bg-[var(--color-action-primary-hover)] active:shadow-none active:[translate:var(--button-ledge)_var(--button-ledge)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus-ring)]"
               style={{
                 marginTop: "var(--space-6)",
                 display: "inline-flex",
@@ -74,8 +78,6 @@ export function Hero({ content }: { content: PageContent["hero"] }) {
                 color: "var(--color-action-primary-text)",
                 background: "var(--color-action-primary)",
                 borderRadius: "var(--radius-control)",
-                boxShadow:
-                  "var(--button-ledge) var(--button-ledge) 0 0 var(--color-action-ledge)",
                 textDecoration: "none",
               }}
             >

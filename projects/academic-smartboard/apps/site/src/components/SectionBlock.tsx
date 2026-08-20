@@ -30,7 +30,7 @@ export function SectionBlock({ section }: { section: Section }) {
           <div style={{ marginTop: "var(--space-5)" }}>
             {section.body.map((paragraph, index) => (
               <p
-                key={paragraph}
+                key={`${section.id}-p-${index}`}
                 style={{
                   marginTop: index === 0 ? 0 : "var(--space-4)",
                   maxWidth: "var(--layout-container-text)",
@@ -54,9 +54,9 @@ export function SectionBlock({ section }: { section: Section }) {
                 padding: 0,
               }}
             >
-              {section.bullets.map((bullet) => (
+              {section.bullets.map((bullet, index) => (
                 <li
-                  key={bullet}
+                  key={`${section.id}-b-${index}`}
                   style={{
                     paddingLeft: "var(--space-4)",
                     borderLeft: "2px solid var(--color-border-strong)",
