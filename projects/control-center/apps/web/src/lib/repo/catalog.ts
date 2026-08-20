@@ -386,7 +386,7 @@ export const FEATURE_CATALOG: FeatureDefinition[] = [
     name: "Adapter Agen AI",
     area: "knowledge",
     purpose:
-      "Adapter netral-vendor untuk Claude Code, Cursor, Codex, dan Cline yang menunjuk ke AGENTS.md tanpa menduplikasi aturan.",
+      "Adapter netral-vendor untuk Claude Code, Cursor, dan Codex yang menunjuk ke AGENTS.md tanpa menduplikasi aturan.",
     userValue: "Agen mana pun yang dipakai tetap tunduk pada aturan yang sama.",
     whenToUse: "Saat menyiapkan atau mengganti asisten AI.",
     entryPoint: "docs/bootstrap/CLAUDE_SETUP.md",
