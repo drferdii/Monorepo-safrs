@@ -1,4 +1,7 @@
 import { beranda } from "./beranda.ts";
+import { programPemantauanPerkembangan } from "./program-pemantauan-perkembangan.ts";
+import { programPemetaanBelajar } from "./program-pemetaan-belajar.ts";
+import { programPendampinganPersonal } from "./program-pendampingan-personal.ts";
 import type { NavItem, PageContent } from "./types.ts";
 
 export const NAV_ITEMS: NavItem[] = [
@@ -30,39 +33,6 @@ const wawasan: PageContent = {
   title: "Stub — wawasan",
   description: "Stub — Wawasan",
   hero: { heading: "Stub wawasan", sub: "Stub — Wawasan" },
-  sections: [],
-};
-
-const programPemetaanBelajar: PageContent = {
-  slug: "program/pemetaan-belajar",
-  title: "Stub — program/pemetaan-belajar",
-  description: "Stub — Program Pemetaan Belajar",
-  hero: {
-    heading: "Stub program/pemetaan-belajar",
-    sub: "Stub — Program Pemetaan Belajar",
-  },
-  sections: [],
-};
-
-const programPendampinganPersonal: PageContent = {
-  slug: "program/pendampingan-personal",
-  title: "Stub — program/pendampingan-personal",
-  description: "Stub — Program Pendampingan Personal",
-  hero: {
-    heading: "Stub program/pendampingan-personal",
-    sub: "Stub — Program Pendampingan Personal",
-  },
-  sections: [],
-};
-
-const programPemantauanPerkembangan: PageContent = {
-  slug: "program/pemantauan-perkembangan",
-  title: "Stub — program/pemantauan-perkembangan",
-  description: "Stub — Program Pemantauan Perkembangan",
-  hero: {
-    heading: "Stub program/pemantauan-perkembangan",
-    sub: "Stub — Program Pemantauan Perkembangan",
-  },
   sections: [],
 };
 
