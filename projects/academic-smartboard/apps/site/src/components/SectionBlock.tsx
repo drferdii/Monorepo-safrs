@@ -15,6 +15,23 @@ export function SectionBlock({ section }: { section: Section }) {
       >
         {/* Content anchors columns 1-7; column 8 stays empty by design. */}
         <div style={{ gridColumn: "1 / span 7" }}>
+          {section.image ? (
+            <img
+              src={section.image.src}
+              alt={section.image.alt}
+              width={1536}
+              height={1024}
+              loading="lazy"
+              style={{
+                display: "block",
+                width: "100%",
+                maxWidth: "100%",
+                height: "auto",
+                borderRadius: "var(--radius-structure)",
+                marginBottom: "var(--space-5)",
+              }}
+            />
+          ) : null}
           <h2
             style={{
               paddingBottom: "var(--space-2)",

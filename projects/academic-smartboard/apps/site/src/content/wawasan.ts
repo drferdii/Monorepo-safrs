@@ -23,10 +23,12 @@ import type { PageContent } from "./types.ts";
 // vendor berbahasa Inggris yang tidak berhubungan dengan judul artikel
 // Indonesia-nya.
 //
-// Gambar tiap artikel (.blog_main-card_img / .content-blog_card_img)
-// BELUM di-port — menunggu Task 10 sesuai brief. Section saat ini hanya
-// berisi teks; field gambar akan ditambahkan saat Task 10 memperluas tipe
-// atau komponen render.
+// Gambar tiap artikel (.blog_main-card_img / .content-blog_card_img) di-port
+// di Task 10: PNG arsip dikonversi ke webp (lebar 1536px asli, di bawah
+// batas 1600px sehingga tidak di-resize) dan disimpan di
+// public/images/wawasan/<section.id>.webp. Pemetaan file arsip ke section
+// diverifikasi lewat atribut src <img> pada source-pages/wawasan.html
+// (bukan tebakan dari nama file semata).
 //
 // Dijatuhkan (bukan konten artikel):
 // - Header pembuka blok listing (.sec_content-blog: tag "Artikel Pilihan"
@@ -56,36 +58,60 @@ export const wawasan: PageContent = {
         "Belajar yang terarah dimulai dari memahami kebutuhan anak, memilih strategi yang sesuai, dan membangun rutinitas yang dapat dijalani secara konsisten.",
       ],
       bullets: ["Pendampingan Belajar"],
+      image: {
+        src: "/images/wawasan/5-cara-membantu-anak-belajar-lebih-terarah.webp",
+        alt: "5 Cara Membantu Anak Belajar Lebih Terarah",
+      },
     },
     {
       id: "memahami-cara-belajar-anak-di-rumah",
       heading: "Memahami Cara Belajar Anak di Rumah",
       body: [],
       bullets: ["Cara Belajar"],
+      image: {
+        src: "/images/wawasan/memahami-cara-belajar-anak-di-rumah.webp",
+        alt: "Memahami Cara Belajar Anak di Rumah",
+      },
     },
     {
       id: "membangun-kebiasaan-belajar-yang-konsisten",
       heading: "Membangun Kebiasaan Belajar yang Konsisten",
       body: [],
       bullets: ["Pendampingan"],
+      image: {
+        src: "/images/wawasan/membangun-kebiasaan-belajar-yang-konsisten.webp",
+        alt: "Membangun Kebiasaan Belajar yang Konsisten",
+      },
     },
     {
       id: "peran-tutor-dalam-menguatkan-pemahaman",
       heading: "Peran Tutor dalam Menguatkan Pemahaman",
       body: [],
       bullets: ["Tutor"],
+      image: {
+        src: "/images/wawasan/peran-tutor-dalam-menguatkan-pemahaman.webp",
+        alt: "Peran Tutor dalam Menguatkan Pemahaman",
+      },
     },
     {
       id: "mengenal-perkembangan-belajar-anak",
       heading: "Mengenal Perkembangan Belajar Anak",
       body: [],
       bullets: ["Perkembangan Anak"],
+      image: {
+        src: "/images/wawasan/mengenal-perkembangan-belajar-anak.webp",
+        alt: "Mengenal Perkembangan Belajar Anak",
+      },
     },
     {
       id: "belajar-aktif-dengan-smartboard-sentra",
       heading: "Belajar Aktif dengan Smartboard Sentra",
       body: [],
       bullets: ["Smartboard Sentra"],
+      image: {
+        src: "/images/wawasan/belajar-aktif-dengan-smartboard-sentra.webp",
+        alt: "Belajar Aktif dengan Smartboard Sentra",
+      },
     },
   ],
 };

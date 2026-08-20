@@ -5,6 +5,7 @@ export type Section = {
   heading: string;
   body: string[];
   bullets?: string[];
+  image?: { src: string; alt: string };
 };
 export type PageContent = {
   slug: string; // "" = beranda
