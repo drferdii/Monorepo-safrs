@@ -26,6 +26,22 @@ Record the exact build, lint, type-check, unit, integration, and end-to-end comm
     belum ada.
   - `lint` — Biome (`biome check src`).
   - `typecheck` — `tsc --project tsconfig.json`.
+- `apps/web` (`@sentra/smartboard-web`) sub-fase 1/5, dari
+  `pnpm --filter @sentra/smartboard-web <script>`:
+  - `test` — Vitest, unit logic murni, TANPA render DOM/React Testing
+    Library: `cn.test.ts` (util merge class), `api.test.ts` (client axios,
+    mock), `auth.test.ts` (reducer state machine `authReducer`),
+    `nav.test.ts` (filter `filterByRole`). RTL + `jsdom` sengaja belum
+    ditambah sub-fase ini (Keputusan terbuka #5, plan sub-fase 1) — kalau
+    Chief mau rendering test, itu keputusan cross-cutting terpisah untuk
+    semua app, bukan satu-off `apps/web`; sampai saat itu, rendering
+    dicek manual lewat dev server.
+  - `test:build` — `node --test tests/build-output.test.mjs`: assert 3
+    route sub-fase 1 (`/`, `/login`, `/master/murid`) diekspor ke
+    `out/<route>/index.html`. Jalankan build (`pnpm --filter
+    @sentra/smartboard-web build`) dulu kalau `out/` belum ada.
+  - `lint` — Biome (`biome check src`), sama seperti `apps/site`.
+  - `typecheck` — `tsc --project tsconfig.json`, sama seperti `apps/site`.
 
 ## Rencana test fase port
 

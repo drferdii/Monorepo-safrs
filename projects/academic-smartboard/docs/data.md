@@ -20,6 +20,9 @@ Record actual data classes, ownership, retention, privacy constraints, environme
   10 halaman) — publik, R1
 - `apps/site/public/`: 6 gambar webp artikel wawasan hasil optimasi
   (504K total) — publik, R1
+- `apps/web/` sub-fase 1: kode aplikasi saja (komponen, lib, test unit) —
+  nol data pribadi/nyata disimpan di repo ini, lihat bagian `apps/web` di
+  bawah
 
 ## `apps/site` — data
 
@@ -34,6 +37,20 @@ Kedua foto **DIHILANGKAN** dari situs (tidak dirender, tanpa placeholder —
 bagian `tentang` tidak punya field gambar) sampai ada konfirmasi tertulis
 dari Chief. `public/` hanya memuat 6 gambar webp artikel wawasan hasil
 optimasi (504K total), tanpa foto orang.
+
+## `apps/web` — data (sub-fase 1/5)
+
+Sub-fase 1 **tidak menyentuh data pribadi nyata** — repo ini menyimpan nol
+record siswa/tentor/keluarga. Halaman Master › Murid memanggil
+`GET /api/students` pada backend arsip (FastAPI + MongoDB, dijalankan
+manual, dev-only, terpisah dari monorepo ini) saat runtime di browser;
+respons hanya ada di memori client selama sesi, tidak pernah ditulis ke
+disk atau di-commit. Test unit (`api.test.ts`) memakai mock `axios`, bukan
+data nyata.
+
+Kalau sub-fase berikutnya (2-5) butuh sampel data arsip untuk fixture/test,
+aturan karantina `raw_data/` di bawah tetap berlaku penuh — sampel HARUS
+disintesis/dianonimkan, bukan disalin dari `raw_data/` arsip.
 
 ## Data yang DILARANG masuk
 
