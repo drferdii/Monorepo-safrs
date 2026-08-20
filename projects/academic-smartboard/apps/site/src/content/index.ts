@@ -1,3 +1,4 @@
+import { beranda } from "./beranda.ts";
 import type { NavItem, PageContent } from "./types.ts";
 
 export const NAV_ITEMS: NavItem[] = [
@@ -7,14 +8,6 @@ export const NAV_ITEMS: NavItem[] = [
   { label: "Tentang", href: "/tentang" },
   { label: "Smartboard", href: "/smartboard" },
 ];
-
-const beranda: PageContent = {
-  slug: "",
-  title: "El-Kayyisa | Bimbingan Belajar Personal dan Terarah",
-  description: "Stub — Beranda",
-  hero: { heading: "Stub beranda", sub: "Stub — Beranda" },
-  sections: [],
-};
 
 const caraBelajar: PageContent = {
   slug: "cara-belajar",
