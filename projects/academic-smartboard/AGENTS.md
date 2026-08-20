@@ -27,10 +27,10 @@ Read the repository root `AGENTS.md` first. This file narrows project-local cont
 
 Replace these placeholders with commands that exist before activating the capsule:
 
-- Build: `not applicable: governance capsule only`
-- Lint: `not applicable: governance capsule only`
-- Type check: `not applicable: governance capsule only`
-- Test: `not applicable: governance capsule only`
+- Lint: `pnpm --filter @sentra/smartboard-site lint`
+- Typecheck: `pnpm --filter @sentra/smartboard-site typecheck`
+- Test: `pnpm --filter @sentra/smartboard-site test`
+- Build: `pnpm --filter @sentra/smartboard-site build` (static export ke `apps/site/out/`)
 
 ## Prohibited actions
 
