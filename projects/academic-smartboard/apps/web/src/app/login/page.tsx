@@ -9,7 +9,7 @@ import { z } from "zod";
 import { Button } from "../../components/ui/button.tsx";
 import { Input } from "../../components/ui/input.tsx";
 import { Label } from "../../components/ui/label.tsx";
-import { AuthProvider, useAuth } from "../../lib/auth.tsx";
+import { useAuth } from "../../lib/auth.tsx";
 
 const loginSchema = z.object({
   email: z.email(),
@@ -32,7 +32,7 @@ function LoginForm() {
     setFormError(null);
     try {
       await login(values.email, values.password);
-      // /master/murid is built in Task 7; typedRoutes can't see it yet.
+      // /master/murid is built in Task 8; typedRoutes can't see it yet.
       router.push("/master/murid" as Route);
     } catch {
       setFormError("Email atau kata sandi salah");
@@ -100,12 +100,7 @@ function LoginForm() {
 }
 
 export default function LoginPage() {
-  // AuthProvider is wired into the root layout in Task 7. Wrapping locally
-  // here keeps this route self-contained (static export prerender, manual
-  // dev-server checks) until that wiring lands.
-  return (
-    <AuthProvider>
-      <LoginForm />
-    </AuthProvider>
-  );
+  // AuthProvider is wired into the root layout (Task 7); this route relies
+  // solely on that context now.
+  return <LoginForm />;
 }
