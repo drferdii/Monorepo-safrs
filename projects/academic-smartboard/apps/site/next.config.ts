@@ -8,6 +8,9 @@ const nextConfig: NextConfig = {
   transpilePackages: ["@sentra/token"],
   typedRoutes: true,
   images: { unoptimized: true },
+  // out/<route>/index.html per route (bukan out/<route>.html) — lebih ramah
+  // untuk static host mana pun dan konsisten dengan tests/build-output.test.mjs.
+  trailingSlash: true,
 };
 
 export default nextConfig;
