@@ -42,6 +42,16 @@ const bodyStyle = {
   color: "var(--color-text-secondary)",
 } as const;
 
+const tagStyle = {
+  flexShrink: 0,
+  paddingInline: "var(--space-3)",
+  paddingBlock: "var(--space-1)",
+  borderRadius: "var(--radius-control)",
+  border: "1px solid var(--color-border-subtle)",
+  fontSize: "var(--font-size-caption)",
+  color: "var(--color-text-secondary)",
+} as const;
+
 /* ---- content parsing helpers ----
    smartboard.ts documents these prefix conventions inline; parsing lives
    here (not duplicated per call site) so a mismatch between content and
@@ -118,7 +128,6 @@ export function SmartboardShowcase({ content }: { content: PageContent }) {
   });
   const aiInsights = byPrefix(aiBullets, "Insight:");
   const aiTags = byPrefix(aiBullets, "Tag:");
-  const aiTagsLoop = [...aiTags, ...aiTags];
 
   return (
     <>
@@ -516,22 +525,27 @@ export function SmartboardShowcase({ content }: { content: PageContent }) {
                   width: "max-content",
                 }}
               >
-                {aiTagsLoop.map((tag, index) => (
-                  <span
-                    key={`${tag}-${index}`}
-                    style={{
-                      flexShrink: 0,
-                      paddingInline: "var(--space-3)",
-                      paddingBlock: "var(--space-1)",
-                      borderRadius: "var(--radius-control)",
-                      border: "1px solid var(--color-border-subtle)",
-                      fontSize: "var(--font-size-caption)",
-                      color: "var(--color-text-secondary)",
-                    }}
-                  >
-                    {tag}
-                  </span>
-                ))}
+                {/* Visible half: the real, once-only tag list for assistive tech. */}
+                <div style={{ display: "flex", gap: "var(--space-2)" }}>
+                  {aiTags.map((tag, index) => (
+                    <span key={`${tag}-${index}`} style={tagStyle}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+                {/* Duplicate half exists only so the CSS marquee can loop
+                    seamlessly at -50%; hidden from assistive tech so tags
+                    are not announced twice. */}
+                <div
+                  aria-hidden="true"
+                  style={{ display: "flex", gap: "var(--space-2)" }}
+                >
+                  {aiTags.map((tag, index) => (
+                    <span key={`dup-${tag}-${index}`} style={tagStyle}>
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
