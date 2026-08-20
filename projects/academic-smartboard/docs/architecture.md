@@ -41,8 +41,10 @@ navigasi.
 Chrome (header, footer, komponen showcase, dll.) di `src/components/` dan
 semua warna/radius memakai token semantik `@sentra/token`
 (`transpilePackages: ["@sentra/token"]` di `next.config.ts`) — bukan nilai
-hex/px bebas, tunduk pada gate `scripts/check-tokens.mjs`
-(`packages/token/scope.txt`). Motion memakai CSS murni (bukan library JS)
+hex/px bebas. Situs memakai token `@sentra/token` secara penuh (audit
+`check-tokens.mjs --audit` = nol pelanggaran); pendaftaran ke scope
+enforcement `packages/token/scope.txt` dilakukan pada branch kontrol
+terpisah (task plan lanjutan). Motion memakai CSS murni (bukan library JS)
 dengan guard `prefers-reduced-motion` (lihat `SmartboardShowcase.tsx`) agar
 animasi berhenti untuk pengguna yang memintanya.
 

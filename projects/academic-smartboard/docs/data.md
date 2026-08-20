@@ -29,8 +29,9 @@ dihilangkan sampai ada testimoni riil yang disetujui, bukan diisi data
 placeholder.
 
 2 foto orang dari arsip (`tutor-profile.png`, `mentor-berhijab.png`)
-**DIKECUALIKAN** dari `public/` — konsen/lisensi belum terverifikasi;
-posisinya diisi placeholder berbasis token sampai ada konfirmasi tertulis
+**DIKECUALIKAN** dari `public/` — konsen/lisensi belum terverifikasi.
+Kedua foto **DIHILANGKAN** dari situs (tidak dirender, tanpa placeholder —
+bagian `tentang` tidak punya field gambar) sampai ada konfirmasi tertulis
 dari Chief. `public/` hanya memuat 6 gambar webp artikel wawasan hasil
 optimasi (504K total), tanpa foto orang.
 
