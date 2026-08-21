@@ -156,12 +156,16 @@ html.novia-lenis-ready {
     left: 40px !important;
   }
 
-  /* Right Column: macOS Terminal */
+  /* Right Column: macOS Terminal (Strict Fixed Size) */
   .novia-mac-terminal {
     order: 2 !important;
     width: 48% !important;
     max-width: 560px !important;
     min-width: 420px !important;
+    height: 310px !important;
+    min-height: 310px !important;
+    max-height: 310px !important;
+    flex-shrink: 0 !important;
     margin: 0 !important;
     position: relative !important;
     z-index: 10 !important;
@@ -189,12 +193,16 @@ html.novia-lenis-ready {
   .novia-mac-terminal {
     width: 100% !important;
     max-width: 540px !important;
+    height: 310px !important;
+    min-height: 310px !important;
+    max-height: 310px !important;
+    flex-shrink: 0 !important;
     margin: 32px auto 0 auto !important;
   }
 }
 
 /* ==========================================================================
-   AUTHENTIC MACOS TERMINAL UI (SOLID & REALISTIC)
+   AUTHENTIC MACOS TERMINAL UI (STRICT FIXED SIZE & ZERO MOTION)
    ========================================================================== */
 
 .novia-mac-terminal {
@@ -204,10 +212,17 @@ html.novia-lenis-ready {
   border: 1px solid rgba(255, 255, 255, 0.14);
   border-radius: 12px;
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
-  overflow: hidden;
+  overflow: hidden !important;
   font-family: ui-monospace, "SF Mono", Monaco, Menlo, Consolas, "Liberation Mono", monospace;
   user-select: text;
   -webkit-font-smoothing: antialiased;
+  height: 310px !important;
+  min-height: 310px !important;
+  max-height: 310px !important;
+  box-sizing: border-box !important;
+  contain: layout size style;
+  transform: none !important;
+  transition: none !important;
 }
 
 /* Authentic macOS Titlebar */
@@ -220,6 +235,8 @@ html.novia-lenis-ready {
   align-items: center;
   gap: 12px;
   height: 38px;
+  min-height: 38px;
+  max-height: 38px;
   box-sizing: border-box;
 }
 
@@ -265,25 +282,17 @@ html.novia-lenis-ready {
   width: 52px;
 }
 
-/* Terminal Screen / Body */
+/* Terminal Screen / Body (Fixed Height, No Expanding) */
 .novia-terminal-body {
-  padding: 14px 18px 18px 18px;
-  font-size: 12.5px;
-  line-height: 1.6;
+  padding: 12px 16px 14px 16px;
+  font-size: 12px;
+  line-height: 1.55;
   color: #d1d5db;
-  max-height: 300px;
-  min-height: 240px;
-  overflow-y: auto;
-  scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
-}
-
-.novia-terminal-body::-webkit-scrollbar {
-  width: 6px;
-}
-.novia-terminal-body::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 3px;
+  height: 272px !important;
+  min-height: 272px !important;
+  max-height: 272px !important;
+  box-sizing: border-box !important;
+  overflow: hidden !important;
 }
 
 .novia-terminal-banner {
