@@ -111,12 +111,14 @@ html.novia-lenis-ready {
     position: relative !important;
     width: 48% !important;
     max-width: 540px !important;
-    height: auto !important;
-    min-height: 290px !important;
+    height: 310px !important;
+    min-height: 310px !important;
+    max-height: 310px !important;
     margin: 0 !important;
     text-align: left !important;
     align-items: flex-start !important;
     order: 1 !important;
+    flex-shrink: 0 !important;
   }
 
   #hero .framer-19mtef4 {
@@ -130,30 +132,43 @@ html.novia-lenis-ready {
 
   #hero .framer-19mtef4 h6 {
     text-align: left !important;
-    font-size: clamp(34px, 3.4vw, 52px) !important;
-    line-height: 100% !important;
-    letter-spacing: -1.8px !important;
+    font-size: clamp(30px, 3vw, 44px) !important;
+    line-height: 104% !important;
+    letter-spacing: -1.6px !important;
     white-space: normal !important;
   }
 
-  /* Chip positioning aligned with left column */
+  /* Chip 1 (Purple - Arsitektur Kecerdasan Buatan) */
   #hero .framer-5pzb02-container {
-    top: unset !important;
-    bottom: -46px !important;
-    left: 0 !important;
-  }
-
-  #hero .framer-1nuwzx9-container {
-    top: unset !important;
-    bottom: -46px !important;
-    left: 235px !important;
+    position: absolute !important;
+    top: 172px !important;
+    left: 0px !important;
+    bottom: unset !important;
     right: unset !important;
+    transform: rotate(-2deg) !important;
+    z-index: 5 !important;
   }
 
+  /* Chip 2 (Pink - Desain Situs Web) */
+  #hero .framer-1nuwzx9-container {
+    position: absolute !important;
+    top: 234px !important;
+    left: 0px !important;
+    bottom: unset !important;
+    right: unset !important;
+    transform: rotate(2deg) !important;
+    z-index: 5 !important;
+  }
+
+  /* Chip 3 (Green - Otomasi Cerdas) */
   #hero .framer-y3re4l-container {
-    top: unset !important;
-    bottom: -92px !important;
-    left: 40px !important;
+    position: absolute !important;
+    top: 234px !important;
+    left: 228px !important;
+    bottom: unset !important;
+    right: unset !important;
+    transform: rotate(-1.5deg) !important;
+    z-index: 5 !important;
   }
 
   /* Right Column: macOS Terminal (Strict Fixed Size) */
@@ -187,17 +202,59 @@ html.novia-lenis-ready {
     flex-direction: column !important;
     align-items: center !important;
     gap: 32px !important;
-    padding: 24px 20px 100px 20px !important;
+    padding: 24px 20px 80px 20px !important;
+  }
+
+  #hero .framer-1mnp6iw {
+    position: relative !important;
+    width: 100% !important;
+    max-width: 520px !important;
+    height: 330px !important;
+    min-height: 330px !important;
+    margin: 0 auto !important;
+  }
+
+  #hero .framer-19mtef4 h6 {
+    text-align: left !important;
+    font-size: 32px !important;
+    line-height: 106% !important;
+  }
+
+  #hero .framer-5pzb02-container {
+    position: absolute !important;
+    top: 172px !important;
+    left: 0px !important;
+    bottom: unset !important;
+    right: unset !important;
+    transform: rotate(-2deg) !important;
+  }
+
+  #hero .framer-1nuwzx9-container {
+    position: absolute !important;
+    top: 234px !important;
+    left: 0px !important;
+    bottom: unset !important;
+    right: unset !important;
+    transform: rotate(2deg) !important;
+  }
+
+  #hero .framer-y3re4l-container {
+    position: absolute !important;
+    top: 234px !important;
+    left: 228px !important;
+    bottom: unset !important;
+    right: unset !important;
+    transform: rotate(-1.5deg) !important;
   }
 
   .novia-mac-terminal {
     width: 100% !important;
-    max-width: 540px !important;
+    max-width: 520px !important;
     height: 310px !important;
     min-height: 310px !important;
     max-height: 310px !important;
     flex-shrink: 0 !important;
-    margin: 32px auto 0 auto !important;
+    margin: 24px auto 0 auto !important;
   }
 }
 
