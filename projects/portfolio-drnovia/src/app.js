@@ -546,12 +546,12 @@
       content: content,
       eventsTarget: wrapper,
       autoRaf: true,
-      anchors: { offset: 24, duration: 1.1 },
+      anchors: { offset: 24, duration: 0.8 },
       naiveDimensions: true,
       stopInertiaOnNavigate: true,
-      lerp: 0.06,
-      wheelMultiplier: 0.9,
-      touchMultiplier: 1.05,
+      lerp: 0.12,
+      wheelMultiplier: 1.15,
+      touchMultiplier: 1.2,
       syncTouch: false,
       respectReducedMotion: true,
       overscroll: true,
@@ -638,18 +638,64 @@
                 (entries, io) => {
                   entries.forEach((entry) => {
                     if (!entry.isIntersecting) return;
-                    gsap.fromTo(
-                      entry.target,
-                      { y: 14, opacity: 0.97 },
-                      {
-                        y: 0,
-                        opacity: 1,
-                        duration: 0.6,
-                        ease: "power2.out",
-                        clearProps: "transform,opacity",
-                      },
-                    );
-                    io.unobserve(entry.target);
+                    const target = entry.target;
+
+                    if (target.classList.contains("novia-editorial-row")) {
+                      const fromSide = target.classList.contains(
+                        "novia-editorial-row-reverse",
+                      )
+                        ? 36
+                        : -36;
+                      const media = target.querySelector(
+                        ".novia-editorial-media",
+                      );
+                      const copyItems = target.querySelectorAll(
+                        ".novia-editorial-copy > *",
+                      );
+
+                      if (media) {
+                        gsap.fromTo(
+                          media,
+                          { x: fromSide, opacity: 0 },
+                          {
+                            x: 0,
+                            opacity: 1,
+                            duration: 0.9,
+                            ease: "power3.out",
+                            clearProps: "transform,opacity",
+                          },
+                        );
+                      }
+                      if (copyItems.length) {
+                        gsap.fromTo(
+                          copyItems,
+                          { y: 18, opacity: 0 },
+                          {
+                            y: 0,
+                            opacity: 1,
+                            duration: 0.6,
+                            ease: "power2.out",
+                            stagger: 0.08,
+                            delay: 0.15,
+                            clearProps: "transform,opacity",
+                          },
+                        );
+                      }
+                    } else {
+                      gsap.fromTo(
+                        target,
+                        { y: 14, opacity: 0.97 },
+                        {
+                          y: 0,
+                          opacity: 1,
+                          duration: 0.6,
+                          ease: "power2.out",
+                          clearProps: "transform,opacity",
+                        },
+                      );
+                    }
+
+                    io.unobserve(target);
                   });
                 },
                 {
