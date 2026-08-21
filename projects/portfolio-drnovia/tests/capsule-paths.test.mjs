@@ -30,6 +30,7 @@ const required = [
   "favicon.ico",
   "assets/favicon.svg",
   "assets/favicon-32.png",
+  "assets/hero-deepsea.jpg",
   "src/app.js",
   "src/portfolio-markup.js",
 ];
