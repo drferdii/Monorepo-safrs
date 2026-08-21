@@ -603,6 +603,110 @@ body {
 }
 
 /* ==========================================================================
+   PORTFOLIO SHOWCASE (#project): CINEMATIC DARK BACKGROUND & HD IMAGES
+   ========================================================================== */
+
+#project {
+  position: relative !important;
+  background-color: #020914 !important;
+  overflow: hidden !important;
+}
+
+#project > [data-framer-background-image-wrapper="true"] {
+  background-color: #020914 !important;
+  overflow: hidden !important;
+  z-index: 0 !important;
+}
+
+#project > [data-framer-background-image-wrapper="true"] img {
+  filter: brightness(0.28) contrast(1.28) saturate(1.15) !important;
+  transform: scale(1.04) !important;
+  object-fit: cover !important;
+  width: 100% !important;
+  height: 100% !important;
+}
+
+#project > [data-framer-background-image-wrapper="true"]::after {
+  content: "";
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  background: linear-gradient(
+    180deg,
+    rgba(2, 9, 20, 0.72) 0%,
+    rgba(2, 9, 20, 0.45) 40%,
+    rgba(2, 9, 20, 0.82) 100%
+  ) !important;
+  pointer-events: none !important;
+  z-index: 1 !important;
+}
+
+/* Ensure Project Heading and Subtitle Pop on Dark Background */
+#project h1,
+#project [data-framer-name="main-heading"] h1 {
+  color: #ffffff !important;
+  --framer-text-color: #ffffff !important;
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.03em !important;
+  text-shadow: 0 4px 24px rgba(0, 0, 0, 0.6) !important;
+}
+
+/* Hide Low-Res Placeholder Background Behind Project Cards */
+[data-framer-name="Project"] img[src*="N2w6GD9OJ32bkpXkfMSCXEAtsY"] {
+  display: none !important;
+}
+
+/* Portfolio Cards: HD High-DPI Anti-Aliased Rendering & Modern Contrast */
+[data-framer-name="Project"] {
+  background: rgba(13, 20, 36, 0.85) !important;
+  backdrop-filter: blur(20px) !important;
+  -webkit-backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  transition: transform 0.36s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.36s ease, border-color 0.3s ease !important;
+}
+
+[data-framer-name="Project"]:hover {
+  transform: translateY(-4px) !important;
+  border-color: rgba(147, 197, 253, 0.35) !important;
+  box-shadow: 0 32px 75px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+}
+
+/* High Definition Crisp Portfolio Preview Screenshots */
+[data-framer-name="Project"] img {
+  image-rendering: -webkit-optimize-contrast !important;
+  image-rendering: high-quality !important;
+  border-radius: 12px !important;
+  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.45)) !important;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease !important;
+}
+
+[data-framer-name="Project"]:hover img {
+  transform: scale(1.015) !important;
+  filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.6)) brightness(1.03) !important;
+}
+
+/* Typography on Project Cards */
+[data-framer-name="Project"] p,
+[data-framer-name="Project"] h3,
+[data-framer-name="Project"] h4,
+[data-framer-name="Project"] h5 {
+  color: #ffffff !important;
+  --framer-text-color: #ffffff !important;
+}
+
+[data-framer-name="Project"] [data-framer-name="Year"] p,
+[data-framer-name="Project"] [data-framer-name="Category"] p,
+[data-framer-name="Project"] [data-framer-name="Sub-Title"] p {
+  color: rgba(255, 255, 255, 0.8) !important;
+  --framer-text-color: rgba(255, 255, 255, 0.8) !important;
+}
+
+/* ==========================================================================
    PROFESSIONAL MICRO-INTERACTIONS & INTERACTIVE ANIMATIONS
    ========================================================================== */
 
