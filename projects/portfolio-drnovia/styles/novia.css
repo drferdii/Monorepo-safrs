@@ -659,37 +659,106 @@ body {
   display: none !important;
 }
 
-/* Portfolio Cards: HD High-DPI Anti-Aliased Rendering & Modern Contrast */
+/* ==========================================================================
+   FLAGSHIP HD PORTFOLIO SHOWCASE: LARGE, CRISP, HIGH-DEFINITION CARDS
+   ========================================================================== */
+
+/* Expand Project Container & Rows to Full Generous Width */
+#project .framer-fkrvs {
+  max-width: 1280px !important;
+  width: 100% !important;
+  margin: 0 auto !important;
+  gap: 40px !important;
+  padding: 0 24px !important;
+  box-sizing: border-box !important;
+}
+
+#project .framer-t4zs2z {
+  display: flex !important;
+  flex-direction: row !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  align-items: stretch !important;
+  gap: 36px !important;
+  width: 100% !important;
+}
+
+/* Make Project Cards Large, Spacious & Flagship Grade */
+.framer-sbm4h .framer-11cyqou-container,
+.framer-sbm4h .framer-1ou402j-container,
+.framer-sbm4h .framer-mtcbt4-container,
+.framer-sbm4h .framer-epz7am-container,
+.framer-sbm4h .framer-2jfnzp-container {
+  width: calc(50% - 20px) !important;
+  max-width: 580px !important;
+  min-width: 420px !important;
+  flex: 1 1 420px !important;
+  height: auto !important;
+}
+
+/* Card Outer Frame */
+.framer-kwVcG.framer-mxoaos,
+.framer-kwVcG,
 [data-framer-name="Project"] {
-  background: rgba(13, 20, 36, 0.9) !important;
-  backdrop-filter: blur(20px) !important;
-  -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.16) !important;
-  border-radius: 20px !important;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
-  transition: transform 0.36s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.36s ease, border-color 0.3s ease !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  height: auto !important;
+  min-height: 440px !important;
+  background: rgba(11, 18, 33, 0.92) !important;
+  backdrop-filter: blur(24px) !important;
+  -webkit-backdrop-filter: blur(24px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 22px !important;
+  padding: 16px !important;
+  box-sizing: border-box !important;
+  box-shadow: 0 28px 65px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: space-between !important;
+  transform: none !important;
+  perspective: none !important;
+  transform-style: flat !important;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.3s ease !important;
 }
 
+.framer-kwVcG:hover,
 [data-framer-name="Project"]:hover {
-  transform: translateY(-4px) !important;
-  border-color: rgba(147, 197, 253, 0.45) !important;
-  box-shadow: 0 32px 75px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+  transform: translateY(-6px) scale(1.01) !important;
+  border-color: rgba(147, 197, 253, 0.5) !important;
+  box-shadow: 0 36px 85px rgba(0, 0, 0, 0.75), inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
 }
 
-/* Fix Container Sizing & Disable Bilinear Downsampling on Project Images */
+/* Inner Layout */
+.framer-kwVcG .framer-zvi3d {
+  width: 100% !important;
+  height: auto !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 16px !important;
+}
+
+.framer-kwVcG .framer-hs4jyo {
+  width: 100% !important;
+  height: 330px !important;
+  min-height: 330px !important;
+  max-height: 330px !important;
+  position: relative !important;
+  overflow: hidden !important;
+  border-radius: 14px !important;
+  background: #000000 !important;
+}
+
+/* Thumbnail Frame & Image Rendering */
 .framer-kwVcG .framer-5l8k4k,
 .framer-5l8k4k,
 [data-framer-name="Img-Container"] {
-  height: 290px !important;
-  min-height: 290px !important;
-  max-height: 290px !important;
+  height: 100% !important;
   width: 100% !important;
-  flex: none !important;
+  overflow: hidden !important;
+  border-radius: 14px !important;
+  background: #000000 !important;
   will-change: auto !important;
   transform: none !important;
-  overflow: hidden !important;
-  border-radius: 12px !important;
-  background: #090e17 !important;
 }
 
 .framer-kwVcG .framer-1ugu3me,
@@ -697,10 +766,10 @@ body {
 [data-framer-name="Thumbnail"] {
   height: 100% !important;
   width: 100% !important;
-  flex: none !important;
+  position: relative !important;
+  overflow: hidden !important;
   will-change: auto !important;
   transform: none !important;
-  position: relative !important;
   box-shadow: none !important;
 }
 
@@ -715,7 +784,6 @@ body {
   height: 100% !important;
 }
 
-/* High Definition Crisp Portfolio Preview Screenshots */
 .framer-1ugu3me img,
 [data-framer-name="Thumbnail"] img,
 [data-framer-name="Project"] img {
@@ -723,37 +791,83 @@ body {
   width: 100% !important;
   height: 100% !important;
   object-fit: cover !important;
-  object-position: top center !important;
+  object-position: center 30% !important;
   image-rendering: -webkit-optimize-contrast !important;
   image-rendering: high-quality !important;
-  border-radius: 12px !important;
-  filter: contrast(1.05) brightness(1.02) !important;
-  transform: translateZ(0) !important;
+  border-radius: 14px !important;
+  filter: contrast(1.06) brightness(1.03) !important;
+  transform: scale(1.01) translateZ(0) !important;
   backface-visibility: hidden !important;
   -webkit-backface-visibility: hidden !important;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease !important;
 }
 
-[data-framer-name="Project"]:hover .framer-1ugu3me img,
-[data-framer-name="Project"]:hover [data-framer-name="Thumbnail"] img {
-  transform: scale(1.02) !important;
-  filter: contrast(1.08) brightness(1.05) !important;
+.framer-kwVcG:hover img,
+[data-framer-name="Project"]:hover img {
+  transform: scale(1.04) translateZ(0) !important;
+  filter: contrast(1.08) brightness(1.06) !important;
 }
 
-/* Typography on Project Cards */
-[data-framer-name="Project"] p,
-[data-framer-name="Project"] h3,
-[data-framer-name="Project"] h4,
-[data-framer-name="Project"] h5 {
+/* Card Bottom Metadata Bar */
+.framer-kwVcG .framer-b5gmly {
+  width: 100% !important;
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 10px 4px 4px 4px !important;
+  box-sizing: border-box !important;
+}
+
+.framer-kwVcG .framer-1kooy1y p {
   color: #ffffff !important;
   --framer-text-color: #ffffff !important;
+  font-family: "Plus Jakarta Sans", sans-serif !important;
+  font-size: 19px !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.02em !important;
 }
 
-[data-framer-name="Project"] [data-framer-name="Year"] p,
-[data-framer-name="Project"] [data-framer-name="Category"] p,
-[data-framer-name="Project"] [data-framer-name="Sub-Title"] p {
-  color: rgba(255, 255, 255, 0.8) !important;
-  --framer-text-color: rgba(255, 255, 255, 0.8) !important;
+/* Category & Tag Badges */
+.framer-kwVcG .framer-15sjiob {
+  display: flex !important;
+  flex-direction: row !important;
+  gap: 8px !important;
+  align-items: center !important;
+}
+
+.framer-kwVcG .framer-16ntp72,
+.framer-kwVcG .framer-13rsvb9,
+.framer-kwVcG .framer-1b01lmm {
+  background: rgba(255, 255, 255, 0.12) !important;
+  border: 1px solid rgba(255, 255, 255, 0.18) !important;
+  border-radius: 9999px !important;
+  padding: 4px 10px !important;
+}
+
+.framer-kwVcG .framer-d3irvk p,
+.framer-kwVcG .framer-1u7luqe p,
+.framer-kwVcG .framer-1ndwj3m p {
+  color: rgba(255, 255, 255, 0.9) !important;
+  --framer-text-color: rgba(255, 255, 255, 0.9) !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+}
+
+@media (max-width: 900px) {
+  .framer-sbm4h .framer-11cyqou-container,
+  .framer-sbm4h .framer-1ou402j-container,
+  .framer-sbm4h .framer-mtcbt4-container,
+  .framer-sbm4h .framer-epz7am-container,
+  .framer-sbm4h .framer-2jfnzp-container {
+    width: 100% !important;
+    min-width: 100% !important;
+    max-width: 100% !important;
+  }
+  .framer-kwVcG .framer-hs4jyo {
+    height: 240px !important;
+    min-height: 240px !important;
+  }
 }
 
 /* ==========================================================================
