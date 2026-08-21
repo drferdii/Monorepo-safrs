@@ -360,33 +360,32 @@
     let currentTimer = null;
     let isPaused = false;
 
-    const command =
-      "sentra agent run --pipeline=multistack-orchestrator --env=production";
+    const command = "sentra-stack run --pipeline=multistack-agent --env=prod";
 
     const steps = [
       {
-        html: '<span class="term-time">[00:01]</span> <span class="term-tag term-tag-orch">🚀 [Orchestrator]</span> <span class="term-info">Initializing SAFRS Multi-Agent Stack...</span>',
-        delay: 450,
+        html: '<span class="term-time">[22:52:01]</span> <span class="term-tag term-tag-sys">[SAFRS/Core]</span> <span class="term-info">Initializing multi-stack agent runtime (v2.4.0)...</span>',
+        delay: 380,
       },
       {
-        html: '<span class="term-time">[00:02]</span> <span class="term-tag term-tag-vision">👁️  [Agent 1: Vision-Core]</span> <span class="term-info">Scanning DOM tokens & contrast boundaries</span> <span class="term-badge">@sentra/token AA</span>',
-        delay: 550,
+        html: '<span class="term-time">[22:52:02]</span> <span class="term-tag term-tag-vision">[Agent/Vision]</span> <span class="term-info">Verifying layout contracts & design tokens...</span> <span class="term-success">PASS</span>',
+        delay: 420,
       },
       {
-        html: '<span class="term-time">[00:03]</span> <span class="term-tag term-tag-neural">🧠 [Agent 2: Neural-Engine]</span> <span class="term-info">Loading domain ontology & embeddings</span> <span class="term-badge">Indexed</span>',
-        delay: 550,
+        html: '<span class="term-time">[22:52:03]</span> <span class="term-tag term-tag-neural">[Agent/Neural]</span> <span class="term-info">Loading domain graph embeddings & memory...</span> <span class="term-success">OK (4.2ms)</span>',
+        delay: 440,
       },
       {
-        html: '<span class="term-time">[00:04]</span> <span class="term-tag term-tag-arch">⚡ [Agent 3: System-Architect]</span> <span class="term-info">Deploying reactive runtime & auto-scaling worker</span> <span class="term-badge">Zero-Cold-Start</span>',
+        html: '<span class="term-time">[22:52:04]</span> <span class="term-tag term-tag-arch">[Agent/Architect]</span> <span class="term-info">Spawning reactive workers & edge pipeline...</span> <span class="term-success">DEPLOYED</span>',
+        delay: 400,
+      },
+      {
+        html: '<span class="term-time">[22:52:05]</span> <span class="term-tag term-tag-qa">[Agent/Auditor]</span> <span class="term-info">Auditing 32 capsule security boundaries...</span> <span class="term-success">32/32 PASS</span>',
+        delay: 380,
+      },
+      {
+        html: '<span class="term-time">[22:52:06]</span> <span class="term-tag term-tag-success">[SUCCESS]</span> <span class="term-ready">All 4 agents synchronized. Pipeline active (zero-latency).</span>',
         delay: 500,
-      },
-      {
-        html: '<span class="term-time">[00:05]</span> <span class="term-tag term-tag-qa">🛡️  [Agent 4: QA-Auditor]</span> <span class="term-info">Validating 32 capsule contracts...</span> <span class="term-success">100% PASS</span>',
-        delay: 450,
-      },
-      {
-        html: '<span class="term-time">[00:06]</span> <span class="term-tag term-tag-status">✨ [Status]</span> <span class="term-ready">Multi-Stack Agents Synchronized · Latency: 4ms · READY</span>',
-        delay: 600,
       },
     ];
 
@@ -415,7 +414,7 @@
       const promptLine = document.createElement("div");
       promptLine.className = "novia-term-prompt-line";
       promptLine.innerHTML =
-        '<span class="term-prompt">novia@sentra:~$</span> <span class="term-cmd"></span><span class="novia-term-cursor"></span>';
+        '<span class="term-prompt-user">novia@Novia-MBP</span> <span class="term-prompt-path">~/sentra</span> <span class="term-prompt-symbol">%</span> <span class="term-cmd"></span><span class="novia-term-cursor"></span>';
       linesContainer.appendChild(promptLine);
       const cmdSpan = promptLine.querySelector(".term-cmd");
       const cursorSpan = promptLine.querySelector(".novia-term-cursor");
@@ -427,10 +426,10 @@
           if (cmdSpan) cmdSpan.textContent += command[charIdx];
           charIdx++;
           scrollToBottom();
-          schedule(typeChar, Math.floor(Math.random() * 22) + 24);
+          schedule(typeChar, Math.floor(Math.random() * 20) + 26);
         } else {
           if (cursorSpan) cursorSpan.remove();
-          schedule(() => playSteps(0), 300);
+          schedule(() => playSteps(0), 260);
         }
       }
 
@@ -448,17 +447,17 @@
           const trailLine = document.createElement("div");
           trailLine.className = "novia-term-prompt-line";
           trailLine.innerHTML =
-            '<span class="term-prompt">novia@sentra:~$</span> <span class="novia-term-cursor"></span>';
+            '<span class="term-prompt-user">novia@Novia-MBP</span> <span class="term-prompt-path">~/sentra</span> <span class="term-prompt-symbol">%</span> <span class="novia-term-cursor"></span>';
           linesContainer.appendChild(trailLine);
           scrollToBottom();
 
           schedule(() => {
             runScenario();
-          }, 6500);
+          }, 8000);
         }
       }
 
-      schedule(typeChar, 400);
+      schedule(typeChar, 350);
     }
 
     runScenario();

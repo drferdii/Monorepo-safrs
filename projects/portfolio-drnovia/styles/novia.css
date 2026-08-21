@@ -194,43 +194,39 @@ html.novia-lenis-ready {
 }
 
 /* ==========================================================================
-   MACOS TERMINAL UI COMPONENT
+   AUTHENTIC MACOS TERMINAL UI (SOLID & REALISTIC)
    ========================================================================== */
 
 .novia-mac-terminal {
-  background: rgba(9, 14, 26, 0.88);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 14px;
-  box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  background: rgba(14, 18, 26, 0.94);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
   overflow: hidden;
-  font-family: ui-monospace, "SF Mono", "JetBrains Mono", "Menlo", "Consolas", monospace;
-  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  font-family: ui-monospace, "SF Mono", Monaco, Menlo, Consolas, "Liberation Mono", monospace;
   user-select: text;
+  -webkit-font-smoothing: antialiased;
 }
 
-.novia-mac-terminal:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.75), 0 0 20px rgba(56, 189, 248, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.18) inset;
-}
-
-/* Terminal Titlebar */
+/* Authentic macOS Titlebar */
 .novia-terminal-header {
-  background: linear-gradient(180deg, rgba(28, 36, 54, 0.92) 0%, rgba(20, 26, 40, 0.92) 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 11px 16px;
-  display: flex;
+  background: linear-gradient(180deg, #2d3139 0%, #242830 100%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
+  padding: 8px 14px;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
-  justify-content: space-between;
   gap: 12px;
+  height: 38px;
+  box-sizing: border-box;
 }
 
 .novia-terminal-traffic-lights {
   display: flex;
   align-items: center;
   gap: 8px;
-  flex-shrink: 0;
 }
 
 .novia-traffic-dot {
@@ -238,174 +234,131 @@ html.novia-lenis-ready {
   height: 12px;
   border-radius: 50%;
   display: inline-block;
-  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.3) inset, 0 1px 2px rgba(0, 0, 0, 0.2);
-  transition: opacity 0.2s ease, transform 0.2s ease;
-  cursor: pointer;
+  box-sizing: border-box;
 }
-.novia-traffic-dot:hover {
-  transform: scale(1.15);
-}
+
 .novia-dot-red {
   background: #ff5f56;
-  border: 0.5px solid #e0443e;
+  border: 0.5px solid rgba(0, 0, 0, 0.2);
 }
 .novia-dot-yellow {
   background: #ffbd2e;
-  border: 0.5px solid #dea123;
+  border: 0.5px solid rgba(0, 0, 0, 0.2);
 }
 .novia-dot-green {
   background: #27c93f;
-  border: 0.5px solid #1aab29;
+  border: 0.5px solid rgba(0, 0, 0, 0.2);
 }
 
 .novia-terminal-title {
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 12px;
+  color: #a0a5b1;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 13px;
   font-weight: 500;
-  letter-spacing: -0.01em;
-  display: flex;
-  align-items: center;
-  gap: 6px;
+  text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.novia-terminal-icon {
-  color: #38bdf8;
-  flex-shrink: 0;
+
+.novia-terminal-space {
+  width: 52px;
 }
 
-.novia-terminal-live-status {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 10px;
-  font-weight: 700;
-  letter-spacing: 0.04em;
-  color: #34d399;
-  background: rgba(52, 211, 153, 0.12);
-  border: 1px solid rgba(52, 211, 153, 0.3);
-  border-radius: 12px;
-  padding: 2px 8px;
-  flex-shrink: 0;
-}
-
-.novia-live-pulse {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #34d399;
-  box-shadow: 0 0 8px #34d399;
-  animation: noviaLivePulse 1.8s ease-in-out infinite;
-}
-
-@keyframes noviaLivePulse {
-  0%, 100% { transform: scale(1); opacity: 0.6; }
-  50% { transform: scale(1.4); opacity: 1; }
-}
-
-/* Terminal Body */
+/* Terminal Screen / Body */
 .novia-terminal-body {
-  padding: 16px 18px 20px 18px;
-  font-size: 12px;
-  line-height: 1.65;
-  color: #e2e8f0;
-  max-height: 320px;
-  min-height: 250px;
+  padding: 14px 18px 18px 18px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #d1d5db;
+  max-height: 300px;
+  min-height: 240px;
   overflow-y: auto;
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 }
 
 .novia-terminal-body::-webkit-scrollbar {
-  width: 5px;
+  width: 6px;
 }
 .novia-terminal-body::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 3px;
 }
 
 .novia-terminal-banner {
   margin-bottom: 10px;
-  padding-bottom: 8px;
-  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
-}
-
-.novia-term-dim {
-  color: rgba(255, 255, 255, 0.45);
-  font-size: 11px;
+  color: #6b7280;
+  font-size: 11.5px;
 }
 
 .novia-term-prompt-line {
-  margin: 6px 0;
+  margin: 4px 0;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
 }
 
-.term-prompt {
+.term-prompt-user {
+  color: #34d399;
+  font-weight: 600;
+}
+
+.term-prompt-path {
   color: #38bdf8;
+  font-weight: 600;
+}
+
+.term-prompt-symbol {
+  color: #94a3b8;
   font-weight: 700;
 }
 
 .term-cmd {
-  color: #f1f5f9;
+  color: #f8fafc;
   font-weight: 600;
 }
 
 .novia-term-line {
-  margin: 5px 0;
-  animation: noviaLineFade 0.25s ease-out;
+  margin: 3px 0;
   word-break: break-word;
 }
 
-@keyframes noviaLineFade {
-  from { opacity: 0; transform: translateY(4px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
 .term-time {
-  color: rgba(255, 255, 255, 0.4);
+  color: #64748b;
   font-size: 11px;
   margin-right: 4px;
 }
 
 .term-tag {
-  font-weight: 700;
-  padding: 1px 5px;
-  border-radius: 4px;
-  font-size: 11px;
+  font-weight: 600;
+  margin-right: 4px;
 }
 
-.term-tag-orch {
+.term-tag-sys {
   color: #c084fc;
-  background: rgba(192, 132, 252, 0.12);
 }
 
 .term-tag-vision {
   color: #38bdf8;
-  background: rgba(56, 189, 248, 0.12);
 }
 
 .term-tag-neural {
   color: #f472b6;
-  background: rgba(244, 114, 182, 0.12);
 }
 
 .term-tag-arch {
-  color: #facc15;
-  background: rgba(250, 204, 21, 0.12);
+  color: #fbbf24;
 }
 
 .term-tag-qa {
-  color: #4ade80;
-  background: rgba(74, 222, 128, 0.12);
+  color: #34d399;
 }
 
-.term-tag-status {
-  color: #a78bfa;
-  background: rgba(167, 139, 250, 0.14);
+.term-tag-success {
+  color: #4ade80;
+  font-weight: 700;
 }
 
 .term-info {
@@ -414,41 +367,31 @@ html.novia-lenis-ready {
 
 .term-badge {
   color: #94a3b8;
-  background: rgba(255, 255, 255, 0.08);
-  padding: 1px 6px;
-  border-radius: 10px;
-  font-size: 10.5px;
-  border: 1px solid rgba(255, 255, 255, 0.12);
 }
 
 .term-success {
   color: #4ade80;
-  font-weight: 700;
-  background: rgba(74, 222, 128, 0.15);
-  padding: 1px 6px;
-  border-radius: 10px;
-  font-size: 11px;
+  font-weight: 600;
 }
 
 .term-ready {
-  color: #67e8f9;
+  color: #38bdf8;
   font-weight: 600;
 }
 
 .novia-term-cursor {
   display: inline-block;
-  width: 8px;
+  width: 7.5px;
   height: 14px;
-  background: #38bdf8;
-  vertical-align: middle;
-  margin-left: 3px;
-  box-shadow: 0 0 8px #38bdf8;
-  animation: noviaCursorBlink 0.8s infinite;
+  background: #cbd5e1;
+  vertical-align: text-bottom;
+  margin-left: 2px;
+  animation: noviaTerminalCursorBlink 1s step-start infinite;
 }
 
-@keyframes noviaCursorBlink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0; }
+@keyframes noviaTerminalCursorBlink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
 }
 
 .framer-3YRme .framer-emm1yb,
