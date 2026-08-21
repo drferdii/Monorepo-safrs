@@ -17,7 +17,7 @@
       const timer = window.setTimeout(() => {
         if (settled) return;
         settled = true;
-        reject(new Error("timeout: " + src));
+        reject(new Error(`timeout: ${src}`));
       }, timeoutMs || 3000);
       script.onload = () => {
         if (settled) return;
@@ -29,7 +29,7 @@
         if (settled) return;
         settled = true;
         window.clearTimeout(timer);
-        reject(new Error("load failed: " + src));
+        reject(new Error(`load failed: ${src}`));
       };
       document.head.appendChild(script);
     });
@@ -41,8 +41,7 @@
 
   function installAnchorNavigation() {
     function handleClick(event) {
-      const anchor =
-        event.target.closest && event.target.closest('a[href^="#"]');
+      const anchor = event.target.closest?.('a[href^="#"]');
       if (!anchor) return;
       const href = anchor.getAttribute("href");
       if (!href || href === "#") return;
@@ -50,14 +49,14 @@
       if (!target) return;
 
       event.preventDefault();
-      const reduce =
-        window.matchMedia &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      const reduce = window.matchMedia?.(
+        "(prefers-reduced-motion: reduce)",
+      ).matches;
       target.scrollIntoView({
         behavior: reduce ? "auto" : "smooth",
         block: "start",
       });
-      if (window.history && window.history.replaceState) {
+      if (window.history?.replaceState) {
         window.history.replaceState(null, "", href);
       }
     }
@@ -65,6 +64,147 @@
     document.addEventListener("click", handleClick);
     return () => {
       document.removeEventListener("click", handleClick);
+    };
+  }
+
+  function installInteractiveCards() {
+    const tabs = [
+      {
+        trigger: document.querySelector(".framer-uxc0rs"),
+        card: document.querySelector(".framer-1upsiy3"),
+      },
+      {
+        trigger: document.querySelector(".framer-kp9014"),
+        card: document.querySelector(".framer-1eyqovy"),
+      },
+      {
+        trigger: document.querySelector(".framer-1wvt0y2"),
+        card: document.querySelector(".framer-12n68jw"),
+      },
+    ];
+
+    function activateTab(index) {
+      tabs.forEach((tab, i) => {
+        if (!tab.trigger || !tab.card) return;
+        if (i === index) {
+          tab.card.style.opacity = "1";
+          tab.card.style.pointerEvents = "auto";
+          tab.card.style.transform = "none";
+          tab.trigger.style.backgroundColor = "rgba(255, 255, 255, 0.16)";
+          tab.trigger.style.borderColor = "rgba(255, 255, 255, 0.4)";
+        } else {
+          tab.card.style.opacity = "0";
+          tab.card.style.pointerEvents = "none";
+          tab.trigger.style.backgroundColor = "rgba(255, 255, 255, 0.08)";
+          tab.trigger.style.borderColor = "rgba(255, 255, 255, 0.18)";
+        }
+      });
+    }
+
+    const listeners = [];
+    tabs.forEach((tab, i) => {
+      if (!tab.trigger) return;
+      tab.trigger.style.cursor = "pointer";
+      const clickHandler = () => activateTab(i);
+      const keyHandler = (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          activateTab(i);
+        }
+      };
+      tab.trigger.addEventListener("click", clickHandler);
+      tab.trigger.addEventListener("keydown", keyHandler);
+      listeners.push({
+        element: tab.trigger,
+        clickHandler,
+        keyHandler,
+      });
+    });
+
+    return () => {
+      listeners.forEach(({ element, clickHandler, keyHandler }) => {
+        element.removeEventListener("click", clickHandler);
+        element.removeEventListener("keydown", keyHandler);
+      });
+    };
+  }
+
+  function installCtaButtons() {
+    const ctas = document.querySelectorAll(
+      '.framer-IEAQE, .framer-1rmmc8, [data-framer-name*="Desktop: Bottom"]',
+    );
+    const handler = (e) => {
+      const href = e.currentTarget.getAttribute("href");
+      if (!href || href === "#" || href.startsWith("#")) {
+        e.preventDefault();
+        const footer = document.querySelector("#footer");
+        if (footer) {
+          const reduce = window.matchMedia?.(
+            "(prefers-reduced-motion: reduce)",
+          ).matches;
+          footer.scrollIntoView({
+            behavior: reduce ? "auto" : "smooth",
+            block: "start",
+          });
+        }
+      }
+    };
+
+    ctas.forEach((cta) => {
+      cta.addEventListener("click", handler);
+    });
+
+    return () => {
+      ctas.forEach((cta) => {
+        cta.removeEventListener("click", handler);
+      });
+    };
+  }
+
+  function installEyeFollower() {
+    const eyeSvg = document.querySelector(".framer-1xhn0ls-container svg");
+    if (!eyeSvg) return () => {};
+    const pupils = eyeSvg.querySelectorAll("circle");
+    if (pupils.length < 4) return () => {};
+    const leftPupil = pupils[2];
+    const rightPupil = pupils[3];
+    const baseLeft = { cx: 12.28, cy: 13.82 };
+    const baseRight = { cx: 48.4, cy: 14.12 };
+
+    let targetX = 0;
+    let targetY = 0;
+    let currentX = 0;
+    let currentY = 0;
+    let rafId = null;
+
+    function handleMouseMove(e) {
+      const rect = eyeSvg.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      const dx = (e.clientX - centerX) / (window.innerWidth / 2);
+      const dy = (e.clientY - centerY) / (window.innerHeight / 2);
+      targetX = Math.max(-1, Math.min(1, dx)) * 4.5;
+      targetY = Math.max(-1, Math.min(1, dy)) * 3.5;
+    }
+
+    function animate() {
+      currentX += (targetX - currentX) * 0.12;
+      currentY += (targetY - currentY) * 0.12;
+
+      leftPupil.setAttribute("cx", String(baseLeft.cx + currentX));
+      leftPupil.setAttribute("cy", String(baseLeft.cy + currentY));
+      rightPupil.setAttribute("cx", String(baseRight.cx + currentX));
+      rightPupil.setAttribute("cy", String(baseRight.cy + currentY));
+
+      rafId = requestAnimationFrame(animate);
+    }
+
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    rafId = requestAnimationFrame(animate);
+
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+      if (rafId) cancelAnimationFrame(rafId);
     };
   }
 
@@ -83,8 +223,6 @@
       anchors: { offset: 24, duration: 1.1 },
       naiveDimensions: true,
       stopInertiaOnNavigate: true,
-      // Balanced feel: smoother than native, without Coursera-heavy lag.
-      // 0.04 was too slow; 0.075 felt under-smoothed.
       lerp: 0.06,
       wheelMultiplier: 0.9,
       touchMultiplier: 1.05,
@@ -111,9 +249,13 @@
       cleanupFns.push(installAnchorNavigation());
     }
 
-    const reduceMotion =
-      window.matchMedia &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    // Install interactive micro-interactions & tactile handlers
+    cleanupFns.push(installInteractiveCards());
+    cleanupFns.push(installCtaButtons());
+
+    const reduceMotion = window.matchMedia?.(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
     if (reduceMotion) {
       return () => {
         cleanupFns.forEach((fn) => {
@@ -121,6 +263,9 @@
         });
       };
     }
+
+    const eyeCleanup = installEyeFollower();
+    if (eyeCleanup) cleanupFns.push(eyeCleanup);
 
     let disposed = false;
     let gsapContext = null;
