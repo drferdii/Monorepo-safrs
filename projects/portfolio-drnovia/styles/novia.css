@@ -2,28 +2,11 @@
  * Do not alter Framer positioning/layout contracts.
  */
 
-html,
-body,
-#main,
-.framer-sbm4h,
-.framer-bpy7lj {
-  background-color: #030d1a !important;
-  color: #ffffff;
-  margin: 0 !important;
-  padding: 0 !important;
-  width: 100% !important;
-}
-
 html {
   scroll-behavior: smooth;
 }
 html.novia-lenis-ready {
   scroll-behavior: auto;
-}
-
-/* Hide Framer default root light noise overlay */
-.framer-sbm4h > [data-framer-background-image-wrapper="true"] {
-  display: none !important;
 }
 
 /* Hero Full-Bleed Section */
