@@ -52,7 +52,7 @@ html.novia-lenis-ready {
   transform: translate(-50%, -50%) scale(1.04) !important;
   object-fit: cover !important;
   object-position: center 40% !important;
-  filter: brightness(0.56) contrast(1.18) saturate(1.22) !important;
+  filter: brightness(0.38) contrast(1.18) saturate(1.15) !important;
   z-index: 0 !important;
 }
 
@@ -66,10 +66,10 @@ html.novia-lenis-ready {
   height: 100% !important;
   background: linear-gradient(
     180deg,
-    rgba(2, 6, 18, 0.4) 0%,
-    rgba(2, 6, 23, 0.12) 35%,
-    rgba(2, 6, 23, 0.2) 65%,
-    rgba(2, 6, 23, 0.85) 100%
+    rgba(2, 6, 18, 0.55) 0%,
+    rgba(2, 6, 23, 0.28) 35%,
+    rgba(2, 6, 23, 0.35) 65%,
+    rgba(2, 6, 23, 0.88) 100%
   ) !important;
   pointer-events: none !important;
   z-index: 1 !important;
