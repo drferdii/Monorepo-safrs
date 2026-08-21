@@ -566,6 +566,20 @@
     };
   }
 
+  function installHeroVideo() {
+    const video = document.querySelector(".novia-hero-bg-video");
+    if (!video) return () => {};
+    video.muted = true;
+    video.playsInline = true;
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        /* Autoplay policy fallback: video poster remains visible */
+      });
+    }
+    return () => {};
+  }
+
   function initMotion() {
     const cleanupFns = [];
     const lenisCleanup = initLenis();
@@ -575,7 +589,8 @@
       cleanupFns.push(installAnchorNavigation());
     }
 
-    // Install interactive stacked card switcher, dock, terminal & tactile handlers
+    // Install hero video, dock, terminal & tactile handlers
+    cleanupFns.push(installHeroVideo());
     cleanupFns.push(installInteractiveCards());
     cleanupFns.push(installFloatingDock());
     cleanupFns.push(installMacTerminal());

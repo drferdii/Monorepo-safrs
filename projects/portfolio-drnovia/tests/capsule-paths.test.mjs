@@ -32,6 +32,7 @@ const required = [
   "assets/favicon-32.png",
   "assets/hero-deepsea.jpg",
   "assets/hero-dolphin.jpg",
+  "assets/hero-dolphin.webm",
   "assets/bg-beach-dramatic.jpg",
   "src/app.js",
   "src/portfolio-markup.js",
