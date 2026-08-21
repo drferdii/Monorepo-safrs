@@ -246,6 +246,110 @@
     };
   }
 
+  function installFloatingDock() {
+    const dockContainer = document.querySelector(".framer-1dh82ue");
+    if (!dockContainer) return () => {};
+
+    const items = Array.from(dockContainer.querySelectorAll(".framer-6f740l"));
+    if (!items.length) return () => {};
+
+    let toastTimer = null;
+    let toastEl = document.querySelector(".novia-dock-toast");
+    if (!toastEl) {
+      toastEl = document.createElement("div");
+      toastEl.className = "novia-dock-toast";
+      toastEl.setAttribute("role", "status");
+      toastEl.setAttribute("aria-live", "polite");
+      document.body.appendChild(toastEl);
+    }
+
+    function showToast(message) {
+      if (!toastEl) return;
+      toastEl.innerHTML = message;
+      toastEl.classList.add("active");
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        toastEl.classList.remove("active");
+      }, 3200);
+    }
+
+    // Interactive macOS Fisheye Magnification
+    function handleMouseMove(e) {
+      const mouseX = e.clientX;
+      items.forEach((item) => {
+        const rect = item.getBoundingClientRect();
+        const itemCenterX = rect.left + rect.width / 2;
+        const dist = Math.abs(mouseX - itemCenterX);
+        const maxDist = 120;
+
+        if (dist < maxDist) {
+          const factor = 1 - dist / maxDist;
+          const scale = 1 + factor * 0.28;
+          const translateY = -factor * 10;
+          item.style.transform = `scale(${scale.toFixed(3)}) translateY(${translateY.toFixed(1)}px)`;
+          item.style.zIndex = "10";
+        } else {
+          item.style.transform = "";
+          item.style.zIndex = "";
+        }
+      });
+    }
+
+    function handleMouseLeave() {
+      items.forEach((item) => {
+        item.style.transform = "";
+        item.style.zIndex = "";
+      });
+    }
+
+    // Click handler with bounce animation and email copy action
+    const clickListeners = [];
+    items.forEach((item) => {
+      const clickHandler = () => {
+        item.classList.remove("novia-dock-bouncing");
+        void item.offsetWidth;
+        item.classList.add("novia-dock-bouncing");
+        setTimeout(() => {
+          item.classList.remove("novia-dock-bouncing");
+        }, 700);
+
+        const email = item.getAttribute("data-email");
+        if (email || item.classList.contains("novia-dock-mail-btn")) {
+          const emailAddr = email || "noviaanggraini054@gmail.com";
+          if (
+            navigator.clipboard &&
+            typeof navigator.clipboard.writeText === "function"
+          ) {
+            navigator.clipboard.writeText(emailAddr).catch(() => {});
+          }
+          showToast(
+            `✉️ <b>${emailAddr}</b> tersalin ke clipboard! Membuka email...`,
+          );
+        }
+      };
+
+      item.addEventListener("click", clickHandler);
+      clickListeners.push({ item, clickHandler });
+    });
+
+    dockContainer.addEventListener("mousemove", handleMouseMove, {
+      passive: true,
+    });
+    dockContainer.addEventListener("mouseleave", handleMouseLeave);
+
+    return () => {
+      dockContainer.removeEventListener("mousemove", handleMouseMove);
+      dockContainer.removeEventListener("mouseleave", handleMouseLeave);
+      clickListeners.forEach(({ item, clickHandler }) => {
+        item.removeEventListener("click", clickHandler);
+      });
+      if (toastTimer) clearTimeout(toastTimer);
+      if (toastEl?.parentNode) {
+        toastEl.parentNode.removeChild(toastEl);
+      }
+    };
+  }
+
   function installEyeFollower() {
     const eyeSvg = document.querySelector(".framer-1xhn0ls-container svg");
     if (!eyeSvg) return () => {};
@@ -334,8 +438,9 @@
       cleanupFns.push(installAnchorNavigation());
     }
 
-    // Install interactive stacked card switcher & tactile handlers
+    // Install interactive stacked card switcher, dock, & tactile handlers
     cleanupFns.push(installInteractiveCards());
+    cleanupFns.push(installFloatingDock());
     cleanupFns.push(installCtaButtons());
 
     const reduceMotion = window.matchMedia?.(
