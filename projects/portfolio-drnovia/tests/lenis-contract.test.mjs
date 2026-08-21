@@ -31,7 +31,7 @@ test("app.js binds Lenis to the Framer Content-Wrapper, not window", () => {
   const app = read("src/app.js");
   assert.match(app, /querySelector\(["']\.framer-bpy7lj["']\)/);
   assert.match(app, /wrapper:\s*wrapper/);
-  assert.match(app, /lerp:\s*0\.06/);
+  assert.match(app, /lerp:\s*0\.12/);
   assert.doesNotMatch(app, /wrapper:\s*window/);
   assert.match(app, /new LenisCtor/);
 });

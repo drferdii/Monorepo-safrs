@@ -42,9 +42,10 @@ const server = http.createServer((req, res) => {
         return res.end("Server error");
       }
       const ext = path.extname(file).toLowerCase();
+      const noCacheExt = ext === ".html" || ext === ".js" || ext === ".css";
       res.writeHead(200, {
         "Content-Type": mime[ext] || "application/octet-stream",
-        "Cache-Control": ext === ".html" ? "no-cache" : "public, max-age=3600",
+        "Cache-Control": noCacheExt ? "no-cache" : "public, max-age=3600",
       });
       res.end(data);
     });

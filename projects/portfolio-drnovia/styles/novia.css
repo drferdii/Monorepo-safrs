@@ -4,9 +4,18 @@
 
 html {
   scroll-behavior: smooth;
+  background-color: #030d1a;
 }
 html.novia-lenis-ready {
   scroll-behavior: auto;
+}
+html,
+body,
+#root,
+#main {
+  margin: 0 !important;
+  padding: 0 !important;
+  background-color: #030d1a;
 }
 
 /* Hero Full-Bleed Section */
@@ -1159,6 +1168,295 @@ a[rel*="noopener"]:active {
 .framer-sbm4h .framer-bpy7lj,
 .framer-sbm4h .framer-bpy7lj * {
   scroll-snap-stop: normal;
+}
+
+/* ==========================================================================
+   SIGNATURE FOOTER (#footer): Sentra-style acid-yellow plate
+   ========================================================================== */
+
+.novia-signature-footer {
+  position: relative;
+  background: #e9fb5b;
+  color: #111111;
+  overflow: hidden;
+  padding-bottom: 32px;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  flex-shrink: 0;
+  width: 100%;
+}
+
+.novia-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.novia-footer-brand {
+  display: block;
+  width: 100%;
+  padding: 8px 8px 0 8px;
+  box-sizing: border-box;
+  text-align: center;
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-size: clamp(80px, 28vw, 420px);
+  font-weight: 800;
+  line-height: 0.8;
+  letter-spacing: -0.06em;
+  color: #111111;
+  user-select: none;
+}
+
+.novia-footer-body {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 0 24px;
+  box-sizing: border-box;
+  position: relative;
+}
+
+.novia-footer-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 56px;
+  margin-top: 48px;
+}
+
+.novia-footer-info {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  max-width: 460px;
+}
+
+@media (min-width: 1024px) {
+  .novia-footer-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 64px;
+    row-gap: 40px;
+    max-width: none;
+  }
+
+  .novia-footer-contact,
+  .novia-footer-cta {
+    grid-column: 1;
+  }
+
+  .novia-footer-statement {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: end;
+  }
+}
+
+.novia-footer-contact {
+  border-top: 1px solid #111111;
+  padding-top: 16px;
+}
+
+.novia-footer-contact ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.novia-footer-contact a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.novia-footer-contact a:hover {
+  text-decoration: underline;
+}
+
+.novia-footer-cta p {
+  margin: 0 0 12px 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.novia-footer-cta-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid #111111;
+  padding: 12px 20px;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111111;
+  text-decoration: none;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+.novia-footer-cta-btn:hover {
+  background: #111111;
+  color: #e9fb5b;
+}
+
+.novia-footer-statement {
+  border-top: 1px solid #111111;
+  padding-top: 16px;
+}
+
+.novia-footer-statement p {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  line-height: 1.6;
+}
+
+.novia-footer-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 48px 0 24px 0;
+}
+
+.novia-footer-divider .line {
+  flex: 1;
+  height: 2px;
+  background: rgba(235, 89, 57, 0.7);
+}
+
+.novia-footer-divider .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #eb5939;
+  flex-shrink: 0;
+}
+
+.novia-footer-bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-bottom: 8px;
+  font-size: 14px;
+  font-weight: 600;
+}
+
+@media (min-width: 768px) {
+  .novia-footer-bottom {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+.novia-footer-nav {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  align-items: center;
+}
+
+.novia-footer-nav a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.novia-footer-nav a:hover {
+  text-decoration: underline;
+}
+
+.novia-footer-nav span {
+  opacity: 0.5;
+}
+
+.novia-footer-bottom p {
+  margin: 0;
+}
+
+/* ==========================================================================
+   SIGNATURE WATERMARK: refined ink-signature look (was flat yellow/blue)
+   ========================================================================== */
+
+.framer-sbm4h .framer-1yp7i24 span.framer-text,
+.framer-sbm4h .framer-mgmrnf span.framer-text,
+.framer-sbm4h .framer-1nz9p2v span.framer-text {
+  --framer-text-color: rgba(17, 17, 17, 0.4) !important;
+  color: rgba(17, 17, 17, 0.4) !important;
+  text-shadow: 0 1px 1px rgba(17, 17, 17, 0.08);
+}
+
+.framer-sbm4h .framer-1yp7i24,
+.framer-sbm4h .framer-mgmrnf {
+  opacity: 0.55 !important;
+}
+
+.framer-sbm4h .framer-1nz9p2v {
+  opacity: 0.4 !important;
+}
+
+/* ==========================================================================
+   ABOUT HIGHLIGHT CARDS (01-04): colored accent stripe + number tint
+   ========================================================================== */
+
+.framer-AiKD2 {
+  border-top-width: 5px !important;
+  border-top-style: solid !important;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease !important;
+}
+
+.framer-m10fc7-container .framer-AiKD2 {
+  border-top-color: #8168fd !important;
+  box-shadow: rgba(129, 104, 253, 0.28) 24px 12px 0px 0px !important;
+}
+
+.framer-1bdtdpt-container .framer-AiKD2 {
+  border-top-color: #ec68fd !important;
+  box-shadow: rgba(236, 104, 253, 0.28) 24px 12px 0px 0px !important;
+}
+
+.framer-o98bv3-container .framer-AiKD2 {
+  border-top-color: #84cc16 !important;
+  box-shadow: rgba(132, 204, 22, 0.28) 24px 12px 0px 0px !important;
+}
+
+.framer-1wz6ew0-container .framer-AiKD2 {
+  border-top-color: #ffd440 !important;
+  box-shadow: rgba(255, 212, 64, 0.32) 24px 12px 0px 0px !important;
+}
+
+.framer-m10fc7-container:hover .framer-AiKD2,
+.framer-1bdtdpt-container:hover .framer-AiKD2,
+.framer-o98bv3-container:hover .framer-AiKD2,
+.framer-1wz6ew0-container:hover .framer-AiKD2 {
+  transform: translateY(-4px) !important;
+}
+
+.framer-m10fc7-container .framer-ovre9w span.framer-text,
+.framer-1bdtdpt-container .framer-ovre9w span.framer-text,
+.framer-o98bv3-container .framer-ovre9w span.framer-text,
+.framer-1wz6ew0-container .framer-ovre9w span.framer-text {
+  --extracted-1w3ko1f: initial;
+}
+
+.framer-m10fc7-container .framer-ovre9w span.framer-text {
+  color: #8168fd !important;
+}
+
+.framer-1bdtdpt-container .framer-ovre9w span.framer-text {
+  color: #ec68fd !important;
+}
+
+.framer-o98bv3-container .framer-ovre9w span.framer-text {
+  color: #84cc16 !important;
+}
+
+.framer-1wz6ew0-container .framer-ovre9w span.framer-text {
+  color: #cc9c00 !important;
 }
 
 /* Accessibility: Reduced Motion Override */
