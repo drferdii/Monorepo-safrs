@@ -10,6 +10,41 @@ html.novia-lenis-ready {
 }
 
 /* Hero typography & translated copy layout preservation */
+#hero > [data-framer-background-image-wrapper="true"] {
+  background-color: #030d1a;
+  overflow: hidden;
+}
+
+#hero > [data-framer-background-image-wrapper="true"] img {
+  filter: brightness(0.52) contrast(1.12) saturate(1.1) !important;
+  transform: scale(1.02); /* prevent white edge artifacts on filter */
+}
+
+#hero > [data-framer-background-image-wrapper="true"]::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(2, 10, 22, 0.6) 0%,
+    rgba(2, 12, 28, 0.4) 35%,
+    rgba(2, 10, 22, 0.55) 70%,
+    rgba(2, 10, 22, 0.75) 100%
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+#hero .framer-text p,
+#hero .framer-text h1,
+#hero .framer-text h2,
+#hero .framer-text h6 {
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+}
+
 .framer-3YRme .framer-19mtef4 h6 {
   --framer-line-height: 90% !important;
   margin: 0 !important;
