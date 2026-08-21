@@ -1,0 +1,108 @@
+/* NOVIA STUDIO — scoped layout safety. Do not alter Framer positioning/layout. */
+html {
+  scroll-behavior: smooth;
+}
+html.novia-lenis-ready {
+  scroll-behavior: auto;
+}
+
+/* Hero: original desktop preset uses 40% line-height, which makes translated lines overlap. */
+.framer-3YRme .framer-19mtef4 h6 {
+  --framer-line-height: 90% !important;
+  margin: 0 !important;
+}
+
+/* Two translated copy blocks are longer than the original 60px boxes. */
+.framer-3YRme .framer-emm1yb,
+.framer-3YRme .framer-d6nrso {
+  height: auto !important;
+  min-height: 60px;
+}
+
+@media (max-width: 1439.98px) and (min-width: 810px) {
+  .framer-3YRme .framer-19mtef4 h6 {
+    --framer-line-height: 96% !important;
+  }
+}
+
+@media (max-width: 809.98px) {
+  .framer-3YRme .framer-19mtef4 h6 {
+    --framer-line-height: 100% !important;
+    --framer-letter-spacing: -1.1px !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* React shell: horizontal overflow guard only; never lock vertical scrolling. */
+html,
+body,
+#root,
+#main {
+  width: 100%;
+  min-height: 100%;
+}
+html,
+body {
+  overflow-x: hidden;
+}
+body {
+  margin: 0;
+}
+#root {
+  isolation: isolate;
+}
+
+/* Anchor targets should not sit flush under the viewport edge. */
+#hero,
+#about,
+#project,
+#services,
+#reviews,
+#faqs,
+#footer {
+  scroll-margin-top: 24px;
+}
+
+/* Static React rendering does not use Framer hydration, so ensure the document remains interactive. */
+#main {
+  pointer-events: auto;
+}
+
+/* Motion enhancement states are intentionally conservative. */
+.novia-motion-ready [data-framer-name="Project"] {
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* Scroll ownership: Framer's Content-Wrapper is the viewport scroller.
+   Lenis attaches here. Native overflow remains the fallback if Lenis is absent. */
+.framer-sbm4h .framer-bpy7lj {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  overscroll-behavior-y: auto;
+}
+
+.framer-sbm4h .framer-bpy7lj.lenis {
+  scroll-behavior: auto !important;
+}
+
+.framer-sbm4h .framer-bpy7lj,
+.framer-sbm4h .framer-bpy7lj * {
+  scroll-snap-stop: normal;
+}
