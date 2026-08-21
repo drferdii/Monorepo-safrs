@@ -57,8 +57,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   async function logout() {
-    await apiLogout();
-    dispatch({ type: "LOGOUT" });
+    try {
+      await apiLogout();
+    } finally {
+      dispatch({ type: "LOGOUT" });
+    }
   }
 
   return (
