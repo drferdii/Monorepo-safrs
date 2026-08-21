@@ -68,57 +68,142 @@
   }
 
   function installInteractiveCards() {
-    const tabs = [
+    const container = document.getElementById("1np9dlm");
+    if (!container) return () => {};
+
+    const cards = [
       {
-        trigger: document.querySelector(".framer-uxc0rs"),
-        card: document.querySelector(".framer-1upsiy3"),
+        id: 0,
+        name: "Mantra",
+        wrapper: document.querySelector(".framer-uxc0rs"),
+        inner: document.querySelector(".framer-1upsiy3"),
       },
       {
-        trigger: document.querySelector(".framer-kp9014"),
-        card: document.querySelector(".framer-1eyqovy"),
+        id: 1,
+        name: "MedLink",
+        wrapper: document.querySelector(".framer-kp9014"),
+        inner: document.querySelector(".framer-1eyqovy"),
       },
       {
-        trigger: document.querySelector(".framer-1wvt0y2"),
-        card: document.querySelector(".framer-12n68jw"),
+        id: 2,
+        name: "SideLab",
+        wrapper: document.querySelector(".framer-1wvt0y2"),
+        inner: document.querySelector(".framer-12n68jw"),
       },
     ];
 
-    function activateTab(index) {
-      tabs.forEach((tab, i) => {
-        if (!tab.trigger || !tab.card) return;
-        if (i === index) {
-          tab.card.style.opacity = "1";
-          tab.card.style.pointerEvents = "auto";
-          tab.card.style.transform = "none";
-          tab.trigger.style.backgroundColor = "rgba(255, 255, 255, 0.16)";
-          tab.trigger.style.borderColor = "rgba(255, 255, 255, 0.4)";
+    const validCards = cards.filter((c) => c.wrapper && c.inner);
+    if (validCards.length < 3) return () => {};
+
+    let activeIndex = 0;
+
+    function renderStack(targetIndex) {
+      activeIndex = (targetIndex + validCards.length) % validCards.length;
+
+      validCards.forEach((c, i) => {
+        const relPos =
+          (i - activeIndex + validCards.length) % validCards.length;
+        const w = c.wrapper;
+        const inner = c.inner;
+
+        if (relPos === 0) {
+          // ACTIVE FRONT CARD
+          w.style.zIndex = "10";
+          w.style.bottom = "0px";
+          w.style.left = "0px";
+          w.style.right = "0px";
+          w.style.width = "100%";
+          w.style.transform = "translateY(0px) scale(1)";
+          w.style.filter = "none";
+          w.style.opacity = "1";
+          w.style.pointerEvents = "auto";
+          w.setAttribute("aria-selected", "true");
+          w.classList.add("novia-card-active");
+          w.classList.remove("novia-card-back-1", "novia-card-back-2");
+
+          inner.style.opacity = "1";
+          inner.style.pointerEvents = "auto";
+        } else if (relPos === 1) {
+          // MIDDLE CARD (BEHIND 1)
+          w.style.zIndex = "5";
+          w.style.bottom = "12px";
+          w.style.left = "8px";
+          w.style.right = "8px";
+          w.style.width = "calc(100% - 16px)";
+          w.style.transform = "translateY(0px) scale(0.97)";
+          w.style.filter = "brightness(0.92)";
+          w.style.opacity = "1";
+          w.style.pointerEvents = "auto";
+          w.setAttribute("aria-selected", "false");
+          w.classList.add("novia-card-back-1");
+          w.classList.remove("novia-card-active", "novia-card-back-2");
+
+          inner.style.opacity = "0";
+          inner.style.pointerEvents = "none";
         } else {
-          tab.card.style.opacity = "0";
-          tab.card.style.pointerEvents = "none";
-          tab.trigger.style.backgroundColor = "rgba(255, 255, 255, 0.08)";
-          tab.trigger.style.borderColor = "rgba(255, 255, 255, 0.18)";
+          // BACK CARD (BEHIND 2)
+          w.style.zIndex = "2";
+          w.style.bottom = "24px";
+          w.style.left = "16px";
+          w.style.right = "15px";
+          w.style.width = "calc(100% - 31px)";
+          w.style.transform = "translateY(0px) scale(0.94)";
+          w.style.filter = "brightness(0.85)";
+          w.style.opacity = "1";
+          w.style.pointerEvents = "auto";
+          w.setAttribute("aria-selected", "false");
+          w.classList.add("novia-card-back-2");
+          w.classList.remove("novia-card-active", "novia-card-back-1");
+
+          inner.style.opacity = "0";
+          inner.style.pointerEvents = "none";
         }
       });
     }
 
+    renderStack(0);
+
     const listeners = [];
-    tabs.forEach((tab, i) => {
-      if (!tab.trigger) return;
-      tab.trigger.style.cursor = "pointer";
-      const clickHandler = () => activateTab(i);
+
+    validCards.forEach((c, index) => {
+      const clickHandler = (e) => {
+        // If clicking "Lihat Proyek" link/row, scroll to #project
+        if (
+          e.target.closest?.('[data-framer-name="Row 2"]') ||
+          e.target.closest?.(".framer-1nhr0z3") ||
+          e.target.closest?.(".framer-1ejefme") ||
+          e.target.closest?.(".framer-1kv3t0f")
+        ) {
+          e.preventDefault();
+          e.stopPropagation();
+          const proj = document.querySelector("#project");
+          if (proj) {
+            proj.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+          return;
+        }
+
+        e.preventDefault();
+        e.stopPropagation();
+        if (activeIndex === index) {
+          // Click on active card cycles to next card
+          renderStack(activeIndex + 1);
+        } else {
+          // Click on background card tab switches directly to it
+          renderStack(index);
+        }
+      };
+
       const keyHandler = (e) => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          activateTab(i);
+          renderStack(activeIndex + 1);
         }
       };
-      tab.trigger.addEventListener("click", clickHandler);
-      tab.trigger.addEventListener("keydown", keyHandler);
-      listeners.push({
-        element: tab.trigger,
-        clickHandler,
-        keyHandler,
-      });
+
+      c.wrapper.addEventListener("click", clickHandler);
+      c.wrapper.addEventListener("keydown", keyHandler);
+      listeners.push({ element: c.wrapper, clickHandler, keyHandler });
     });
 
     return () => {
@@ -249,7 +334,7 @@
       cleanupFns.push(installAnchorNavigation());
     }
 
-    // Install interactive micro-interactions & tactile handlers
+    // Install interactive stacked card switcher & tactile handlers
     cleanupFns.push(installInteractiveCards());
     cleanupFns.push(installCtaButtons());
 

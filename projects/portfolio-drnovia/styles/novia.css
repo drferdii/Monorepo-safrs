@@ -201,28 +201,51 @@ a[name="contact"]:hover .framer-1gcpefy {
   transform: translateX(-50%) translateY(-10px) !important;
 }
 
-/* 6. Interactive Hero Switcher Cards (Tab 1, 2, 3) */
-[data-highlight="true"],
-.framer-1wvt0y2,
-.framer-kp9014,
-.framer-uxc0rs {
+/* 6. Interactive Hero Stacked Card Switcher (Mantra, MedLink, SideLab) */
+[id="1np9dlm"],
+.framer-1np9dlm-container {
   cursor: pointer;
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.3s ease;
+  position: relative;
 }
-[data-highlight="true"]:hover,
-.framer-1wvt0y2:hover,
-.framer-kp9014:hover,
-.framer-uxc0rs:hover {
+
+.framer-uxc0rs,
+.framer-kp9014,
+.framer-1wvt0y2 {
+  cursor: pointer;
+  transition: transform 0.42s cubic-bezier(0.34, 1.56, 0.64, 1),
+              bottom 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+              width 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+              left 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+              right 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+              filter 0.3s ease,
+              background-color 0.25s ease,
+              box-shadow 0.3s ease !important;
+  will-change: transform, bottom, filter;
+}
+
+.framer-1upsiy3,
+.framer-1eyqovy,
+.framer-12n68jw {
+  transition: opacity 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.35s cubic-bezier(0.16, 1, 0.3, 1) !important;
+  will-change: opacity, transform;
+}
+
+/* Hover elevation on the active front card */
+.novia-card-active:hover {
   background-color: rgba(255, 255, 255, 0.14) !important;
-  border-color: rgba(255, 255, 255, 0.35) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 12px 28px -6px rgba(0, 0, 0, 0.35), 0 0 1px rgba(255, 255, 255, 0.5) inset;
+  border-color: rgba(255, 255, 255, 0.38) !important;
+  box-shadow: 0 14px 32px -6px rgba(0, 0, 0, 0.38), 0 0 1px rgba(255, 255, 255, 0.6) inset !important;
 }
-[data-highlight="true"]:active,
-.framer-1wvt0y2:active,
-.framer-kp9014:active,
-.framer-uxc0rs:active {
-  transform: scale(0.985);
+
+/* Hover expansion of card stack deck */
+.framer-1np9dlm-container:hover .novia-card-back-1 {
+  bottom: 16px !important;
+  filter: brightness(0.96) !important;
+}
+.framer-1np9dlm-container:hover .novia-card-back-2 {
+  bottom: 30px !important;
+  filter: brightness(0.9) !important;
 }
 
 /* Hero card thumbnail & arrow interactions */
@@ -230,24 +253,24 @@ a[name="contact"]:hover .framer-1gcpefy {
 [data-framer-name="Thumbnail"] img {
   transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
 }
-[data-highlight="true"]:hover .framer-xq733q img,
-[data-highlight="true"]:hover [data-framer-name="Thumbnail"] img {
+.novia-card-active:hover .framer-xq733q img,
+.novia-card-active:hover [data-framer-name="Thumbnail"] img {
   transform: scale(1.05);
 }
 [data-highlight="true"] .framer-3wu21x,
 [data-framer-name="Default"] .framer-3wu21x {
   transition: transform 0.32s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
-[data-highlight="true"]:hover .framer-3wu21x,
-[data-highlight="true"]:hover [data-framer-name="Default"] .framer-3wu21x {
+.novia-card-active:hover .framer-3wu21x,
+.novia-card-active:hover [data-framer-name="Default"] .framer-3wu21x {
   transform: scale(1, 1) !important;
 }
 [data-highlight="true"] .framer-12uc8li,
 [data-framer-name="Default"] .framer-12uc8li {
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
-[data-highlight="true"]:hover .framer-12uc8li,
-[data-highlight="true"]:hover [data-framer-name="Default"] .framer-12uc8li {
+.novia-card-active:hover .framer-12uc8li,
+.novia-card-active:hover [data-framer-name="Default"] .framer-12uc8li {
   transform: translate(2px, -2px);
 }
 
