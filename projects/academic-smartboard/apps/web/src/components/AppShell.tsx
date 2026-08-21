@@ -57,7 +57,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                 href={item.href as Route}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "rounded-[var(--radius-control)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--font-size-body)] text-[var(--color-text-primary)] transition-colors duration-[var(--motion-duration-fast)] ease-[var(--motion-easing-standard)] hover:bg-[var(--color-background-canvas)]",
+                  "flex min-h-[var(--target-min)] items-center rounded-[var(--radius-control)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--font-size-body)] text-[var(--color-text-primary)] transition-colors duration-[var(--motion-duration-fast)] ease-[var(--motion-easing-standard)] hover:bg-[var(--color-background-canvas)]",
                   active &&
                     "bg-[var(--color-background-canvas)] font-[var(--font-weight-medium)] text-[var(--color-accent-text)]",
                 )}
@@ -75,7 +75,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <DropdownMenu.Trigger asChild>
               <button
                 type="button"
-                className="inline-flex items-center gap-[var(--space-2)] rounded-[var(--radius-control)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--font-size-body)] text-[var(--color-text-primary)] hover:bg-[var(--color-background-surface)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus-ring)]"
+                className="inline-flex min-h-[var(--target-min)] items-center gap-[var(--space-2)] rounded-[var(--radius-control)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--font-size-body)] text-[var(--color-text-primary)] hover:bg-[var(--color-background-surface)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--color-focus-ring)]"
               >
                 {user.name}
                 <ChevronDown size={16} strokeWidth={1.5} aria-hidden="true" />
@@ -91,7 +91,7 @@ export function AppShell({ children }: { children: ReactNode }) {
                   onSelect={() => {
                     void handleLogout();
                   }}
-                  className="flex cursor-pointer items-center gap-[var(--space-2)] rounded-[var(--radius-control)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--font-size-body)] text-[var(--color-text-primary)] outline-none data-[highlighted]:bg-[var(--color-background-surface)]"
+                  className="flex min-h-[var(--target-min)] cursor-pointer items-center gap-[var(--space-2)] rounded-[var(--radius-control)] px-[var(--space-3)] py-[var(--space-2)] text-[length:var(--font-size-body)] text-[var(--color-text-primary)] outline-none data-[highlighted]:bg-[var(--color-background-surface)]"
                 >
                   <LogOut size={16} strokeWidth={1.5} aria-hidden="true" />
                   Keluar
