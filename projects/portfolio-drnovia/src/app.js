@@ -350,6 +350,144 @@
     };
   }
 
+  function installMacTerminal() {
+    const linesContainer = document.getElementById("novia-terminal-lines");
+    const terminalEl = document.getElementById("novia-mac-terminal");
+    const bodyEl = document.getElementById("novia-terminal-body");
+    if (!linesContainer || !terminalEl) return () => {};
+
+    let isRunning = true;
+    let currentTimer = null;
+    let isPaused = false;
+
+    const command =
+      "sentra agent run --pipeline=multistack-orchestrator --env=production";
+
+    const steps = [
+      {
+        html: '<span class="term-time">[00:01]</span> <span class="term-tag term-tag-orch">🚀 [Orchestrator]</span> <span class="term-info">Initializing SAFRS Multi-Agent Stack...</span>',
+        delay: 450,
+      },
+      {
+        html: '<span class="term-time">[00:02]</span> <span class="term-tag term-tag-vision">👁️  [Agent 1: Vision-Core]</span> <span class="term-info">Scanning DOM tokens & contrast boundaries</span> <span class="term-badge">@sentra/token AA</span>',
+        delay: 550,
+      },
+      {
+        html: '<span class="term-time">[00:03]</span> <span class="term-tag term-tag-neural">🧠 [Agent 2: Neural-Engine]</span> <span class="term-info">Loading domain ontology & embeddings</span> <span class="term-badge">Indexed</span>',
+        delay: 550,
+      },
+      {
+        html: '<span class="term-time">[00:04]</span> <span class="term-tag term-tag-arch">⚡ [Agent 3: System-Architect]</span> <span class="term-info">Deploying reactive runtime & auto-scaling worker</span> <span class="term-badge">Zero-Cold-Start</span>',
+        delay: 500,
+      },
+      {
+        html: '<span class="term-time">[00:05]</span> <span class="term-tag term-tag-qa">🛡️  [Agent 4: QA-Auditor]</span> <span class="term-info">Validating 32 capsule contracts...</span> <span class="term-success">100% PASS</span>',
+        delay: 450,
+      },
+      {
+        html: '<span class="term-time">[00:06]</span> <span class="term-tag term-tag-status">✨ [Status]</span> <span class="term-ready">Multi-Stack Agents Synchronized · Latency: 4ms · READY</span>',
+        delay: 600,
+      },
+    ];
+
+    function schedule(fn, ms) {
+      if (!isRunning) return;
+      currentTimer = setTimeout(() => {
+        if (!isRunning) return;
+        if (isPaused) {
+          schedule(fn, 200);
+          return;
+        }
+        fn();
+      }, ms);
+    }
+
+    function scrollToBottom() {
+      if (bodyEl) {
+        bodyEl.scrollTop = bodyEl.scrollHeight;
+      }
+    }
+
+    function runScenario() {
+      if (!isRunning) return;
+      linesContainer.innerHTML = "";
+
+      const promptLine = document.createElement("div");
+      promptLine.className = "novia-term-prompt-line";
+      promptLine.innerHTML =
+        '<span class="term-prompt">novia@sentra:~$</span> <span class="term-cmd"></span><span class="novia-term-cursor"></span>';
+      linesContainer.appendChild(promptLine);
+      const cmdSpan = promptLine.querySelector(".term-cmd");
+      const cursorSpan = promptLine.querySelector(".novia-term-cursor");
+
+      let charIdx = 0;
+      function typeChar() {
+        if (!isRunning) return;
+        if (charIdx < command.length) {
+          if (cmdSpan) cmdSpan.textContent += command[charIdx];
+          charIdx++;
+          scrollToBottom();
+          schedule(typeChar, Math.floor(Math.random() * 22) + 24);
+        } else {
+          if (cursorSpan) cursorSpan.remove();
+          schedule(() => playSteps(0), 300);
+        }
+      }
+
+      function playSteps(stepIdx) {
+        if (!isRunning) return;
+        if (stepIdx < steps.length) {
+          const step = steps[stepIdx];
+          const line = document.createElement("div");
+          line.className = "novia-term-line";
+          line.innerHTML = step.html;
+          linesContainer.appendChild(line);
+          scrollToBottom();
+          schedule(() => playSteps(stepIdx + 1), step.delay);
+        } else {
+          const trailLine = document.createElement("div");
+          trailLine.className = "novia-term-prompt-line";
+          trailLine.innerHTML =
+            '<span class="term-prompt">novia@sentra:~$</span> <span class="novia-term-cursor"></span>';
+          linesContainer.appendChild(trailLine);
+          scrollToBottom();
+
+          schedule(() => {
+            runScenario();
+          }, 6500);
+        }
+      }
+
+      schedule(typeChar, 400);
+    }
+
+    runScenario();
+
+    const handleMouseEnter = () => {
+      isPaused = true;
+    };
+    const handleMouseLeave = () => {
+      isPaused = false;
+    };
+    const handleClick = () => {
+      if (currentTimer) clearTimeout(currentTimer);
+      isPaused = false;
+      runScenario();
+    };
+
+    terminalEl.addEventListener("mouseenter", handleMouseEnter);
+    terminalEl.addEventListener("mouseleave", handleMouseLeave);
+    terminalEl.addEventListener("click", handleClick);
+
+    return () => {
+      isRunning = false;
+      if (currentTimer) clearTimeout(currentTimer);
+      terminalEl.removeEventListener("mouseenter", handleMouseEnter);
+      terminalEl.removeEventListener("mouseleave", handleMouseLeave);
+      terminalEl.removeEventListener("click", handleClick);
+    };
+  }
+
   function installEyeFollower() {
     const eyeSvg = document.querySelector(".framer-1xhn0ls-container svg");
     if (!eyeSvg) return () => {};
@@ -438,9 +576,10 @@
       cleanupFns.push(installAnchorNavigation());
     }
 
-    // Install interactive stacked card switcher, dock, & tactile handlers
+    // Install interactive stacked card switcher, dock, terminal & tactile handlers
     cleanupFns.push(installInteractiveCards());
     cleanupFns.push(installFloatingDock());
+    cleanupFns.push(installMacTerminal());
     cleanupFns.push(installCtaButtons());
 
     const reduceMotion = window.matchMedia?.(

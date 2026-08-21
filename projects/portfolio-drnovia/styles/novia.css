@@ -49,7 +49,7 @@ html.novia-lenis-ready {
 }
 
 #hero .framer-19mtef4 h6 {
-  --framer-line-height: 90% !important;
+  --framer-line-height: 96% !important;
   --framer-text-color: #ffffff !important;
   color: #ffffff !important;
   opacity: 1 !important;
@@ -70,6 +70,385 @@ html.novia-lenis-ready {
   --framer-text-color: #ffffff !important;
   opacity: 1 !important;
   text-shadow: none !important;
+}
+
+/* ==========================================================================
+   HERO LEFT-SHIFT & MACOS TERMINAL 2-COLUMN LAYOUT
+   ========================================================================== */
+
+@media (min-width: 1024px) {
+  #hero {
+    min-height: 100vh;
+    display: flex !important;
+    flex-direction: column !important;
+    justify-content: space-between !important;
+  }
+
+  #hero .framer-1fptlhi {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    width: 100% !important;
+    max-width: 1360px !important;
+    margin: 0 auto !important;
+    padding: 20px 48px 110px 48px !important;
+    position: relative !important;
+    box-sizing: border-box !important;
+    gap: 40px !important;
+  }
+
+  /* Shift Status Badge to Top-Left */
+  #hero .framer-1wnpgu1-container {
+    position: absolute !important;
+    top: -45px !important;
+    left: 48px !important;
+    transform: none !important;
+  }
+
+  /* Left Column: Heading and Chips */
+  #hero .framer-1mnp6iw {
+    position: relative !important;
+    width: 48% !important;
+    max-width: 540px !important;
+    height: auto !important;
+    min-height: 290px !important;
+    margin: 0 !important;
+    text-align: left !important;
+    align-items: flex-start !important;
+    order: 1 !important;
+  }
+
+  #hero .framer-19mtef4 {
+    position: relative !important;
+    top: 0 !important;
+    left: 0 !important;
+    transform: none !important;
+    text-align: left !important;
+    width: 100% !important;
+  }
+
+  #hero .framer-19mtef4 h6 {
+    text-align: left !important;
+    font-size: clamp(34px, 3.4vw, 52px) !important;
+    line-height: 100% !important;
+    letter-spacing: -1.8px !important;
+    white-space: normal !important;
+  }
+
+  /* Chip positioning aligned with left column */
+  #hero .framer-5pzb02-container {
+    top: unset !important;
+    bottom: -46px !important;
+    left: 0 !important;
+  }
+
+  #hero .framer-1nuwzx9-container {
+    top: unset !important;
+    bottom: -46px !important;
+    left: 235px !important;
+    right: unset !important;
+  }
+
+  #hero .framer-y3re4l-container {
+    top: unset !important;
+    bottom: -92px !important;
+    left: 40px !important;
+  }
+
+  /* Right Column: macOS Terminal */
+  .novia-mac-terminal {
+    order: 2 !important;
+    width: 48% !important;
+    max-width: 560px !important;
+    min-width: 420px !important;
+    margin: 0 !important;
+    position: relative !important;
+    z-index: 10 !important;
+  }
+
+  /* Bottom Row */
+  #hero .framer-mf8wpk {
+    position: absolute !important;
+    bottom: 20px !important;
+    left: 48px !important;
+    right: 48px !important;
+    width: calc(100% - 96px) !important;
+  }
+}
+
+@media (max-width: 1023.98px) {
+  #hero .framer-1fptlhi {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 32px !important;
+    padding: 24px 20px 100px 20px !important;
+  }
+
+  .novia-mac-terminal {
+    width: 100% !important;
+    max-width: 540px !important;
+    margin: 32px auto 0 auto !important;
+  }
+}
+
+/* ==========================================================================
+   MACOS TERMINAL UI COMPONENT
+   ========================================================================== */
+
+.novia-mac-terminal {
+  background: rgba(9, 14, 26, 0.88);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 14px;
+  box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.65), 0 0 0 1px rgba(255, 255, 255, 0.08) inset;
+  overflow: hidden;
+  font-family: ui-monospace, "SF Mono", "JetBrains Mono", "Menlo", "Consolas", monospace;
+  transition: transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease;
+  user-select: text;
+}
+
+.novia-mac-terminal:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 30px 60px -12px rgba(0, 0, 0, 0.75), 0 0 20px rgba(56, 189, 248, 0.2), 0 0 0 1px rgba(255, 255, 255, 0.18) inset;
+}
+
+/* Terminal Titlebar */
+.novia-terminal-header {
+  background: linear-gradient(180deg, rgba(28, 36, 54, 0.92) 0%, rgba(20, 26, 40, 0.92) 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 11px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.novia-terminal-traffic-lights {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.novia-traffic-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 0 0.5px rgba(0, 0, 0, 0.3) inset, 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  cursor: pointer;
+}
+.novia-traffic-dot:hover {
+  transform: scale(1.15);
+}
+.novia-dot-red {
+  background: #ff5f56;
+  border: 0.5px solid #e0443e;
+}
+.novia-dot-yellow {
+  background: #ffbd2e;
+  border: 0.5px solid #dea123;
+}
+.novia-dot-green {
+  background: #27c93f;
+  border: 0.5px solid #1aab29;
+}
+
+.novia-terminal-title {
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.novia-terminal-icon {
+  color: #38bdf8;
+  flex-shrink: 0;
+}
+
+.novia-terminal-live-status {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: #34d399;
+  background: rgba(52, 211, 153, 0.12);
+  border: 1px solid rgba(52, 211, 153, 0.3);
+  border-radius: 12px;
+  padding: 2px 8px;
+  flex-shrink: 0;
+}
+
+.novia-live-pulse {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 8px #34d399;
+  animation: noviaLivePulse 1.8s ease-in-out infinite;
+}
+
+@keyframes noviaLivePulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.4); opacity: 1; }
+}
+
+/* Terminal Body */
+.novia-terminal-body {
+  padding: 16px 18px 20px 18px;
+  font-size: 12px;
+  line-height: 1.65;
+  color: #e2e8f0;
+  max-height: 320px;
+  min-height: 250px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.novia-terminal-body::-webkit-scrollbar {
+  width: 5px;
+}
+.novia-terminal-body::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.novia-terminal-banner {
+  margin-bottom: 10px;
+  padding-bottom: 8px;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+}
+
+.novia-term-dim {
+  color: rgba(255, 255, 255, 0.45);
+  font-size: 11px;
+}
+
+.novia-term-prompt-line {
+  margin: 6px 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px;
+}
+
+.term-prompt {
+  color: #38bdf8;
+  font-weight: 700;
+}
+
+.term-cmd {
+  color: #f1f5f9;
+  font-weight: 600;
+}
+
+.novia-term-line {
+  margin: 5px 0;
+  animation: noviaLineFade 0.25s ease-out;
+  word-break: break-word;
+}
+
+@keyframes noviaLineFade {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.term-time {
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 11px;
+  margin-right: 4px;
+}
+
+.term-tag {
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 11px;
+}
+
+.term-tag-orch {
+  color: #c084fc;
+  background: rgba(192, 132, 252, 0.12);
+}
+
+.term-tag-vision {
+  color: #38bdf8;
+  background: rgba(56, 189, 248, 0.12);
+}
+
+.term-tag-neural {
+  color: #f472b6;
+  background: rgba(244, 114, 182, 0.12);
+}
+
+.term-tag-arch {
+  color: #facc15;
+  background: rgba(250, 204, 21, 0.12);
+}
+
+.term-tag-qa {
+  color: #4ade80;
+  background: rgba(74, 222, 128, 0.12);
+}
+
+.term-tag-status {
+  color: #a78bfa;
+  background: rgba(167, 139, 250, 0.14);
+}
+
+.term-info {
+  color: #e2e8f0;
+}
+
+.term-badge {
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-size: 10.5px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+.term-success {
+  color: #4ade80;
+  font-weight: 700;
+  background: rgba(74, 222, 128, 0.15);
+  padding: 1px 6px;
+  border-radius: 10px;
+  font-size: 11px;
+}
+
+.term-ready {
+  color: #67e8f9;
+  font-weight: 600;
+}
+
+.novia-term-cursor {
+  display: inline-block;
+  width: 8px;
+  height: 14px;
+  background: #38bdf8;
+  vertical-align: middle;
+  margin-left: 3px;
+  box-shadow: 0 0 8px #38bdf8;
+  animation: noviaCursorBlink 0.8s infinite;
+}
+
+@keyframes noviaCursorBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
 .framer-3YRme .framer-emm1yb,
