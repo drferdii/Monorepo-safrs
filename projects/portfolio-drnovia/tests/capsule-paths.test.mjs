@@ -27,6 +27,9 @@ const required = [
   "package.json",
   "server.js",
   "index.html",
+  "favicon.ico",
+  "assets/favicon.svg",
+  "assets/favicon-32.png",
   "src/app.js",
   "src/portfolio-markup.js",
 ];
