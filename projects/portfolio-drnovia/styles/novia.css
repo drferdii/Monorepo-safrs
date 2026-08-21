@@ -132,16 +132,16 @@ html.novia-lenis-ready {
 
   #hero .framer-19mtef4 h6 {
     text-align: left !important;
-    font-size: clamp(30px, 3vw, 44px) !important;
-    line-height: 104% !important;
-    letter-spacing: -1.6px !important;
+    font-size: clamp(28px, 2.8vw, 40px) !important;
+    line-height: 106% !important;
+    letter-spacing: -1.5px !important;
     white-space: normal !important;
   }
 
   /* Chip 1 (Purple - Arsitektur Kecerdasan Buatan) */
   #hero .framer-5pzb02-container {
     position: absolute !important;
-    top: 172px !important;
+    top: 178px !important;
     left: 0px !important;
     bottom: unset !important;
     right: unset !important;
@@ -152,8 +152,8 @@ html.novia-lenis-ready {
   /* Chip 2 (Pink - Desain Situs Web) */
   #hero .framer-1nuwzx9-container {
     position: absolute !important;
-    top: 234px !important;
-    left: 0px !important;
+    top: 178px !important;
+    left: 236px !important;
     bottom: unset !important;
     right: unset !important;
     transform: rotate(2deg) !important;
@@ -163,11 +163,11 @@ html.novia-lenis-ready {
   /* Chip 3 (Green - Otomasi Cerdas) */
   #hero .framer-y3re4l-container {
     position: absolute !important;
-    top: 234px !important;
-    left: 228px !important;
+    top: 232px !important;
+    left: 20px !important;
     bottom: unset !important;
     right: unset !important;
-    transform: rotate(-1.5deg) !important;
+    transform: rotate(-1deg) !important;
     z-index: 5 !important;
   }
 
@@ -209,20 +209,20 @@ html.novia-lenis-ready {
     position: relative !important;
     width: 100% !important;
     max-width: 520px !important;
-    height: 330px !important;
-    min-height: 330px !important;
+    height: 310px !important;
+    min-height: 310px !important;
     margin: 0 auto !important;
   }
 
   #hero .framer-19mtef4 h6 {
     text-align: left !important;
-    font-size: 32px !important;
-    line-height: 106% !important;
+    font-size: 30px !important;
+    line-height: 108% !important;
   }
 
   #hero .framer-5pzb02-container {
     position: absolute !important;
-    top: 172px !important;
+    top: 178px !important;
     left: 0px !important;
     bottom: unset !important;
     right: unset !important;
@@ -231,8 +231,8 @@ html.novia-lenis-ready {
 
   #hero .framer-1nuwzx9-container {
     position: absolute !important;
-    top: 234px !important;
-    left: 0px !important;
+    top: 178px !important;
+    left: 236px !important;
     bottom: unset !important;
     right: unset !important;
     transform: rotate(2deg) !important;
@@ -240,11 +240,11 @@ html.novia-lenis-ready {
 
   #hero .framer-y3re4l-container {
     position: absolute !important;
-    top: 234px !important;
-    left: 228px !important;
+    top: 232px !important;
+    left: 20px !important;
     bottom: unset !important;
     right: unset !important;
-    transform: rotate(-1.5deg) !important;
+    transform: rotate(-1deg) !important;
   }
 
   .novia-mac-terminal {
@@ -256,6 +256,98 @@ html.novia-lenis-ready {
     flex-shrink: 0 !important;
     margin: 24px auto 0 auto !important;
   }
+}
+
+@media (max-width: 520px) {
+  #hero .framer-1mnp6iw {
+    height: 360px !important;
+    min-height: 360px !important;
+  }
+
+  #hero .framer-5pzb02-container {
+    top: 170px !important;
+    left: 0px !important;
+  }
+
+  #hero .framer-1nuwzx9-container {
+    top: 218px !important;
+    left: 0px !important;
+  }
+
+  #hero .framer-y3re4l-container {
+    top: 266px !important;
+    left: 0px !important;
+  }
+}
+
+/* ==========================================================================
+   HERO CHIP BADGES (COMPACT, SINGLE-LINE, SLEEK SIZING)
+   ========================================================================== */
+
+.framer-nYBrn.framer-r56p0z {
+  width: auto !important;
+  height: auto !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  position: relative !important;
+}
+
+.framer-nYBrn .framer-m1l9nd {
+  height: 36px !important;
+  width: auto !important;
+  min-width: 0 !important;
+  padding: 0 16px 0 40px !important;
+  border-radius: 9999px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.18) inset !important;
+  backdrop-filter: blur(12px) !important;
+  -webkit-backdrop-filter: blur(12px) !important;
+  overflow: visible !important;
+}
+
+.framer-nYBrn .framer-mi1low {
+  width: auto !important;
+  height: auto !important;
+  white-space: nowrap !important;
+  flex: none !important;
+  position: relative !important;
+}
+
+.framer-nYBrn .framer-mi1low p.framer-text {
+  font-size: 13.5px !important;
+  --framer-font-size: 13.5px !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+  font-weight: 600 !important;
+  letter-spacing: -0.01em !important;
+}
+
+/* Icon circle styling */
+.framer-nYBrn .framer-wy7vqk {
+  width: 28px !important;
+  height: 28px !important;
+  position: absolute !important;
+  top: 4px !important;
+  left: 4px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3) !important;
+  padding: 0 !important;
+}
+
+.framer-nYBrn .framer-2fxszj {
+  width: 15px !important;
+  height: 15px !important;
+}
+
+/* Hide clutter stickers/corner folds */
+.framer-nYBrn .framer-sqbgvs,
+.framer-nYBrn .framer-85sbxl {
+  display: none !important;
 }
 
 /* ==========================================================================
