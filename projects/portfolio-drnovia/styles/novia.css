@@ -661,33 +661,83 @@ body {
 
 /* Portfolio Cards: HD High-DPI Anti-Aliased Rendering & Modern Contrast */
 [data-framer-name="Project"] {
-  background: rgba(13, 20, 36, 0.85) !important;
+  background: rgba(13, 20, 36, 0.9) !important;
   backdrop-filter: blur(20px) !important;
   -webkit-backdrop-filter: blur(20px) !important;
-  border: 1px solid rgba(255, 255, 255, 0.14) !important;
+  border: 1px solid rgba(255, 255, 255, 0.16) !important;
   border-radius: 20px !important;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.12) !important;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55), inset 0 1px 0 rgba(255, 255, 255, 0.15) !important;
   transition: transform 0.36s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.36s ease, border-color 0.3s ease !important;
 }
 
 [data-framer-name="Project"]:hover {
   transform: translateY(-4px) !important;
-  border-color: rgba(147, 197, 253, 0.35) !important;
-  box-shadow: 0 32px 75px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+  border-color: rgba(147, 197, 253, 0.45) !important;
+  box-shadow: 0 32px 75px rgba(0, 0, 0, 0.65), inset 0 1px 0 rgba(255, 255, 255, 0.25) !important;
+}
+
+/* Fix Container Sizing & Disable Bilinear Downsampling on Project Images */
+.framer-kwVcG .framer-5l8k4k,
+.framer-5l8k4k,
+[data-framer-name="Img-Container"] {
+  height: 290px !important;
+  min-height: 290px !important;
+  max-height: 290px !important;
+  width: 100% !important;
+  flex: none !important;
+  will-change: auto !important;
+  transform: none !important;
+  overflow: hidden !important;
+  border-radius: 12px !important;
+  background: #090e17 !important;
+}
+
+.framer-kwVcG .framer-1ugu3me,
+.framer-1ugu3me,
+[data-framer-name="Thumbnail"] {
+  height: 100% !important;
+  width: 100% !important;
+  flex: none !important;
+  will-change: auto !important;
+  transform: none !important;
+  position: relative !important;
+  box-shadow: none !important;
+}
+
+.framer-1ugu3me [data-framer-background-image-wrapper="true"],
+[data-framer-name="Thumbnail"] [data-framer-background-image-wrapper="true"] {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  right: 0 !important;
+  bottom: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
 }
 
 /* High Definition Crisp Portfolio Preview Screenshots */
+.framer-1ugu3me img,
+[data-framer-name="Thumbnail"] img,
 [data-framer-name="Project"] img {
+  display: block !important;
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+  object-position: top center !important;
   image-rendering: -webkit-optimize-contrast !important;
   image-rendering: high-quality !important;
   border-radius: 12px !important;
-  filter: drop-shadow(0 12px 28px rgba(0, 0, 0, 0.45)) !important;
+  filter: contrast(1.05) brightness(1.02) !important;
+  transform: translateZ(0) !important;
+  backface-visibility: hidden !important;
+  -webkit-backface-visibility: hidden !important;
   transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), filter 0.4s ease !important;
 }
 
-[data-framer-name="Project"]:hover img {
-  transform: scale(1.015) !important;
-  filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.6)) brightness(1.03) !important;
+[data-framer-name="Project"]:hover .framer-1ugu3me img,
+[data-framer-name="Project"]:hover [data-framer-name="Thumbnail"] img {
+  transform: scale(1.02) !important;
+  filter: contrast(1.08) brightness(1.05) !important;
 }
 
 /* Typography on Project Cards */
