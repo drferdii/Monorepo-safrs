@@ -9,14 +9,15 @@ html.novia-lenis-ready {
   scroll-behavior: auto;
 }
 
-/* Hero typography & translated copy layout preservation */
+/* Hero background & typography preservation */
 #hero > [data-framer-background-image-wrapper="true"] {
   background-color: #030d1a;
   overflow: hidden;
+  z-index: 0;
 }
 
 #hero > [data-framer-background-image-wrapper="true"] img {
-  filter: brightness(0.52) contrast(1.12) saturate(1.1) !important;
+  filter: brightness(0.48) contrast(1.12) saturate(1.1) !important;
   transform: scale(1.02); /* prevent white edge artifacts on filter */
 }
 
@@ -29,25 +30,46 @@ html.novia-lenis-ready {
   bottom: 0;
   background: linear-gradient(
     180deg,
-    rgba(2, 10, 22, 0.6) 0%,
-    rgba(2, 12, 28, 0.4) 35%,
-    rgba(2, 10, 22, 0.55) 70%,
-    rgba(2, 10, 22, 0.75) 100%
+    rgba(2, 10, 22, 0.45) 0%,
+    rgba(2, 12, 28, 0.25) 35%,
+    rgba(2, 10, 22, 0.4) 70%,
+    rgba(2, 10, 22, 0.65) 100%
   );
   pointer-events: none;
   z-index: 1;
 }
 
-#hero .framer-text p,
-#hero .framer-text h1,
-#hero .framer-text h2,
-#hero .framer-text h6 {
-  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.45);
+/* Ensure all hero content layers stay in front, bright, and unaffected by dark filters */
+#hero .framer-1425bdo,
+#hero .framer-1fptlhi,
+#hero .framer-3YRme,
+#hero .framer-19mtef4 {
+  position: relative;
+  z-index: 2;
 }
 
-.framer-3YRme .framer-19mtef4 h6 {
+#hero .framer-19mtef4 h6 {
   --framer-line-height: 90% !important;
+  --framer-text-color: #ffffff !important;
+  color: #ffffff !important;
+  opacity: 1 !important;
   margin: 0 !important;
+  text-shadow: none !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+#hero [data-framer-name="Logo"] p {
+  color: #ffffff !important;
+  --framer-text-color: #ffffff !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
+}
+
+#hero [data-framer-name="Novia Dwi Anggraini"] p {
+  color: #ffffff !important;
+  --framer-text-color: #ffffff !important;
+  opacity: 1 !important;
+  text-shadow: none !important;
 }
 
 .framer-3YRme .framer-emm1yb,
