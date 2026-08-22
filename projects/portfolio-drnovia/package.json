@@ -1,0 +1,14 @@
+{
+  "name": "portfolio-drnovia",
+  "private": true,
+  "version": "1.0.0",
+  "description": "NOVIA STUDIO portfolio — React 18 runtime with preserved Framer visual markup.",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "node --test tests/capsule-paths.test.mjs tests/lenis-contract.test.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
