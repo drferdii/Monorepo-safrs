@@ -27,10 +27,14 @@ Read the repository root `AGENTS.md` first. This file narrows project-local cont
 
 Replace these placeholders with commands that exist before activating the capsule:
 
-- Lint: `pnpm --filter @sentra/smartboard-site lint`
-- Typecheck: `pnpm --filter @sentra/smartboard-site typecheck`
-- Test: `pnpm --filter @sentra/smartboard-site test`
-- Build: `pnpm --filter @sentra/smartboard-site build` (static export ke `apps/site/out/`)
+- Lint (site): `pnpm --filter @sentra/smartboard-site lint`
+- Typecheck (site): `pnpm --filter @sentra/smartboard-site typecheck`
+- Test (site): `pnpm --filter @sentra/smartboard-site test`
+- Build (site): `pnpm --filter @sentra/smartboard-site build` (static export ke `apps/site/out/`)
+- Lint (web): `pnpm --filter @sentra/smartboard-web lint`
+- Typecheck (web): `pnpm --filter @sentra/smartboard-web typecheck`
+- Test (web): `pnpm --filter @sentra/smartboard-web test`
+- Build (web): `pnpm --filter @sentra/smartboard-web build` (static export ke `apps/web/out/`)
 
 ## Prohibited actions
 
